@@ -1,0 +1,12 @@
+{
+    "hide": ["_addImage", "_setImage", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImage", "_removeImageSet"],
+    "fr": {
+        "methods":[
+            {"name":"_setScene","translated":"définirDécor","displayed":"définirDécor(\"nature\")"},
+            {"name":"_showBlock","translated":"montrerBloc","displayed":"montrerBloc()"},
+            {"name":"_hideBlock","translated":"cacherBloc","displayed":"cacherBloc()"},
+            {"name":"_setBackground","translated":"définirImageFond","displayed":"définirImageFond(\"image\")"},
+            {"name":"_setBlock","translated":"définirImageBloc","displayed":"définirImageBloc(\"image\")"}
+        ]
+    }
+}

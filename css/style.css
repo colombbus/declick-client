@@ -1,0 +1,1085 @@
+body, html {
+    height:100%;
+    min-height:100%;
+    margin:0;
+    padding:0;
+    font-family:'Arial', sans-serif;
+}
+
+/* TFrame */
+
+#tframe {
+    height:100%;
+    width:100%;
+    min-height:100%;
+}
+
+#tframe-top {
+    bottom:33%;
+    margin-bottom:8px;
+    overflow:hidden;
+}
+
+#tframe-separator {
+    bottom:33%;
+}
+
+#tframe-bottom {
+    height:33%;
+    overflow:hidden;
+}
+
+#tframe-bottom-top {
+    position:relative;
+    z-index:2;
+}
+
+#tframe-loading {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:white;
+    z-index:100;
+}
+
+#tframe-loading img {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+}
+
+.split-pane-divider  {
+    height:5px;
+    background:url("../images/handle.png") no-repeat scroll 50% 1px #EBEBEB;
+}
+
+.split-pane-divider.disabled  {
+    background-image:none;
+}
+
+.split-pane.horizontal-percent > .split-pane-divider.disabled {
+    cursor:default;
+}
+
+/* TCanvas */
+
+#tcanvas-outer {
+    width:100%;
+    position:relative;
+    overflow:hidden;
+    height:100%;
+    background-color:#FFFFFF;
+}
+
+#tcanvas3d {
+    background-color:transparent;
+    width:800px;
+    height:500px;
+    position:absolute;
+    overflow:hidden;
+    top:0px;
+    left:0px;
+    /*
+    border-color: red;
+    border-style: solid;
+    border-width: 15px;
+    z-index: 3;
+    */
+}
+
+#tcanvas {
+    background-color:transparent;
+    width:500px;
+    height:200px;
+    position:relative;
+    overflow:hidden;
+}
+
+#tcanvas-design {
+    position:absolute;
+    width:100%;
+    height:100%;
+    background-image:url('../images/design_back.png');
+}
+
+#tcanvas-design-mouse {
+    position:absolute;
+    bottom:0px;
+    font-family: "Arial", sans-serif;
+    color:#929292;
+    font-size:12pt;
+    background-color:white;
+    padding:2px;
+    z-index: 1;
+}
+.right-design{
+    right:0px;
+}
+.left-design{
+    left:0px;
+}
+
+#tcanvas_container {
+    width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+}
+
+/* TEditor */
+
+#teditor {
+    height:100%;
+    margin-right:200px;
+}
+
+#teditor.editor-disabled {
+    background-color:#EFEFEF;
+}
+
+#teditor.editor-disabled .ace_text-layer {
+    display:none;
+}
+
+#teditor.editor-disabled .ace_cursor {
+    border-color:transparent;
+}
+
+#teditor.editor-disabled #disabled-message {
+    position:absolute;
+    z-index:10;
+    height:100%;
+    width:100%;
+    text-align:center;
+}
+
+#teditor.editor-disabled #disabled-message p {
+    margin:0;
+    padding:0;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    color:#333435;
+    font-size:0.8em;
+    opacity:0.3;
+}
+
+/* TSidebar */
+
+#tsidebar {
+    background-color:#DEDEDE;
+    width:250px;
+    float:right;
+    height:100%;
+    font-family:'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
+    overflow:hidden;
+    position:relative;
+}
+
+#tsidebar-switch {
+    float:right;
+    height:100%;
+    width:40px;
+    background-color: #929292;
+}
+
+#tsidebar-switch-programs {
+    cursor:pointer;
+    width:100%;
+    height:45px;
+    background-image:url('../images/programs.png');
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+#tsidebar-switch-resources {
+    cursor:pointer;
+    width:100%;
+    height:45px;
+    background-image:url('../images/resources.png');
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+#tsidebar-switch-programs.active, #tsidebar-switch-resources.active {
+    background-color: #dedede;
+}
+
+#tsidebar-programs, #tsidebar-resources {
+    overflow-y:auto;
+    height:100%;
+    margin-right:40px;
+    position:relative;
+}
+
+#tsidebar-programs.loading, #tsidebar-resources.loading {
+    background-image:url(../images/loader2.gif);
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+#tsidebar-upload {
+    padding-top:30px;
+}
+
+#tsidebar-upload-header {
+    text-align:center;
+    background-color:#DEDEDE;
+    margin-top:-28px;
+}
+
+#tsidebar-upload-input {
+    visibility:hidden;
+    width:0;
+    height:0;
+}
+
+#tsidebar-upload-button {
+    font-family:'Arial', sans-serif;
+    display:inline-block;
+    font-size:10pt;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding-top:3px;
+    padding-bottom:3px;
+    padding-left:8px;
+    padding-right:8px;
+    color:#000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#CCCCCC;
+    background-color:transparent;
+    cursor:pointer;
+}
+
+#tsidebar-upload-button:hover {
+    color:#990000;
+    background-color:#DEDEDE;
+}
+
+#tsidebar-upload-button:disabled:hover {
+    color:#000000;
+    background-color:transparent;
+}
+
+
+#tsidebar-upload-button img {
+    margin-right:8px;
+    vertical-align:text-bottom;
+    height:16px;
+    opacity:0.6;
+}
+
+#tsidebar-upload-button:hover img {
+    opacity:1;
+}
+
+#tsidebar-upload-button:disabled:hover img {
+    opacity:0.6;
+}
+
+.tsidebar-program {
+    padding:10px;
+    color:#333435;
+    cursor:pointer;
+    position:relative;
+}
+
+.tsidebar-edited {
+    color:/*#19469D*//*#0000CD*/#E47637;
+}
+
+.tsidebar-current {
+    background-color:#FFFFFF;
+}
+
+.tsidebar-close {
+    position:absolute;
+    right:10px;
+    top:10px;
+    height:20px;
+    width:20px;
+    background-image:url('../images/close.png');
+    background-size:20px 20px;
+    display:none;
+    opacity:0.6;
+}
+
+.tsidebar-program:hover .tsidebar-close {
+    display:block;
+}
+
+.tsidebar-program:hover .tsidebar-close:hover {
+    opacity:1;
+}
+
+.tsidebar-program.tsidebar-renaming:hover .tsidebar-close {
+    display:none;
+}
+
+.tsidebar-renaming > div:first-child {
+    display:none;
+}
+
+.tsidebar-renaming .tsidebar-loading,
+.tsidebar-edited .tsidebar-loading {
+    background-image:url('../images/loader2.gif');
+}
+
+textarea.tsidebar-rename {
+    width:100%;
+    height:50px;
+}
+
+#tsidebar-resources-empty {
+    position:absolute;
+    z-index:10;
+    height:100%;
+    width:100%;
+    text-align:center;
+}
+
+#tsidebar-resources-empty p {
+    margin:0;
+    padding:0px 10px;
+    position:relative;
+    top:50%;
+    transform: translateY(-50%);
+    color:#333435;
+    opacity:0.3;
+}
+
+.tsidebar-file {
+    float:left;
+    margin:10px;
+    padding:4px;
+    width:90px;
+    height:90px;
+    border:1px solid transparent;
+    overflow:hidden;
+    font-size:0.8em;
+    background-color:#FFFFFF;
+    word-wrap: break-word;
+    border-radius:5px;
+    cursor:pointer;
+    text-align:center;
+    position:relative;
+}
+
+.tsidebar-file-name {
+    width:90px;
+    height:56px;
+    margin-bottom:4px;
+    overflow:hidden;
+}
+
+.tsidebar-file-icon {
+    width:90px;
+    height:30px;
+    overflow:hidden;
+    background-image:url('../images/file.png');
+    background-repeat:no-repeat;
+    background-position:50% 0%;
+}
+
+.tsidebar-type-image  .tsidebar-file-icon {
+    background-image:url('../images/picture.png');    
+} 
+
+.tsidebar-type-image.tsidebar-current  .tsidebar-file-icon {
+    background-image:url('../images/picture_white.png');    
+}
+
+.tsidebar-type-image .tsidebar-file-icon:hover {
+    background-image:url('../images/picture_red.png');
+}
+
+.tsidebar-type-audio .tsidebar-file-icon {
+    background-image:url('../images/music.png');    
+}
+
+.tsidebar-type-audio.tsidebar-current  .tsidebar-file-icon {
+    background-image:url('../images/music_white.png');    
+}
+
+.tsidebar-type-video  .tsidebar-file-icon {
+    background-image:url('../images/video.png');    
+}
+
+.tsidebar-type-video.tsidebar-current  .tsidebar-file-icon {
+    background-image:url('../images/video_white.png');
+}
+
+.tsidebar-type-text  .tsidebar-file-icon {
+    background-image:url('../images/text.png');    
+}
+
+.tsidebar-type-text  .tsidebar-file-icon:hover {
+    background-image:url('../images/text_red.png');    
+}
+
+.tsidebar-type-text.tsidebar-current  .tsidebar-file-icon {
+    background-image:url('../images/text_white.png');
+}
+
+.tsidebar-file.tsidebar-current {
+    color:#FFFFFF;
+    background-color:#E47637;
+}
+
+.progress-bar-wrapper {
+    height:8px;
+    background-color:black;
+    position:absolute;
+    bottom:5px;
+    left:5px;
+    right:5px;
+}
+
+.progress-bar-wrapper .progress-bar {
+    height:8px;
+    background-color:#ADFF2F;
+    width:0%;
+}
+
+.tsidebar-loading {
+    position:absolute;
+    right:12px;
+    top:12px;
+    height:16px;
+    width:16px;
+    background-image:url('../images/loader.gif');
+}
+
+.tangara_error {    
+    background: rgba(255, 0, 0, 0.1);
+    position: absolute;
+    width: 100% !important;
+    left: 0 !important;
+    position: absolute;
+}
+
+/* TConsole */
+
+#tconsole {
+    width:100%;
+    background-color:#EAF2F0;
+    padding-left:5px;
+    padding-right:5px;
+    padding-top:10px;
+}
+
+#tconsole-text {
+    height:2em;
+    background-color:#EAF2F0;
+}
+
+/* TToolbar */
+
+#ttoolbar {
+    background-color:#FFFFFF;
+    font-size:10pt;
+    font-weight:normal;
+    display:table;
+    width:100%;
+}
+
+.ttoolbar-modes {
+    display:table-cell;
+    text-align:left;
+    width:33%;
+}
+
+.ttoolbar-buttons {
+    display:table-cell;
+    text-align:center;
+    width:33%;
+}
+
+.ttoolbar-options {
+    display:table-cell;
+    text-align:right;
+    width:33%;
+}
+
+.ttoolbar-mode,
+.ttoolbar-button,
+.ttoolbar-option
+{
+    font-size:10pt;
+    min-width:100px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding-top:3px;
+    padding-bottom:3px;
+    padding-left:8px;
+    padding-right:8px;
+    color:#000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border-style:solid;
+    border-width:1px;
+    border-color:transparent;
+    background-color:transparent;
+    cursor:pointer;
+}
+
+.ttoolbar-mode-image,
+.ttoolbar-button-image,
+.ttoolbar-option-image {
+    margin-right:8px;
+    vertical-align:text-bottom;
+    height:16px;
+    opacity:0.6;
+}
+
+.ttoolbar-mode:hover,
+.ttoolbar-option:hover {
+    color:#990000;
+    background-color:#DEDEDE;
+}
+
+.ttoolbar-mode:hover .ttoolbar-mode-image,
+.ttoolbar-option:hover .ttoolbar-option-image,
+.ttoolbar-button:hover .ttoolbar-button-image,
+.ttoolbar-mode.active .ttoolbar-mode-image {
+    opacity:1;
+}
+
+.ttoolbar-option:disabled:hover .ttoolbar-option-image {
+    opacity:0.5;
+}
+
+.ttoolbar-option:disabled:hover {
+    color:#000000;
+    background-color:transparent;
+}
+
+.ttoolbar-mode.active, 
+.ttoolbar-option.active {
+    color:#FFFFFF;
+    background-color:#929292;
+}
+
+.ttoolbar-option {
+    border-style:solid;
+    border-width:1px;
+    border-color:#CCCCCC;
+}
+
+.ttoolbar-option[disabled],.ttoolbar-option[disabled]:active {
+    opacity:0.5;
+    background-color:#FFFFFF;
+    border-color:#CCCCCC;
+}
+
+.ttoolbar-option:active {
+    background-color:#EBEBEB;
+    border-color:#ADADAD;
+}
+
+.ttoolbar-button-execute {
+    background-color:#6DBEA9;
+    /*border-color:#4D9E89;*/
+    color:#ffffff;
+}
+
+.ttoolbar-button-execute .ttoolbar-button-image {
+    opacity:1;
+}
+
+.ttoolbar-button-execute:hover {
+    color:#FF0000;
+}
+
+.ttoolbar-button-execute:active {
+    background-color:#4D9E89;
+}
+
+#ttoolbar-help {
+    -webkit-border-radius: 0px 5px 5px 0px;
+    -moz-border-radius: 0px 5px 5px 0px;
+    border-radius: 0px 5px 5px 0px;
+    min-width:0px;
+    margin-left:0px;
+    
+}
+
+#ttoolbar-help .ttoolbar-mode-image {
+    margin-right:0;
+}
+
+/* TLog */
+
+#tlog-outer {
+    position:relative;
+    z-index:1;  
+    width:100%;
+    height:100%;
+    background-color:#DEDEDE;
+    overflow:hidden;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#tlog-inner {
+    position:relative;
+    padding:5px;
+    height:100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow:hidden;
+}
+
+#tlog {
+    height:100%;
+    overflow:auto;
+}
+            
+.tlog-row, .tdesign-log-row {
+    font-family:'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
+    font-size:20px;
+}
+            
+.tlog-success {
+    /*color:#009900;*/color:#0D7E49;
+}
+            
+.tlog-failure {
+    color:#FF0000;
+    cursor:pointer;
+}
+
+.tlog-failure:hover {
+    text-decoration:underline;
+}
+
+.tlog-message {
+    color:#0000FF;
+}
+
+/* TDesignLog */
+#tdesign-log {
+    height:100%;
+    overflow:auto;
+}
+
+.tdesign-log-row {
+    background-color:#efefef;
+    padding:5px 10px 5px 10px;
+    margin:0px 0px 5px 0px;
+    cursor:pointer;
+}
+
+.tdesign-log-row.selected {
+   background-color:#428bca;
+}
+
+.tdesign-log-name, .tdesign-log-location {
+    display:inline-block;
+    cursor:pointer;
+}
+
+.tdesign-log-name {
+    color:#444444;
+}
+
+.selected .tdesign-log-name {
+    color:#FFFFFF;
+}
+
+.tdesign-log-location {
+    color:#428bca;
+}
+
+.selected .tdesign-log-location {
+    color:#FFFFFF;
+}
+
+.tdesign-log-location.active {
+    color:#E47637;
+}
+
+#tlog-switch {
+    float:right;
+    box-sizing:border-box;
+    height:100%;
+    width:40px;
+    background-color: #929292;
+}
+
+#tlog-switch-log {
+    cursor:pointer;
+    width:100%;
+    height:45px;
+    background-image:url('../images/output.png');
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+#tlog-switch-design {
+    cursor:pointer;
+    width:100%;
+    height:45px;
+    background-image:url('../images/design_mode.png');
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+#tlog-switch-log.active, #tlog-switch-design.active {
+    background-color: #dedede;
+}
+
+/* TRuntinme */
+
+.runtime-frame {
+    display:none;
+}
+
+/* TViewer */
+
+.tviewer-main {
+    position: absolute;
+    z-index:1000;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:rgba(0,0,0,0.8);
+    text-align:center;
+}
+
+.tviewer-main.loading {
+    background-image:url(../images/loader3.gif);
+    background-repeat:no-repeat;
+    background-position:50% 50%;
+}
+
+.tviewer-main:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em; /* Adjusts for spacing */
+}
+
+.tviewer-image,
+.tviewer-text {
+    max-width:80%;
+    max-height:80%;
+    padding-left:50px;
+    padding-right:50px;
+    vertical-align:middle;
+    display:inline-block;
+    position:relative;
+}
+
+.tviewer-text {
+    width:80%;
+    height:80%;
+    background-color:#ffffff;
+    border:solid 5px #FFFFFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.tviewer-image img {
+    box-sizing:border-box;
+    background-color:#FFFFFF;
+    border:solid 5px #FFFFFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.tviewer-button-close {
+    position:absolute;
+    right:0px;
+    top:-30px;
+    background-image:url(../images/close_white.png);
+    height:26px;
+    width:26px;
+    cursor:pointer;
+}
+
+.tviewer-button-close:hover{
+    background-image:url(../images/close_orange.png);    
+}
+
+.tviewer-button-left {
+    position:absolute;
+    left:0px;
+    top:50%;
+    margin-top:-13px;
+    background-image:url(../images/previous_white.png);
+    height:26px;
+    width:26px;
+    cursor:pointer;
+}
+
+.tviewer-button-left:hover {
+    background-image:url(../images/previous_orange.png);
+}
+
+.tviewer-button-right {
+    position:absolute;
+    right:0px;
+    top:50%;
+    margin-top:-13px;
+    background-image:url(../images/next_white.png);
+    height:26px;
+    width:26px;
+    cursor:pointer;
+}
+
+.tviewer-button-right:hover {
+    background-image:url(../images/next_orange.png);    
+}
+
+.tviewer-button-edit {
+    position:absolute;
+    left:0px;
+    top:-30px;
+    background-image:url(../images/edit_white.png);
+    background-position:50% 50%;
+    background-repeat:no-repeat;
+    height:26px;
+    width:26px;
+    cursor:pointer;
+}
+
+.tviewer-button-edit:hover {
+    background-image:url(../images/edit_orange.png);    
+}
+
+.tviewer-button-duplicate {
+    position:absolute;
+    left:-30px;
+    top:-30px;
+    background-image:url(../images/duplicate_white.png);
+    background-position:50% 50%;
+    background-repeat:no-repeat;
+    height:26px;
+    width:26px;
+    cursor:pointer;
+}
+
+.tviewer-button-duplicate:hover {
+    background-image:url(../images/duplicate_orange.png);    
+}
+
+
+.tviewer-title {
+    position:absolute;
+    bottom:-22px;
+    left:-50px;
+    right:-50px;
+    text-align:center;
+    color:#FFFFFF;
+    font-size:12px;
+}
+
+.tviewer-editor {
+    position:absolute;
+    top:30px;
+    bottom:30px;
+    left:30px;
+    right:30px;
+    background-color:#dedede;
+    border:solid 5px #FFFFFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.tviewer-editor-image {
+    border:solid 1px #000000;
+    position:absolute;
+    top:50%;
+    left:50%;
+}
+
+.tviewer-editor .tviewer-button-close {
+    top:-30px;
+    right:-30px;
+}
+
+.tviewer-editor-message {
+    position:absolute;
+    text-align:center;
+    bottom:5px;
+    left:5px;
+    right:5px;
+    color:#e47637;
+}
+
+.tviewer-creation {
+    background-color:#FFFFFF;
+    border:solid 5px #FFFFFF;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:300px;
+    min-height:200px;
+    padding:10px;
+    margin-left:-150px;
+    margin-top:-150px;
+    font-size:0.8em;
+    box-sizing:border-box;
+}
+
+.tviewer-creation-title {
+    margin-bottom:20px;
+    text-align:center;
+    font-size:1.2em;
+}
+
+.tviewer-creation-label {
+    float:left;
+    width:130px;
+    text-align:right;
+    margin-bottom:5px;
+    padding-top:3px;
+}
+
+.tviewer-creation-input {
+    margin-left:135px;
+    padding:2px;
+    width:125px;
+    display:block;
+    margin-bottom:10px;
+}
+
+.tviewer-creation-button {
+    font-size:10pt;
+    min-width:100px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-top:20px;
+    margin-bottom:5px;
+    padding-top:3px;
+    padding-bottom:3px;
+    padding-left:8px;
+    padding-right:8px;
+    color:#000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#CCCCCC;
+    background-color:transparent;
+    cursor:pointer;
+}
+
+.tviewer-creation-button:hover {
+    color:#990000;
+    background-color:#DEDEDE;
+}
+
+.tviewer-text-name {
+    position:absolute;
+    width:100%;
+    height:50px;
+    text-align:center;
+    left:0;
+    top:0;
+}
+
+.tviewer-text-editor {
+    position:absolute;
+    top:50px;
+    bottom:80px;
+    left:30px;
+    right:30px;
+    background-color:#FFFFFF;
+}
+
+#ttexteditor-text {
+    width:100%;
+    height:100%;
+    font-size:12pt;
+}
+
+.tviewer-text-buttons {
+    width:100%;
+    min-height:80px;
+    position:absolute;
+    bottom:0;
+    left:0;
+    text-align:center;
+}
+
+.ttoolbar-creation-button-image {
+    margin-right:8px;
+    vertical-align:middle;
+    height:14px;
+    opacity:0.6;
+}
+
+.tviewer-creation-button:hover .ttoolbar-creation-button-image {
+    opacity:1;
+}
+
+.tviewer-creation-message {
+    text-align:center;
+    margin-top:10px;
+    margin-bottom:-5px;
+    color:#e47637;
+}
+
+.clear-fix {
+    clear:both;
+}
+
+.ttoolbar-button-execute
+{
+   font-size:11pt;
+    min-width:100px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding-top:3px;
+    padding-bottom:3px;
+    padding-left:8px;
+    padding-right:8px;
+    color:#5E5E5E;
+    cursor:pointer;
+    border:none;
+    background-color:transparent;
+    
+   font-family:Comfortaa, "Helvetica Neue",Helvetica,Arial,sans-serif;     
+}
+
+
+.ttoolbar-button-execute:hover {
+    color:#F6A71F;
+}
+
+.ttoolbar-button-execute:active {
+    color:#E47637;
+}

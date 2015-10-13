@@ -1,0 +1,11 @@
+{
+    "skeleton": {
+		"element": [
+			{ "coordinateX":26, "coordinateY":94, "image":"bottom.gif", "name":"bottom"},
+			{ "coordinateX":0, "coordinateY":44, "image":"rightArm.gif", "name":"rightArm", "cx":42, "cy":0, "hand":[[-20,68],[-42,85]]},
+			{ "coordinateX":95, "coordinateY":44, "image":"leftArm.gif", "name":"leftArm", "cx":0, "cy":0, "hand":[[20,68],[42,85]]},
+			{ "coordinateX":54, "coordinateY":1, "image":"head.gif", "name":"head"},
+			{ "coordinateX":41, "coordinateY":44, "image":"chest.gif", "name":"chest"}
+		]
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "fr": {
+        "methods":[
+             {"name":"_hide","translated":"cacher","displayed":"cacher()"},
+             {"name":"_show","translated":"montrer","displayed":"montrer()"}
+        ]
+    }
+}

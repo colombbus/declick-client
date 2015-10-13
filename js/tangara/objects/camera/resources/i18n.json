@@ -1,0 +1,12 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_follow","translated":"suivre","displayed":"suivre(objet)"},
+            {"name":"_unfollow","translated":"nePasSuivre","displayed":"nePasSuivre()"},
+            {"name":"_followX","translated":"suivreHorizontalement","displayed":"suivreHorizontalement(true)"},
+            {"name":"_followY","translated":"suivreVerticalement","displayed":"suivreVerticalement(true)"},
+            {"name":"_moveTo","translated":"allerA","displayed":"allerA(0,0)"},
+            {"name":"_centerOn","translated":"centrerSur","displayed":"centrerSur(0,0)"}
+         ]
+    }
+}

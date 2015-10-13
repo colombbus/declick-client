@@ -1,0 +1,18 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_add","translated":"ajouter","displayed":"ajouter(objet)"},
+            {"name":"_remove","translated":"retirer","displayed":"retirer(objet)"},
+            {"name":"_returnStart","translated":"revenirAuD\u00e9but","displayed":"revenirAuD\u00e9but)"},
+            {"name":"_getNextObject","translated":"R\u00e9cup\u00e9rerObjetSuivant","displayed":"R\u00e9cup\u00e9rerObjetSuivant()"},
+            {"name":"_hasObjects","translated":"aDesObjets","displayed":"aDesObjets()"},
+            {"name":"_getObjects","translated":"R\u00e9cup\u00e9rerObjet","displayed":"R\u00e9cup\u00e9rerObjet(objet)"},
+            {"name":"_modify","translated":"modifier","displayed":"modifier(2, objet)"},
+            {"name":"_has","translated":"contient","displayed":"contient(Objet)"},
+            {"name":"_hasIn","translated":"contientParmi","displayed":"contientParmi()"},
+            {"name":"_getSize","translated":"R\u00e9cup\u00e9rerTaille","displayed":"R\u00e9cup\u00e9rerTaille()"},
+            {"name":"_void","translated":"vider","displayed":"vider()"},
+            {"name":"_delete","translated":"supprimer","displayed":"supprimer()"}
+        ]
+    }
+}

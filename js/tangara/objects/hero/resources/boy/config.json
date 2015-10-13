@@ -1,0 +1,9 @@
+{
+    "images": {
+            "forward":["boy_r1.png", "boy_r2.png", "boy_r3.png", "boy_r4.png", "boy_r5.png"],
+            "backward":["boy_l1.png", "boy_l2.png", "boy_l3.png", "boy_l4.png", "boy_l5.png"],
+            "front":["boy_r1.png"]
+        },
+    "durationMove": 0.5,
+    "durationPause": 1
+}

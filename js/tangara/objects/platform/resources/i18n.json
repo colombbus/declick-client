@@ -1,0 +1,13 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_build","translated":"construire","displayed":"construire()"},
+            {"name":"_addTile","translated":"ajouterBrique","displayed":"ajouterBrique(\"image\")"},
+            {"name":"_addRow","translated":"ajouterLigne","displayed":"ajouterLigne([0,0])"},
+            {"name":"_addColumn","translated":"ajouterColonne","displayed":"ajouterColonne([0,0])"},
+            {"name":"_loadStructure","translated":"définirStructure","displayed":"définirStructure([[0,0],[0,0]])"},
+            {"name":"_setBaseTile","translated":"définirBriqueFond","displayed":"définirBriqueFond(\"image\")"},
+            {"name":"_setTile","translated":"définirBrique","displayed":"définirBrique(0,0,1)"}
+         ]
+    }
+}

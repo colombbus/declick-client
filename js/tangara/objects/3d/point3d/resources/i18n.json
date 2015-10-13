@@ -1,0 +1,17 @@
+{
+    "fr": {
+        "methods": [
+            {"name": "_getName","translated": "cacher","displayed": "cacher()"},
+            {"name": "_setName","translated": "cacher","displayed": "cacher()"},
+            {"name": "_setX","translated": "définirCoordonnéesX","displayed": "définirCoordonnéesX(0)"},
+            {"name": "_setY","translated": "définirCoordonnéesY","displayed": "définirCoordonnéesY(0)"},
+            {"name": "_setZ","translated": "définirCoordonnéesZ","displayed": "définirCoordonnéesZ(0)"},
+            {"name": "_getX","translated": "récupérerCoordonnéesX","displayed": "récupérerCoordonnéesX()"},
+            {"name": "_getY","translated": "récupérerCoordonnéesY","displayed": "récupérerCoordonnéesY()"},
+            {"name": "_getZ","translated": "récupérerCoordonnéesZ","displayed": "récupérerCoordonnéesZ()"},
+            {"name": "_setCoordinates","translated": "définirCoordonnées","displayed": "définirCoordonnées(0,0,0)"},
+            {"name": "_hide","translated": "cacher","displayed": "cacher()"},
+            {"name": "_show","translated": "montrer","displayed": "montrer()"}
+        ]
+    }
+}

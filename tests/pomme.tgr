@@ -1,0 +1,11 @@
+sol = new Animation("sol.gif");
+sol.définirPosition(0,350);
+arbre = new Animation("arbre.gif");
+arbre.définirPosition(700,15);
+julien = new Personnage();
+julien.définirPosition(100,155);
+pomme = new Animation("pomme.gif");
+pomme.définirPosition(720,90);
+julien.peutAttraper(pomme, "tangara.alerter(\"Julien a pris la pomme !\")");
+maison = new Animation("maison.gif");
+maison.définirPosition(0,18);

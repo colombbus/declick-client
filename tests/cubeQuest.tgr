@@ -1,0 +1,394 @@
+menu = new Animation("menujeu.png");
+jouer = new Bouton("JOUER");
+bonus = new Bouton("BONUS");
+jouer.définirPosition(263,238);
+bonus.définirPosition(260,340);
+jouer.ajouterCommande("démarrer()");
+bonus.ajouterCommande("niveauBonus()");
+
+function démarrer(){
+    menu.cacher();
+    jouer.cacher();
+    bonus.cacher();
+    perso.montrer();
+    démarrerNiveau(niveau)
+}
+
+//Clavier
+comclave = new CommandesClavier();
+comclave.ajouterCommande("droite","perso.avancer()");
+comclave.ajouterCommande("gauche","perso.reculer()");
+comclave.ajouterCommande("bas","perso.descendre()");
+comclave.ajouterCommande("haut","perso.monter()");
+comclave.ajouterCommande("d","perso.avancer()");
+comclave.ajouterCommande("q","perso.reculer()");
+comclave.ajouterCommande("z","perso.monter()");
+comclave.ajouterCommande("s","perso.descendre()");
+comclave.ajouterCommandeRepos("perso.arrêter()");
+comclave.afficherCommandes(false);
+
+//Fond du niveau
+fond = new Bloc();
+fond.ajouterImage("niveau1.png");
+fond.ajouterImage("niveau2.png");
+fond.ajouterImage("niveau3.png");
+fond.ajouterImage("niveau4.png");
+fond.ajouterImage("niveau5.png");
+fond.ajouterImage("niveau6.png");
+fond.ajouterImage("niveau7.png");
+fond.ajouterImage("niveau8.png");
+fond.ajouterImage("fini.png");
+fond.ajouterImage("niveau10.png");
+fond.rendreTransparent("blanc");
+
+//Notre perso
+perso = new Promeneur("perso.png");
+perso.ajouterBloc(fond);
+perso.définirVitesse(150);
+perso.cacher();
+
+//Gameover fond
+fin = new Animation("gameover.png");
+fin.cacher();
+
+//Bouton Recommencer
+boutonRecommencer = new Bouton();
+boutonRecommencer.définirTexte("Recommencer");
+boutonRecommencer.cacher();
+boutonRecommencer.ajouterCommande("recommencer()");
+boutonRecommencer.définirPosition(238,28);
+
+//Point d'arrivée
+arrivée = new Animation("arrivee.png");
+arrivée.cacher();
+
+// méchants
+méchant1 = new Animation("ennemi.png");
+méchant1.cacher();
+méchant1.définirCatégorie("méchant");
+méchant1.définirPosition(-100,-100);
+méchant2 = new Animation("ennemi2.png");
+méchant2.cacher();
+méchant2.définirPosition(-100,-100);
+méchant2.définirCatégorie("méchant");
+méchant3 = new Animation("ennemi3.png");
+méchant3.cacher();
+méchant3.définirPosition(-100,-100);
+méchant3.définirCatégorie("méchant");
+mouvementMéchant1 = new Séquence();
+mouvementMéchant1.ajouterCommande("méchant1.allerA(x2Méchant1, y2Méchant1)");
+mouvementMéchant1.ajouterDélai(1000);
+mouvementMéchant1.ajouterCommande("méchant1.allerA(x1Méchant1, y1Méchant1)");
+mouvementMéchant1.ajouterDélai(1000);
+mouvementMéchant1.répéter(true);
+mouvementMéchant1.afficherCommandes(false);
+mouvementMéchant2 = new Séquence();
+mouvementMéchant2.ajouterCommande("méchant2.allerA(x2Méchant2, y2Méchant2)");
+mouvementMéchant2.ajouterDélai(1000);
+mouvementMéchant2.ajouterCommande("méchant2.allerA(x1Méchant2, y1Méchant2)");
+mouvementMéchant2.ajouterDélai(1000);
+mouvementMéchant2.répéter(true);
+mouvementMéchant2.afficherCommandes(false);
+mouvementMéchant3 = new Séquence();
+mouvementMéchant3.ajouterCommande("méchant3.allerA(x2Méchant3, y2Méchant3)");
+mouvementMéchant3.ajouterDélai(1000);
+mouvementMéchant3.ajouterCommande("méchant3.allerA(x1Méchant3, y1Méchant3)");
+mouvementMéchant3.ajouterDélai(1000);
+mouvementMéchant3.répéter(true);
+mouvementMéchant3.afficherCommandes(false);
+
+
+// collisions
+perso.siCollision("gameover()", "méchant");
+perso.siCollision("niveauSuivant()", arrivée);
+
+var niveau = 1;
+
+function démarrerNiveau(combien) {
+    comclave.activer();
+    arrivée.montrer();
+    méchant1.définirPosition(-100,-100);
+    méchant2.définirPosition(-100,-100);
+    méchant3.définirPosition(-100,-100);
+    switch(combien) {
+        case 1: 
+            niveau1();
+            break;
+        case 2:
+            niveau2();
+            break;
+        case 3:
+            niveau3();
+            break;
+        case 4:
+            niveau4();
+            break;
+        case 5:
+            niveau5();
+            break;
+        case 6:
+            niveau6();
+            break;
+        case 7:
+            niveau7();
+            break;
+        case 8:
+            niveau8();
+            break;
+        case 10:
+            niveau10();
+            break;
+    }
+    niveau = combien;
+}
+
+function niveauSuivant() {
+    niveau++;
+    if (niveau<9) {
+        démarrerNiveau(niveau);
+    } else if (niveau == 10) {
+        démarrerNiveau(niveau);
+    } else {
+        merci();
+    }
+}
+
+function recommencer() {
+    fin.cacher();
+    boutonRecommencer.cacher();
+    démarrerNiveau(niveau);
+}
+
+function niveau1() {
+    fond.afficherImage("niveau1.png");
+    perso.définirPosition(28,48);
+    x1Méchant1 = 139;
+    y1Méchant1 = 218;
+    x2Méchant1 = 273;
+    y2Méchant1 = 218;
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant1.montrer();
+    méchant2.cacher();
+    méchant3.cacher();
+    arrivée.définirPosition(338,276);
+    mouvementMéchant1.démarrer();
+}
+
+function niveau2() {
+    fond.afficherImage("niveau2.png");
+    perso.définirPosition(28,65);
+    x1Méchant1 = 415;
+    y1Méchant1 = 158;
+    x2Méchant1 = 288;
+    y2Méchant1 = 158;
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant1.montrer();
+    méchant2.cacher();
+    méchant3.cacher();
+    arrivée.définirPosition(557,366);
+    mouvementMéchant1.démarrer();
+}
+
+function niveau3() {
+    fond.afficherImage("niveau3.png");
+    perso.définirPosition(71,57);
+    x1Méchant1 = 150;
+    y1Méchant1 = 171;
+    x2Méchant1 = 415;
+    y2Méchant1 = 171;
+    x1Méchant2 = 415;
+    y1Méchant2 = 274;
+    x2Méchant2 = 150;
+    y2Méchant2 = 274;
+    x1Méchant3 = 150;
+    y1Méchant3 = 386;
+    x2Méchant3 = 415;
+    y2Méchant3 = 386;
+    méchant1.montrer();
+    méchant2.montrer();
+    méchant3.montrer();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant2.définirPosition(x1Méchant2,y1Méchant2);
+    méchant3.définirPosition(x1Méchant3,y1Méchant3);
+    arrivée.définirPosition(265,464);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.démarrer();
+    mouvementMéchant3.démarrer();
+}
+
+function niveau4() {
+    fond.afficherImage("niveau4.png");
+    perso.définirPosition(56,42);
+    x1Méchant1 = 285;
+    y1Méchant1 = 63;
+    x2Méchant1 = 285;
+    y2Méchant1 = 217;
+    méchant1.montrer();
+    méchant2.cacher();
+    méchant3.cacher();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    arrivée.définirPosition(265,464);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.arrêter();
+    mouvementMéchant3.arrêter();
+}
+
+function niveau5() {
+    fond.afficherImage("niveau5.png");
+    perso.définirPosition(32,530);
+    x1Méchant1 = 106;
+    y1Méchant1 = 394;
+    x2Méchant1 = 310;
+    y2Méchant1 = 394;
+    méchant1.montrer();
+    méchant2.cacher();
+    méchant3.cacher();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    arrivée.définirPosition(395,538);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.arrêter();
+    mouvementMéchant3.arrêter();
+}
+
+function niveau6() {
+    fond.afficherImage("niveau6.png");
+    perso.définirPosition(75,269);
+    x1Méchant1 = 294;
+    y1Méchant1 = 217;
+    x2Méchant1 = 294;
+    y2Méchant1 = 371;
+    x1Méchant2 = 186;
+    y1Méchant2 = 266;
+    x2Méchant2 = 383;
+    y2Méchant2 = 266;
+    méchant1.montrer();
+    méchant2.montrer();
+    méchant3.cacher();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant2.définirPosition(x1Méchant2,y1Méchant2);
+    arrivée.définirPosition(289,492);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.démarrer();
+    mouvementMéchant3.arrêter();
+}
+
+function niveau7() {
+    fond.afficherImage("niveau7.png");
+    perso.définirPosition(28,488);
+    x1Méchant1 = 379;
+    y1Méchant1 = 172;
+    x2Méchant1 = 379;
+    y2Méchant1 = 326;
+    x1Méchant2 = 119;
+    y1Méchant2 = 443;
+    x2Méchant2 = 345;
+    y2Méchant2 = 443;
+    méchant1.montrer();
+    méchant2.montrer();
+    méchant3.cacher();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant2.définirPosition(x1Méchant2,y1Méchant2);
+    arrivée.définirPosition(390,534);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.démarrer();
+    mouvementMéchant3.arrêter();
+}
+
+function niveau8() {
+    fond.afficherImage("niveau8.png");
+    perso.définirPosition(263,52);
+    x1Méchant1 = 385;
+    y1Méchant1 = 142;
+    x2Méchant1 = 231;
+    y2Méchant1 = 296;
+    x1Méchant2 = 316;
+    y1Méchant2 = 316;
+    x2Méchant2 = 152;
+    y2Méchant2 = 152;
+    méchant1.montrer();
+    méchant2.montrer();
+    méchant3.cacher();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant2.définirPosition(x1Méchant2,y1Méchant2);
+    arrivée.définirPosition(263,420);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.démarrer();
+    mouvementMéchant3.arrêter();
+}
+
+function niveau10() {
+    fond.afficherImage("niveau10.png");
+    perso.définirPosition(42,354);
+    x1Méchant1 = 286;
+    y1Méchant1 = 253;
+    x2Méchant1 = 119;
+    y2Méchant1 = 253;
+    x1Méchant2 = 533;
+    y1Méchant2 = 100;
+    x2Méchant2 = 533;
+    y2Méchant2 = 400;
+    x1Méchant3 = 739;
+    y1Méchant3 = 172;
+    x2Méchant3 = 739;
+    y2Méchant3 = 300;
+    méchant1.montrer();
+    méchant2.montrer();
+    méchant3.montrer();
+    méchant1.définirPosition(x1Méchant1,y1Méchant1);
+    méchant2.définirPosition(x1Méchant2,y1Méchant2);
+    méchant3.définirPosition(x1Méchant3,y1Méchant3);
+    arrivée.définirPosition(886,240);
+    mouvementMéchant1.démarrer();
+    mouvementMéchant2.démarrer();
+    mouvementMéchant3.démarrer();
+}
+
+function niveauBonus() {
+    niveau = 10;
+    menu.cacher();
+    jouer.cacher();
+    bonus.cacher();
+    perso.montrer();
+    démarrerNiveau(niveau);
+}
+
+function gameover(){
+    comclave.désactiver();
+    mouvementMéchant1.arrêter();
+    mouvementMéchant2.arrêter();
+    mouvementMéchant3.arrêter();
+    perso.arrêter();
+    méchant1.arrêter();
+    méchant2.arrêter();
+    méchant3.arrêter();
+    méchant1.cacher();
+    méchant2.cacher();
+    méchant3.cacher();
+    arrivée.cacher();
+    fin.montrer();	
+    boutonRecommencer.montrer();
+}
+
+mouvementMerci = new Séquence();
+mouvementMerci.ajouterCommande("perso.allerA(33,350)");
+mouvementMerci.ajouterDélai(2000);
+mouvementMerci.ajouterCommande("perso.allerA(516,350)");
+mouvementMerci.ajouterDélai(2000);
+mouvementMerci.répéter(true);
+
+function merci() {
+    comclave.désactiver();
+    mouvementMéchant1.arrêter();
+    mouvementMéchant2.arrêter();
+    mouvementMéchant3.arrêter();
+    perso.arrêter();
+    méchant1.arrêter();
+    méchant2.arrêter();
+    méchant3.arrêter();
+    méchant1.cacher();
+    méchant2.cacher();
+    méchant3.cacher();
+    arrivée.cacher();
+    fond.afficherImage("fini.png");
+    mouvementMerci.démarrer();
+}

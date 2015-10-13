@@ -1,0 +1,12 @@
+{
+    "fr": {
+        "methods": [
+            {"name": "_setText", "translated": "d\u00e9finirTexte", "displayed": "d\u00e9finirTexte(\"texte\")"},
+            {"name": "_setTextSize", "translated": "d\u00e9finirTailleTexte", "displayed": "d\u00e9finirTailleTexte(12)"},
+            {"name": "_setColor", "translated": "d\u00e9finirCouleur", "displayed": "d\u00e9finirCouleur(125,125,125)"},
+            {"name": "_setTextColor", "translated": "d\u00e9finirCouleurTexte", "displayed": "d\u00e9finirCouleurTexte(0,0,0)"},
+            {"name": "_addCommand", "translated": "ajouterCommande", "displayed": "ajouterCommande(\"commande\")"},
+            {"name": "_removeCommands", "translated": "supprimerCommandes", "displayed": "supprimerCommandes()"}
+        ]
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "fr": {
+        "methods": [
+            {"name": "_setText", "translated": "d\u00e9finirTexte", "displayed": "d\u00e9finirTexte(\"texte\")"},
+            {"name": "_addCommand", "translated": "ajouterCommande", "displayed": "ajouterCommande(\"commande\")"},
+            {"name": "_removeCommands", "translated": "supprimerCommandes", "displayed": "supprimerCommandes()"},
+            {"name": "_show", "translated": "montrer", "displayed": "montrer()"}
+        ]
+    }
+}

@@ -1,0 +1,7 @@
+//teacher.dumpStatements();
+teacher.wait(1000);
+if (teacher.hasStatement({expression: { left:{name: 'bob'}, operator:'=', right:{type:'NewExpression', callee:{name: 'Robot'}}}})) { 
+    teacher.validateStep();
+} else if (teacher.hasStatement({expression: { operator:'=', right:{type:'NewExpression', callee:{name: 'Robot'}}}})) { 
+    teacher.invalidateStep("Pas mal, mais ce serait mieux s'il s'appelait bob !");
+}

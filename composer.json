@@ -1,0 +1,33 @@
+{
+    "name": "Tangara-client",
+    "type": "Javascript project",
+    "description": "The tangara-client project aims to provide a Javascript front-end build on the \"RequireJS Framework\" for Educational IDE Tangara",
+    "keywords": ["colombbus", "javascript", "educational IDE", "learn programming", "tangara", "tangarajs", "requirejs"],
+    "license": "GPL v3.0",
+    "authors": [
+        {
+            "name": "Benoit Prady",
+            "email": "benoit.prady@colombbus.org"
+        },
+        {
+            "name": "Régis Leloup",
+            "email": "regis.leloup@colombbus.org"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "jquery/jquery",
+                "version": "1.11.0",
+                "dist": {
+                    "url": "http://code.jquery.com/jquery-1.11.0.js",
+                    "type": "file"
+                }
+            }
+        }
+    ],
+    "require": {
+      "jquery/jquery": "1.11.*"
+    }
+}

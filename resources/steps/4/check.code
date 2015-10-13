@@ -1,0 +1,26 @@
+teacher.wait(1000);
+teacher.log("VALEUR :");
+teacher.debug(teacher.get("atteint"));
+if (teacher.get("atteint")) {
+    teacher.validateStep();
+} else {
+    if (teacher.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'avancer'}}}}) && 
+    teacher.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'monter'}}}}) &&
+    teacher.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'descendre'}}}})) {
+        teacher.invalidateStep("Courage ! Tu es sur la bonne voie...");
+    } else if (teacher.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'avancer'}}}}) || 
+    teacher.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'monter'}}}}) ||
+    teacher.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'descendre'}}}})) {
+        teacher.invalidateStep("Il y a de l'idée...");
+    }
+}
+
+/*
+bob.avancer()
+bob.descendre()
+bob.avancer()
+bob.avancer()
+bob.monter()
+bob.avancer()
+bob.avancer()
+*/

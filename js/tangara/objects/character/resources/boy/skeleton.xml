@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<skeleton>
+<element coordinateX="26" coordinateY="94" image="bottom.gif" name="bottom"/>
+<element coordinateX="0" coordinateY="44" image="rightArm.gif" name="rightArm"/>
+<element coordinateX="95" coordinateY="44" image="leftArm.gif" name="leftArm"/>
+<element coordinateX="54" coordinateY="1" image="head.gif" name="head"/>
+<element coordinateX="41" coordinateY="44" image="chest.gif" name="chest"/>
+<point coordinateX="93" coordinateY="48" name="leftShoulder"/>
+<point coordinateX="42" coordinateY="48" name="rightShoulder"/>
+<point coordinateX="127" coordinateY="118" name="leftHand"/>
+<point coordinateX="9" coordinateY="117" name="rightHand"/>
+</skeleton>

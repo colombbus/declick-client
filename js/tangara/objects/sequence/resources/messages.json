@@ -1,0 +1,8 @@
+{
+    "fr": {
+        "freeze warning":"Pour boucler, la Séquence doit posséder un délai d'au moins {0} millisecondes"
+    },
+    "en": {
+        "freeze warning":"To be able to loop, Sequence must have at least {0} milliseconds delay"
+    }
+}

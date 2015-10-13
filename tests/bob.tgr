@@ -1,0 +1,206 @@
+porte = new Animation("porte.png");
+porte.ajouterImage("porte_ouverte.png");
+
+fond = new Bloc("fond.png");
+fond.rendreTransparent("blanc");
+
+bRecommencer = new Bouton("Recommencer");
+bRecommencer.cacher();
+bRecommencer.définirPosition(356,276);
+bRecommencer.ajouterCommande("démarrer()");
+
+// MECHANTS
+
+méchant = new Animation();
+bat = new Animation();
+clé = new Animation();
+
+// BOB
+
+bob = new Promeneur();
+bob.ajouterImage("bob_face.png", "face");
+bob.ajouterImage("bob_droite_1.png","droite");
+bob.ajouterImage("bob_droite_2.png","droite");
+bob.ajouterImage("bob_droite_3.png","droite");
+bob.ajouterImage("bob_droite_4.png","droite");
+bob.ajouterImage("bob_droite_5.png","droite");
+bob.ajouterImage("bob_droite_6.png","droite");
+bob.ajouterImage("bob_gauche_1.png","gauche");
+bob.ajouterImage("bob_gauche_2.png","gauche");
+bob.ajouterImage("bob_gauche_3.png","gauche");
+bob.ajouterImage("bob_gauche_4.png","gauche");
+bob.ajouterImage("bob_gauche_5.png","gauche");
+bob.ajouterImage("bob_gauche_6.png","gauche");
+bob.ajouterImage("nok1.png","aïe");
+bob.ajouterImage("nok2.png","aïe");
+bob.ajouterImage("nok3.png","aïe");
+bob.ajouterImage("ok.png");
+bob.rendreTransparent("blanc");
+
+bob.afficherImage("bob_face.png");
+bob.définirVitesse(120);
+bob.définirVitesseSaut(150);
+
+bob.ajouterBloc(fond);
+bob.peutTomber(true);
+bob.définirPosition(55,62);
+
+direction = "face";
+mort = false;
+
+mouvement = new Minuteur();
+mouvement.ajouterCommande("bob.afficherImageSuivante(direction)");
+mouvement.afficherCommandes(false);
+mouvement.définirDélai(100);
+
+function reculer() {
+    bob.reculer();
+    direction = "gauche";
+    bob.afficherImageSuivante(direction);
+}
+
+function avancer() {
+    bob.avancer();
+    direction = "droite";
+    bob.afficherImageSuivante(direction);
+}
+
+function pause() {
+    bob.arrêter();
+    direction = "face";
+    bob.afficherImageSuivante(direction);
+}
+
+// CLAVIER
+clavier = new CommandesClavier();
+clavier.ajouterCommande("gauche","reculer()");
+clavier.ajouterCommande("droite","avancer()");
+clavier.ajouterCommande(" ","bob.sauter()");
+clavier.ajouterCommandeRepos("pause()");
+clavier.afficherCommandes(false);
+
+// MECHANT
+méchant.ajouterImage("mechant1.png");
+méchant.ajouterImage("mechant2.png");
+méchant.rendreTransparent("blanc");
+méchant.afficherImageSuivante();
+méchant.définirPosition(254,512);
+méchant.définirCatégorie("méchant");
+
+mouvementMéchant = new Minuteur();
+mouvementMéchant.ajouterCommande("méchant.afficherImageSuivante()");
+mouvementMéchant.définirDélai(1000);
+mouvementMéchant.afficherCommandes(false);
+mouvementMéchant.démarrer();
+
+déplacementMéchant = new Séquence();
+déplacementMéchant.ajouterCommande("méchant.allerA(512,512)");
+déplacementMéchant.ajouterDélai(2400);
+déplacementMéchant.ajouterCommande("méchant.allerA(254,512)");
+déplacementMéchant.ajouterDélai(2400);
+déplacementMéchant.afficherCommandes(false);
+déplacementMéchant.répéter(true);
+
+// BAT
+bat.ajouterImage("bat1.png");
+bat.ajouterImage("bat2.png");
+bat.rendreTransparent("blanc");
+bat.afficherImageSuivante();
+bat.définirPosition(92,183);
+bat.définirVitesse(50);
+bat.définirCatégorie("méchant");
+
+déplacementBat = new Séquence();
+déplacementBat.ajouterCommande("bat.allerA(509,305)");
+déplacementBat.ajouterDélai(3000);
+déplacementBat.ajouterCommande("bat.allerA(92,183)");
+déplacementBat.ajouterDélai(3000);
+déplacementBat.afficherCommandes(false);
+déplacementBat.répéter(true);
+
+mouvementBat = new Minuteur();
+mouvementBat.ajouterCommande("bat.afficherImageSuivante()");
+mouvementBat.définirDélai(100);
+mouvementBat.afficherCommandes(false);
+mouvementBat.démarrer();
+
+// COLLISIONS
+bob.siCollision("collision()", "méchant");
+
+aïe = new Séquence();
+aïe.ajouterCommande("bob.afficherImageSuivante(\"aïe\")");
+aïe.ajouterDélai(500);
+aïe.ajouterCommande("bob.afficherImageSuivante(\"aïe\")");
+aïe.ajouterDélai(500);
+aïe.ajouterCommande("bob.afficherImageSuivante(\"aïe\")");
+aïe.ajouterDélai(500);
+aïe.ajouterCommande("bRecommencer.montrer()");
+
+function collision()
+{
+    bob.surveillerCollisions(false);
+    clavier.désactiver();
+    bob.arrêter();
+    mouvement.arrêter();
+    déplacementMéchant.arrêter();
+    déplacementBat.arrêter();
+    méchant.arrêter();
+    bat.arrêter();
+    aïe.démarrer();
+}
+
+
+// CLE
+clé.définirImage("cle.png");
+clé.rendreTransparent("blanc");
+clé.siCollision("ouvrir = true", bob);
+clé.siCollision("clé.cacher()", bob);
+clé.définirPosition(698,510);
+
+ouvrir = false;
+
+// PORTE
+porte.rendreTransparent("blanc");
+porte.siCollision("ouvrirPorte()", bob);
+porte.définirPosition(492,81);
+
+
+// FIN DU JEU
+texteBravo = new Texte("Bravo !");
+texteBravo.définirCouleur("rouge");
+texteBravo.définirTaille(24);
+texteBravo.définirPosition(319,264);
+texteBravo.cacher();
+
+function ouvrirPorte()
+{
+    if (ouvrir)
+    {
+        clavier.désactiver();
+        bob.arrêter();
+        bob.afficherImage("ok.png");
+        porte.afficherImage("porte_ouverte.png");
+        mouvement.arrêter();
+        déplacementMéchant.arrêter();
+        déplacementBat.arrêter();
+        méchant.arrêter();
+        bat.arrêter();
+        texteBravo.montrer();
+    }
+}
+
+function démarrer()
+{
+    direction = "face";
+    bob.définirPosition(55,62);
+    clavier.activer();
+    ouvrir = false;
+    mouvement.démarrer();
+    déplacementBat.démarrer();
+    déplacementMéchant.démarrer();
+    clé.montrer();
+    bRecommencer.cacher();
+    bob.surveillerCollisions(true);
+}
+
+démarrer();

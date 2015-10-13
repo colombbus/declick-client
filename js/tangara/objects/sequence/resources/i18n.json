@@ -1,0 +1,14 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_addCommand","translated":"ajouterCommande","displayed":"ajouterCommande(\"commande\")"},
+            {"name":"_addDelay","translated":"ajouterD\u00e9lai","displayed":"ajouterD\u00e9lai(1000)"},
+            {"name":"_pause","translated":"suspendre","displayed":"suspendre()"},
+            {"name":"_unpause","translated":"reprendre","displayed":"reprendre()"},
+            {"name":"_start","translated":"d\u00e9marrer","displayed":"d\u00e9marrer()"},
+            {"name":"_stop","translated":"arr\u00eater","displayed":"arr\u00eater()"},
+            {"name":"_loop","translated":"recommencer","displayed":"recommencer(false)"},
+            {"name":"_displayCommands","translated":"afficherCommandes","displayed":"afficherCommandes(true)"}
+        ]
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_loop","translated":"recommencer","displayed":"recommencer(false)"},
+            {"name":"_addVideo","translated":"ajouterVideo","displayed":"ajouterSon(\"fichier\")"},
+            {"name":"_stop","translated":"arr\u00eater","displayed":"arr\u00eater(\"fichier\")"},
+            {"name":"_play","translated":"jouer","displayed":"jouer(\"fichier\")"}
+        ]
+    }
+}

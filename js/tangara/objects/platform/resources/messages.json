@@ -1,0 +1,12 @@
+{
+    "fr": {
+        "file not found":"Fichier « {0} » introuvable",
+        "x value incorrect":"L'indice horizontal {0} est incorrect",
+        "y value incorrect":"L'indice vertical {0} est incorrect",
+        "tile number incorrect":"{0} n'est pas un numéro de brique valide",
+        "structure incorrect":"La structure fournie n'est pas valide"
+    },
+    "en": {
+        "file not found":"File '{0}' not found"
+    }
+}
