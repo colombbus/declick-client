@@ -128,7 +128,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                             // set Object path
                             var aConstructor = aClass;
                             if (instance) {
-                                // in case class is in fact an instance (e.g. special object tangara),
+                                // in case class is in fact an instance (e.g. special object declick),
                                 // get its constructor
                                 aConstructor = aClass.constructor;
                             }

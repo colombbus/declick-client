@@ -20,7 +20,7 @@
 // [dammit]: acorn_loose.js
 // [walk]: util/walk.js
 // 
-// ADDED TWEAKS FOR TANGARA: SEE LINES 412, 427, 1147 AND 1154
+// ADDED TWEAKS FOR DECLICK: SEE LINES 412, 427, 1147 AND 1154
 // 
 
 (function(root, mod) {
@@ -282,7 +282,7 @@
   var _while = {keyword: "while", isLoop: true}, _with = {keyword: "with"}, _new = {keyword: "new", beforeExpr: true};
   var _this = {keyword: "this"};
 
-// TWEAK TANGARA
+// TWEAK DECLICK
   var _repeat = {keyword: "repeat", isLoop: true};
 // END TWEAK
 
@@ -310,7 +310,7 @@
                       "void": {keyword: "void", prefix: true, beforeExpr: true},
                       "delete": {keyword: "delete", prefix: true, beforeExpr: true}};
 
-// TWEAK TANGARA
+// TWEAK DECLICK
   keywordTypes["repeat"] = _repeat;
 // END TWEAK
 
@@ -418,7 +418,7 @@
 
   var isReservedWord5 = makePredicate("class enum extends super const export import");
 
-  // TWEAK FOR TANGARA: added ability to add reserved words
+  // TWEAK FOR DECLICK: added ability to add reserved words
   // 
   exports.addReservedWords = function(words) {
       var wordsString = words.join(" ");
@@ -433,7 +433,7 @@
 
   var isStrictBadIdWord = makePredicate("eval arguments");
 
-  // TWEAK FOR TANGARA: added ability to add reserved identifiers
+  // TWEAK FOR DECLICK: added ability to add reserved identifiers
   // 
   exports.addReservedIdentifiers = function(words) {
       var wordsString = words.join(" ");
@@ -443,10 +443,10 @@
 
   // And the keywords.
 
-  // TWEAK FOR TANGARA: added 'repeat' as keyword
+  // TWEAK FOR DECLICK: added 'repeat' as keyword
   var isKeyword = makePredicate("break case catch continue debugger default do else finally for function if return switch throw try var while with null true false instanceof typeof void delete new in this repeat");
 
-  // TWEAK FOR TANGARA: added ability to set the "repeat" keyword
+  // TWEAK FOR DECLICK: added ability to set the "repeat" keyword
   exports.setRepeatKeyword = function(repeatWord) {
       _repeat.keyword =repeatWord;
       delete keywordTypes["repeat"];
@@ -1090,7 +1090,7 @@
     node.end = lastEnd;
     if (options.locations) {
       node.loc.end = lastEndLoc;
-      // TWEAK FOR TANGARA
+      // TWEAK FOR DECLICK
       node.raw = input.slice(node.start, node.end);
       // END OF TWEAK
     }
@@ -1167,14 +1167,14 @@
     inFunction = strict = null;
     labels = [];
     readToken();
-    // TWEAK FOR TANGARA: set strict mode
+    // TWEAK FOR DECLICK: set strict mode
     strict = true;
       
     var node = program || startNode(), first = true;
     if (!program) node.body = [];
     while (tokType !== _eof) {
       var stmt = parseStatement();
-      // TWEAK FOR TANGARA: record only body, start and end to statement
+      // TWEAK FOR DECLICK: record only body, start and end to statement
       /*var stmt2 = {};
       stmt2.body = input.slice(stmt.start, stmt.end);
       stmt2.start = stmt.loc.start.line;
@@ -1375,7 +1375,7 @@
       labels.pop();
       return finishNode(node, "WhileStatement");
 
-// TWEAK FOR TANGARA : added _repeat 
+// TWEAK FOR DECLICK : added _repeat 
     case _repeat:
       next();
       expect(_parenL);

@@ -16,12 +16,6 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     Teacher.prototype.constructor = Teacher;
     Teacher.prototype.className = "Teacher";
 
-    /*Tangara.prototype._write = function(value) {
-     value = TUtils.getString(value);
-     TUI.addLogMessage(value);
-     };*/
-
-
     //Learn.countObject
 
     var statements = [];

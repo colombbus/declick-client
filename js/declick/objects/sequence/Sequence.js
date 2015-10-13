@@ -147,7 +147,7 @@ define(['TObject', 'TUtils', 'CommandManager'], function(TObject, TUtils, Comman
     Sequence.prototype._loop = function(value) {
         value = TUtils.getBoolean(value);
         if (value) {
-            // WARNING: in order to prevent Tangara freeze, check that there is at least a total delay of MINIMUM_LOOP in actions
+            // WARNING: in order to prevent Declick from freezing, check that there is at least a total delay of MINIMUM_LOOP in actions
             var totalDelay = 0;
             for (var i = 0; i < this.actions.length; i++) {
                 var action = this.actions[i];

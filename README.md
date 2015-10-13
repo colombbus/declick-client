@@ -1,6 +1,6 @@
-tangara-client
+Declick-client
 =========
 
 An educational IDE online
 
-Tangara-client (javascript) works with Tangara-server (PHP)
+Declick-client (javascript) works with Declick-server (PHP)

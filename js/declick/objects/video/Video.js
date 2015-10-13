@@ -7,7 +7,7 @@ define(['jquery', 'TObject', 'TUtils', 'TRuntime', 'TEnvironment', 'ui/TCanvas']
         //$("video").attr("type", "video/mp4");
 
         $("video").draggable();
-        $("video").append('<source src="http://localhost/tangara-client/images/minions.mp4" type="video/mp4" style="width: 500px; height: 500px;"></source>');
+        $("video").append('<source src="http://localhost/declick-client/images/minions.mp4" type="video/mp4" style="width: 500px; height: 500px;"></source>');
         //$("video").attr("src", TUtils.getString("minions.mp4"));
         //"assets/minions.mp4"
         this.domVideo = document.getElementById("tvideo");

@@ -238,10 +238,10 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             var range;
             if (lines.length > 1) {
                 range = new AceRange(lines[0] - 1, 0, lines[1] - 1, 100);
-                errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
+                errorMarker = aceEditor.getSession().addMarker(range, 'declick_error', 'line', true);
             } else if (lines.length > 0) {
                 range = new AceRange(lines[0] - 1, 0, lines[0] - 1, 100);
-                errorMarker = aceEditor.getSession().addMarker(range, 'tangara_error', 'line', true);
+                errorMarker = aceEditor.getSession().addMarker(range, 'declick_error', 'line', true);
             }
             aceEditor.navigateTo(lines[0] - 1, 0);
             // In a timer, because otherwise does not seem to work when editor mode has just been activated
@@ -391,7 +391,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
 
                 var completions = [];
 
-                if (name == "tangara") {
+                if (name == "declick") {
                     // result[1] is the important part
                     result = [name, name];
                 }

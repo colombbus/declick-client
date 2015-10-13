@@ -1,4 +1,4 @@
-QUnit.module('Tangara');
+QUnit.module('Declick');
 QUnit.test("Object deletion", function(assert) {
     assert.ok(true, "this test is fine");
 }); 

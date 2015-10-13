@@ -1,5 +1,5 @@
 (function ($) {
-var img= '../../tangara/plugins/flip.png';
+var img= '../../declick/plugins/flip.png';
 // extend menu
 $.extend(true, $.fn.wPaint.menus.main.items, {
 horizontal: {

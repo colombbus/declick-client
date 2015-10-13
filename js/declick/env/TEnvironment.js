@@ -16,7 +16,7 @@ define(['jquery', 'TResource'], function($, TResource) {
         this.language = "fr";
 
         // Config parameters: default values
-        this.config = {"debug": false, "backend-path": "/tangara-server/web/app.php/", "cache":true, "log":false};
+        this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache":true, "log":false};
         this.debug;
 
         /**
@@ -24,7 +24,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * @param {Function} callback
          */
         this.load = function(callback) {
-            window.console.log("*** Loading Tangara Environment ***");
+            window.console.log("*** Loading Declick Environment ***");
             window.console.log("* Loading config");
             var configFile = this.getResource("config.json");
             var self = this;
@@ -70,7 +70,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * @returns {String}
          */
         this.getObjectsUrl = function() {
-            return this.getBaseUrl() + "/js/tangara/objects";
+            return this.getBaseUrl() + "/js/declick/objects";
         };
 
         /**

@@ -516,8 +516,8 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
         /**
          * This method replaces quote delimiters (#) by a quotation mark (").
          * It allows to call a string in an another string
-         * (this happens quite often in Tangara). Ex:</br>
-         * In Tangara:  object.method("object2.methode(#"...#"))</br>
+         * (this happens quite often in Declick). Ex:</br>
+         * In Declick:  object.method("object2.methode(#"...#"))</br>
          * In Java:     object.method("object2.methode(\"...\"))</br>
          * @param {String} string   The String to change
          * @returns {String}    Returns the modified string.

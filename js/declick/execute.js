@@ -1,5 +1,5 @@
 require.config({
-    "baseUrl": 'js/tangara',
+    "baseUrl": 'js/declick',
     paths: {
         "jquery": '../libs/jquery-1.11.1/jquery-1.11.1.min',
         "quintus": '../libs/quintus-0.2.0/quintus-all.min',

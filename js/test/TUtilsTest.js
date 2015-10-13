@@ -1,6 +1,6 @@
 var requireTest = require.config({
     context: "new",
-    "baseUrl": '../tangara', // tangara directory
+    "baseUrl": '../declick', // declick directory
     paths: {
         "jasmine": '../libs/jasmine-2.1.3/jasmine',
         "jasmine-html": '../libs/jasmine-2.1.3/jasmine-html',

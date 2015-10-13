@@ -1,5 +1,5 @@
 require.config({
-    "baseUrl": 'js/tangara',
+    "baseUrl": 'js/declick',
     paths: {
         "jquery": '../libs/jquery-1.11.1/jquery-1.11.1.min',
         "jquery_animate_enhanced": '../libs/jquery.animate-enhanced/jquery.animate-enhanced.min',
@@ -12,7 +12,16 @@ require.config({
         "TObject": 'objects/tobject/TObject',
         "TObject3D": 'objects/tobject3d/TObject3D',
         "TGraphicalObject": 'objects/tgraphicalobject/TGraphicalObject',
+        "fileupload": '../libs/jquery-file-upload/jquery.fileupload',
+        "iframe-transport": '../libs/jquery-file-upload/jquery.iframe-transport',
         "jquery-ui": '../libs/jquery.ui-1.11.2',
+        "wPaint": '../libs/wpaint-2.5.0/wPaint.min',
+        "wColorPicker": '../libs/wpaint-2.5.0/wColorPicker.min',
+        "wPaint/plugins/file": '../libs/wpaint-2.5.0/plugins/file/wPaint.menu.main.file.min',
+        "wPaint/plugins/main": '../libs/wpaint-2.5.0/plugins/main/wPaint.menu.main.min',
+        "wPaint/plugins/shapes": '../libs/wpaint-2.5.0/plugins/shapes/wPaint.menu.main.shapes.min',
+        "wPaint/plugins/text": '../libs/wpaint-2.5.0/plugins/text/wPaint.menu.text.min',
+        "wPaint/plugins/flip": 'plugins/wPaint.menu.main.flip',
         "TProject": "data/TProject",
         "TProgram": "data/TProgram",
         "TEnvironment": "env/TEnvironment",
@@ -28,13 +37,7 @@ require.config({
         "SynchronousManager": "utils/SynchronousManager",
         "TError": "utils/TError",
         "TUtils": "utils/TUtils",
-        "platform-pr": "http://algorea-beta.eroux.fr/platform-pr",
-        "json": "../libs/pem-task/json2.min",
-        "Task": "env/Task",
-        "Grader": "env/Grader",
-        "TExercise": "data/TExercise",
-        "TResource": "data/TResource",
-        "jschannel": "../libs/jschannel/jschannel"
+        "TResource": "data/TResource"
     },
     map: {
         "fileupload": {
@@ -42,22 +45,39 @@ require.config({
         }
     },
     shim: {
-        'platform-pr': {
-            deps: ['jquery', 'jschannel'],
-            exports: '$'
+        'wPaint': {
+            deps: ['jquery', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse']
+        },
+        'wPaint/plugins/main': {
+            deps: ['wPaint']
+        },
+        'wPaint/plugins/file': {
+            deps: ['wPaint', 'wPaint/plugins/main']
+        },
+        'wPaint/plugins/shapes': {
+            deps: ['wPaint', 'wPaint/plugins/main']
+        },
+        'wPaint/plugins/text': {
+            deps: ['wPaint', 'wPaint/plugins/main']
+        },
+        'wPaint/plugins/flip': {
+            deps: ['wPaint', 'wPaint/plugins/main']
+        },
+        'wColorPicker': {
+            deps: ['wPaint']
         },
         'split-pane': {
             deps: ['jquery']
         }
-    }    
+    }
 });
 
-//window.location.protocol + "//" + window.location.host+ window.location.pathname.split("/").slice(0, -1).join("/")+"/js/tangara",
-//baseUrl: 'js/tangara',
+//window.location.protocol + "//" + window.location.host+ window.location.pathname.split("/").slice(0, -1).join("/")+"/js/declick",
+//baseUrl: 'js/declick',
 // Start the main app logic.
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TLearnFrame', 'Task', 'Grader'], function($, TEnvironment, TRuntime, TLearnFrame, Task, Grader) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject'], function($, TEnvironment, TRuntime, TFrame, TProject) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
@@ -69,42 +89,17 @@ function load() {
                 TEnvironment.log("***************************");
                 TEnvironment.log("* Building User Interface *");
                 TEnvironment.log("***************************");
-                frame = new TLearnFrame(function(component) {
+                frame = new TFrame(function(component) {
                     $("body").append(component);
                     TEnvironment.log("*******************");
                     TEnvironment.log("* Initiating link *");
                     TEnvironment.log("*******************");
-                    // Create task and grader
-                    window.task = new Task(this);
-                    window.grader = new Grader();
-                    //window.platform.initWithTask(window.task);
-                    // get exercise id
-                    var exerciseId;
-                    if (typeof init_exerciseId !== 'undefined') {
-                        // get id from server
-                        exerciseId = init_exerciseId;
-                    } else {
-                        // get id from hash
-                        var hash = document.location.hash;
-                        exerciseId = parseInt(hash.substring(1));
-                    }
-                    TEnvironment.log("********************");
-                    TEnvironment.log("* Loading exercise *");
-                    TEnvironment.log("********************");
-                    var self = this;
-                    $(document).ready(function() {
-                        // Create task and grader
-                        self.displayed();
-                        // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
-                        $(window).resize();
-                        if (isNaN(exerciseId)) {
-                            window.console.error("Could not find exercise id");
-                            self.init();
-                        } else {
-                            self.loadExercise(exerciseId, function() {
-                                self.init();
-                            });
-                        }
+                    var currentProject = new TProject();
+                    currentProject.init(function() {
+                        TEnvironment.setProject(currentProject);
+                        $(document).ready(function() {
+                            frame.displayed();
+                        });
                     });
                 });
             });

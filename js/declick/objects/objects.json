@@ -214,12 +214,12 @@
         "parents": false,
         "instance": true
     },
-    "Tangara": {
-        "path": "tangara",
+    "Declick": {
+        "path": "declick",
         "translations": {
-            "fr": "tangara",
-            "es": "tangara",
-            "en": "tangara"
+            "fr": "declick",
+            "es": "declick",
+            "en": "declick"
         },
         "parents": false,
         "instance": true
