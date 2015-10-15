@@ -8,7 +8,6 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
         this.active = false;
         this.keyboardEnabled = false;
         this.waiting = false;
-        this.keyWaited = false;
         this.keys = [];
         var that = this;
         this.listenerKeyDown = function(e) {
@@ -21,6 +20,9 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
         };
         this.synchronousManager = new SynchronousManager();
         TRuntime.addInstance(this);
+        this.keyNamesInitialized = false;
+        this.initKeyNames();
+       
     };
 
     Keyboard.prototype = Object.create(TObject.prototype);
@@ -88,15 +90,13 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
      */
     Keyboard.prototype.processKeyDown = function(e) {
         if (this.active) {
-            if (this.waiting) {
-                this.waiting = false;
-                this.keyWaited = e.keyCode;
-                this.synchronousManager.end();
-            } else {
-                this.keyWaited = false;
-            }
             var keycode = e.keyCode;
             this.keys[keycode] = true;
+            this[this.getMessage(TUtils.getkeyName(keycode))] = true;
+            if (this.waiting) {
+                this.waiting = false;
+                this.synchronousManager.end();
+            }
         }
     };
     
@@ -108,6 +108,7 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
         if (this.active) {
             var keycode = e.keyCode;
             this.keys[keycode] = false;
+            this[this.getMessage(TUtils.getkeyName(keycode))] = false;
         }
     };
 
@@ -147,18 +148,30 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
             this.enableKeyboard();
         }        
         var keycode = this.getKeyCode(key);
-        return (this.keyWaited === keycode || (typeof this.keys[keycode] !== 'undefined' && this.keys[keycode]));
+        return (typeof this.keys[keycode] !== 'undefined' && this.keys[keycode]);
     };
     
     Keyboard.prototype.freeze = function(value) {
         this.active = !value;
     };
+    
+    Keyboard.prototype.initKeyNames = function() {
+        if (typeof this.constructor.messages !== 'undefined') {
+            var names = TUtils.getKeyNames();
+            for (var i = 0;i<names.length;i++) {
+                this[this.getMessage(names[i])] = false;
+            }
+            this.keyNamesInitialized = true;
+        }
+    };
 
     Keyboard.prototype.clear = function() {
         this.waiting = false;
-        this.keyWaited = false;
         this.keys = [];
         this.synchronousManager.end();
+        if (!this.keyNamesInitialized) {
+            this.initKeyNames();
+        }
     };
     
     

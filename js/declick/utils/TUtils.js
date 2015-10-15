@@ -185,6 +185,14 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             "]": 221,
             "'": 222
         };
+        
+        var keyNames = [];
+        for (var name in keyCodes) {
+            if (keyCodes.hasOwnProperty(name)) {
+                keyNames.push(name);
+            }
+        }
+        
         var colors = {
             black: [0, 0, 0],
             white: [255, 255, 255],
@@ -402,6 +410,28 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
                 }
             }
             return false;
+        };
+        
+        this.getkeyName = function(value) {
+            for (var name in keyCodes) {
+                if (keyCodes.hasOwnProperty(name)) {
+                    var code = keyCodes[name];
+                    if (this.checkArray(code)) {
+                        if (code.indexOf(value) !== -1) {
+                            return name;
+                        }
+                    } else {
+                        if (value === code) {
+                            return name;
+                        }
+                    }
+                }
+            }
+            return false;
+        };
+        
+        this.getKeyNames = function() {
+            return keyNames;
         };
         
         /**
