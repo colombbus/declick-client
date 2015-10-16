@@ -127,10 +127,9 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
 
    
     /**
-     * Detect if a given key is down
-     * @param {String} key
+     * Wait for a key to be typed
      */
-    Keyboard.prototype._wait = function(key) {
+    Keyboard.prototype._wait = function() {
         this.waiting = true;
         this.synchronousManager.begin();
     };
