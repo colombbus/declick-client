@@ -10,6 +10,7 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     	this.followedObject = null;
     	this.followX = true;
     	this.followY = true;
+        TRuntime.addInstance(this);
     };
     
     Camera.prototype = Object.create(TObject.prototype);
@@ -25,9 +26,9 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
      */
     Camera.prototype.activate = function() {
     	if (!this.activated) {
-    		var s = getStage();
-        	s.add("viewport");
-        	this.activated = true;
+            var s = getStage();
+            s.add("viewport");
+            this.activated = true;
     	}
     };
     
@@ -36,8 +37,8 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
      */
     Camera.prototype.follow = function() {
     	if (this.activated) {
-	    	var s = getStage();
-	    	s.follow(this.followedObject.getGObject(), {x:this.followX, y:this.followY});
+            var s = getStage();
+            s.follow(this.followedObject.getGObject(), {x:this.followX, y:this.followY});
     	}
     };
     
@@ -46,8 +47,8 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
      */
     Camera.prototype.stopFollow = function() {
     	if (this.activated) {
-        	var s = getStage();
-        	s.unfollow();
+            var s = getStage();
+            s.unfollow();
     	}
     };
 
@@ -117,6 +118,14 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
     	var s = getStage();
     	this.stopFollow();
     	s.centerOn(x,y);
+    };
+
+    Camera.prototype.clear = function() {
+        this.stopFollow();
+    };
+    
+    Camera.prototype.init = function() {
+        
     };
     
     var instance = new Camera();

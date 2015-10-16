@@ -106,6 +106,8 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     Declick.prototype.clear = function() {
     };
 
+    Declick.prototype.init = function() {
+    };
 
     var declickInstance = new Declick();
 

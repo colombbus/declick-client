@@ -371,10 +371,17 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 // deleteObject will remove object from tGraphicalObjects
                 object.deleteObject();
             }
-            // init instances
+            // clear instances
             for (var i=0;i<tInstances.length;i++) {
                 tInstances[i].clear();
             }
+        };
+        
+        this.init = function() {
+            // init instances
+            for (var i=0;i<tInstances.length;i++) {
+                tInstances[i].init();
+            }            
         };
 
         this.setDesignMode = function(value) {

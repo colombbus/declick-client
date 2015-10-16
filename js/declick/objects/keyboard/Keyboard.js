@@ -131,9 +131,6 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
      * @param {String} key
      */
     Keyboard.prototype._wait = function(key) {
-        if (!this.keyboardEnabled) {
-            this.enableKeyboard();
-        }
         this.waiting = true;
         this.synchronousManager.begin();
     };
@@ -144,9 +141,6 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
      * @param {String} key
      */
     Keyboard.prototype._detect = function(key) {
-        if (!this.keyboardEnabled) {
-            this.enableKeyboard();
-        }        
         var keycode = this.getKeyCode(key);
         return (typeof this.keys[keycode] !== 'undefined' && this.keys[keycode]);
     };
@@ -169,9 +163,13 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
         this.waiting = false;
         this.keys = [];
         this.synchronousManager.end();
+    };
+    
+    Keyboard.prototype.init = function() {
         if (!this.keyNamesInitialized) {
             this.initKeyNames();
         }
+        this.enableKeyboard();
     };
     
     

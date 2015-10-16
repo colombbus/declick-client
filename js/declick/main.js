@@ -99,6 +99,7 @@ function load() {
                         TEnvironment.setProject(currentProject);
                         $(document).ready(function() {
                             frame.displayed();
+                            TRuntime.init();
                         });
                     });
                 });

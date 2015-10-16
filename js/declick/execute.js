@@ -44,6 +44,7 @@ function load() {
                         // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
                         $(window).resize();
                         canvas.showLoading();
+                        TRuntime.init();
                         var currentProject = new TProject();
                         currentProject.init(function() {
                             TEnvironment.setProject(currentProject);

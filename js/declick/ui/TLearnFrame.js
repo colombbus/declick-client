@@ -99,6 +99,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
                 $(this).remove();
             });
             canvas.removeLoading();
+            TRuntime.init();
             window.platform.initWithTask(window.task);            
         };
 

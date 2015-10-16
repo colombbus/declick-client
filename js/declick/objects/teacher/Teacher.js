@@ -366,7 +366,10 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
         }
         this.synchronousManager.end();
     };
-        
+    
+    Teacher.prototype.init = function() {
+    };
+    
     var teacherInstance = new Teacher();
 
     return teacherInstance;
