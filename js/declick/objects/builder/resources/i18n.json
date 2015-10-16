@@ -3,14 +3,11 @@
     "fr": {
         "methods":[
             {"name":"_buildGround","translated":"poserSol","displayed":"poserSol()"},
-            {"name":"_getStructure","translated":"récupérerStructure","displayed":"récupérerStructure()"},
             {"name":"_buildDoor","translated":"poserPorte","displayed":"poserPorte()"},
             {"name":"_buildEntrance","translated":"poserEntrée","displayed":"poserEntrée()"},
             {"name":"_buildExit","translated":"poserSortie","displayed":"poserSortie()"},
             {"name":"_buildWall","translated":"poserMur","displayed":"poserMur()"},
-            {"name":"_buildStructure","translated":"construire","displayed":"construire()"},
-            {"name":"_addTile","translated":"ajouterBrique","displayed":"ajouterBrique(\"image\")"},
-            {"name":"_getPlatform","translated":"récupérerPlateforme","displayed":"récupérerPlateforme()"},
+            {"name":"_addTile","translated":"ajouterElément","displayed":"ajouterElément(\"image\")"},
             {"name":"_addRow","translated":"poserLigne","displayed":"poserLigne(0,0)"},
             {"name":"_setFlash","translated":"sePresser","displayed":"sePresser()"},
             {"name":"_setTileCollidable","translated":"définirBloc","displayed":"définirBloc(1, true)"}
