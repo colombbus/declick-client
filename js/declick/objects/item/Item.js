@@ -5,11 +5,19 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
      * @param {String} name Item's name
      * @exports Item
      */
-     var Item = function(name) {
-        Sprite.call(this, name);
-        if (typeof name === 'undefined') {
-            this.addImage("ball.gif", "", false);
-            this.setDisplayedImage("ball.gif");
+    var Item = function(name) {
+        var translated = this.getMessage(name);
+        if (translated !== name) {
+            // name is one of the default category
+            Sprite.call(this);
+            this.addImage(translated, "", false);
+            this.setDisplayedImage(translated);
+        } else {
+            Sprite.call(this, name);
+            if (typeof name === 'undefined') {
+                this.addImage("coin.png", "", false);
+                this.setDisplayedImage("coin.png");
+            }
         }
     };
 
@@ -36,6 +44,12 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     
     Item.prototype._setName = function(value) {
         value = TUtils.getString(value);
+        var translated = this.getMessage(value);
+        if (translated !== value) {
+            // name is one of the default category
+            this.addImage(translated, "", false);
+            this.setDisplayedImage(translated);
+        }        
         this.gObject.setName(value);
     };
 
