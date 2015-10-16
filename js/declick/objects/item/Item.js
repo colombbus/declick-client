@@ -12,6 +12,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             Sprite.call(this);
             this.addImage(translated, "", false);
             this.setDisplayedImage(translated);
+            this.gObject.setName(name);
         } else {
             Sprite.call(this, name);
             if (typeof name === 'undefined') {
