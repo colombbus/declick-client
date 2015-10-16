@@ -2,15 +2,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     /**
      * Defines Robot, inherited from Hero.
      * The main difference with Hero is that it executes commands one by one.
-     * @param {String} name
+     * @param {Boolean} auto
      * @exports Robot
      */
-    var Robot = function(name, auto) {
-        if (typeof name !== 'undefined') {
-            Hero.call(this, name);
-        } else {
-            Hero.call(this, "robot");
-        }
+    var Robot = function(auto) {
+        Hero.call(this, "robot");
+
         if (typeof auto === 'undefined') {
             auto = true;
         }
