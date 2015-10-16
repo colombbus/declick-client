@@ -395,6 +395,17 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             return (this.gObject.getGridX()=== this.exitLocation[0] && this.gObject.getGridY()=== this.exitLocation[1]);
         }
         return false;
+    };
+    
+    Robot.prototype._isOver = function(name) {
+        try {
+            var current = this.gObject.getItemName();
+            if (name === current) {
+                return true;
+            }
+        } catch (e) {
+        }
+        return false;
     };    
     
     Robot.prototype.deleteObject = function() {

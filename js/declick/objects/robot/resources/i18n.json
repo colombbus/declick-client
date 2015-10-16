@@ -14,7 +14,8 @@
             {"name":"_countCarriedItems","translated":"compterItemsRamass\u00e9s","displayed":"compterItemsRamass\u00e9s()"},
             {"name":"_wasBlocked","translated":"estBloqu\u00e9","displayed":"estBloqu\u00e9(\"haut\")"},
             {"name":"_getItemName","translated":"récupérerNomItem","displayed":"récupérerNomItem()"},
-            {"name":"_isOverExit","translated":"estSurSortie","displayed":"estSurSortie()"}
+            {"name":"_isOverExit","translated":"estSurSortie","displayed":"estSurSortie()"},
+            {"name":"_isOver","translated":"estSur","displayed":"estSur(\"nom\")"}
             ]
     }
 }
