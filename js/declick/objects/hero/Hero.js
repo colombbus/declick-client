@@ -392,7 +392,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 parent.custom = false;
             }
         }).fail(function(jqxhr, textStatus, error) {
-            throw new Error(TUtils.format(parent.getMessage("unknwon character"), name));
+            throw new Error(TUtils.format(parent.getMessage("unknown character"), name));
         });
 
     };

@@ -454,7 +454,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
                 parent.build(baseImageUrl, elements, assets);
             }
         }).fail(function(jqxhr, textStatus, error) {
-            throw new Error(TUtils.format(parent.getMessage("unknwon skeleton"), name));
+            throw new Error(TUtils.format(parent.getMessage("unknown skeleton"), name));
         });
     };
 

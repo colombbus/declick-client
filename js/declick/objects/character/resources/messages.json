@@ -4,7 +4,7 @@
         "fille":"girl",
         "chien":"dog",
         "chat":"cat",
-        "unknwon skeleton":"Personnage « {0} » introuvable",
+        "unknown skeleton":"Personnage « {0} » introuvable",
         "wrong object type":"L'objet {0} ne peut pas être attrapé"
     },
     "en": {
@@ -12,7 +12,7 @@
         "girl":"girl",
         "dog":"dog",
         "cat":"cat",
-        "unknwon skeleton":"Character '{0}' unknown",
+        "unknown skeleton":"Character '{0}' unknown",
         "wrong object type":"Object {0} cannot be caught"
     }
 }

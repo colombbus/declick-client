@@ -5,7 +5,7 @@
         "droite":"right",
         "haut":"up",
         "bas":"down",
-        "unknwon key":"La touche « {0} » n'existe pas"
+        "unknown key":"La touche « {0} » n'existe pas"
     },
     "en": {
     }

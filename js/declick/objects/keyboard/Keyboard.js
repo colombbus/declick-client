@@ -39,7 +39,7 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
         key = this.getMessage(key);
         var code = TUtils.getkeyCode(key);
         if (code === false) {
-            throw new Error(TUtils.format(this.getMessage("unknwon key"), key));
+            throw new Error(TUtils.format(this.getMessage("unknown key"), key));
         }
         return code;
     };
