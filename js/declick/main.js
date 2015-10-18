@@ -37,7 +37,12 @@ require.config({
         "SynchronousManager": "utils/SynchronousManager",
         "TError": "utils/TError",
         "TUtils": "utils/TUtils",
-        "TResource": "data/TResource"
+        "TResource": "data/TResource",
+        /*"platform-pr": "http://algorea-beta.eroux.fr/platform-pr",*/
+        "platform-pr": "../libs/pem-task/platform-pr",
+        "json": "../libs/pem-task/json2.min",
+        "Task": "env/Task",
+        "Grader": "env/Grader"        
     },
     map: {
         "fileupload": {
@@ -77,7 +82,7 @@ require.config({
 // Start the main app logic.
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject'], function($, TEnvironment, TRuntime, TFrame, TProject) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject', 'Task', 'Grader'], function($, TEnvironment, TRuntime, TFrame, TProject) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");

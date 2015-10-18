@@ -89,6 +89,10 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
             TRuntime.setLog(this);
         };
 
+        this.updateToken = function(token) {
+            // do nothing
+        };
+
         this.init = function() {
             var height = $solution.height();
             $solution.css('top', -height + "px");
@@ -100,6 +104,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
             });
             canvas.removeLoading();
             TRuntime.init();
+            window.task.addViews({solution:{}});
             window.platform.initWithTask(window.task);            
         };
 

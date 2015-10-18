@@ -1,8 +1,13 @@
-define(['platform-pr', 'json'], function() {
+define(['jquery','platform-pr', 'json'], function($) {
     
     var Task = function(aFrame) {
         
         var frame = aFrame;
+        var views = {task:{}};
+        
+        this.addViews = function(value) {
+            $.extend(views, value);
+        };
         
         this.showViews = function(views, callback) {
             if (typeof views.task !== 'undefined' && views.task) {
@@ -16,18 +21,18 @@ define(['platform-pr', 'json'], function() {
         };
         
         this.getViews = function(callback) {
-            var views = {
+            /*var views = {
                 task: {},
-                solution: {},
-                /*hint: {requires: "task"},
-                forum: {requires: "task"},*/
+                solution: {}
+                , hint: {requires: "task"},
+                forum: {requires: "task"},
                 editor: {requires: "task"}
-            };
+            };*/
             callback(views);
         };
         
         this.updateToken = function (token, callback) {
-            //console.warning("sorry, token system not available for this task");
+            frame.updateToken(token);
             callback();
         };
 

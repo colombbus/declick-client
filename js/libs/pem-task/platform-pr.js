@@ -5,7 +5,7 @@
 function getUrlParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
+        results = regex.exec(location.href);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
@@ -21,7 +21,7 @@ function isCrossDomain() {
       var res = false;
       function doNothing(document){}
       try{
-          res = !! parent.document.TaskProxyManager;
+          res = !! parent.document;
       } catch(e){
           res = false;
       }
@@ -42,12 +42,13 @@ if (!isCrossDomain()) {
    platform = {
       registered_objects: [],
       parent_platform: null,
+      initFailed: false,
       setPlatform: function(platformArg) {
          platform.parent_platform = platformArg;
       },
       trigger: function(event, content) {
          for (var i = 0; i < platform.registered_objects.length; i++) {
-            object = platform.registered_objects[i];
+            var object = platform.registered_objects[i];
             if (typeof (object[event]) != "undefined") {
                object[event].apply(object, content);
             }
@@ -101,12 +102,24 @@ if (!isCrossDomain()) {
    };
    platform = {};
    platform.ready = false;
+   platform.initFailed = false;
    platform.initWithTask = function(task) {
+      if (typeof Channel === 'undefined') {
+         platform.initFailed = true;
+         console.error('cannot init task if jschannel is not present');
+         return;
+      }
+      var gradeAnswer = function(params, success, error) {
+         if (typeof task.gradeAnswer === 'function') {
+            task.gradeAnswer(params[0], params[1], success, error);
+         } else {
+            window.grader.gradeTask(params[0], params[1], success, error);
+         }
+      };
       var channelId = getUrlParameterByName('channelId');
-      var chan = Channel.build({window: window.parent, origin: "*", scope: channelId});
+      var chan = Channel.build({window: window.parent, origin: "*", scope: channelId, onReady: function() {platform.ready = true;}});
       platform.chan = chan;
       platform.task = task;
-      window.task = task;
       platform.channelId = channelId;
       chan.bind('task.load', function(trans, views) {task.load(views, callAndTrigger(trans.complete, 'load'), trans.error);trans.delayReturn(true);});
       chan.bind('task.unload', function(trans) {task.unload(callAndTrigger(trans.complete, 'unload'), trans.error);trans.delayReturn(true);});
@@ -118,14 +131,16 @@ if (!isCrossDomain()) {
       chan.bind('task.reloadAnswer', function(trans, answer) {task.reloadAnswer(answer, callAndTrigger(trans.complete, 'reloadAnswer'), trans.error);trans.delayReturn(true);});
       chan.bind('task.getAnswer', function(trans) {task.getAnswer(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.getState', function(trans) {task.getState(trans.complete, trans.error);trans.delayReturn(true);});
+      chan.bind('task.getResources', function(trans) {task.getResources(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.reloadState', function(trans, state) {task.reloadState(state, callAndTrigger(trans.complete, 'reloadState'), trans.error);trans.delayReturn(true);});
-      platform.ready = true;
+      chan.bind('grader.gradeTask', function(trans, params) {gradeAnswer(params, trans.complete, trans.error);trans.delayReturn(true);});
+      chan.bind('task.gradeAnswer', function(trans, params) {gradeAnswer(params, trans.complete, trans.error);trans.delayReturn(true);});
    };
 
    platform.registered_objects = [];
    platform.trigger = function(event, content) {
       for (var i = 0; i < platform.registered_objects.length; i++) {
-         object = platform.registered_objects[i];
+         var object = platform.registered_objects[i];
          if (typeof (object[event]) != "undefined") {
             object[event].apply(object, content);
          }
@@ -145,7 +160,7 @@ if (!isCrossDomain()) {
    };
    platform.validate = function (sMode, success, error) {
       if (!success) success = function(){}; // not mandatory, as most code doesn't use it
-      if (!error) error = function() {console.error(arguments)};
+      if (!error) error = function() {console.error(arguments);};
       platform.chan.call({method: "platform.validate",
          params: sMode,
          error: error,
@@ -154,7 +169,7 @@ if (!isCrossDomain()) {
    };
    platform.getTaskParams = function(key, defaultValue, success, error) {
       if (!success) success = function(){};
-      if (!error) error = function() {console.error(arguments)};
+      if (!error) error = function() {console.error(arguments);};
       platform.chan.call({method: "platform.getTaskParams",
          params: [key, defaultValue],
          error: error,
@@ -163,7 +178,7 @@ if (!isCrossDomain()) {
    };
    platform.showView = function(views, success, error) {
       if (!success) success = function(){};
-      if (!error) error = function() {console.error(arguments)};
+      if (!error) error = function() {console.error(arguments);};
       platform.chan.call({method: "platform.showView",
          params: views,
          error: error,
@@ -172,7 +187,7 @@ if (!isCrossDomain()) {
    };
    platform.askHint = function(platformToken, success, error) {
       if (!success) success = function(){};
-      if (!error) error = function() {console.error(arguments)};
+      if (!error) error = function() {console.error(arguments);};
       platform.chan.call({method: "platform.askHint",
          params: platformToken,
          error: error,
@@ -181,7 +196,7 @@ if (!isCrossDomain()) {
    };
    platform.updateHeight = function(height, success, error) {
       if (!success) success = function(){};
-      if (!error) error = function() {console.error(arguments)};
+      if (!error) error = function() {console.error(arguments);};
       platform.chan.call({method: "platform.updateHeight",
          params: height,
          error: error,
@@ -190,7 +205,7 @@ if (!isCrossDomain()) {
    };
    platform.openUrl = function(url, success, error) {
       if (!success) success = function(){};
-      if (!error) error = function() {console.error(arguments)};
+      if (!error) error = function() {console.error(arguments);};
       platform.chan.call({method: "platform.openUrl",
          params: url,
          error: error,
@@ -200,13 +215,5 @@ if (!isCrossDomain()) {
 }
 
 window.platform = platform;
-
-$('document').ready(function() {
-   console.error(window.task);
-   // if task is ready, use it, otherwise wait for initWithTask call
-   if (!platform.ready && typeof window.task.load === 'function') {
-      platform.initWithTask(window.task);
-   }
-});
 
 }());
