@@ -32,7 +32,7 @@ define(['jquery','platform-pr', 'json'], function($) {
         };
         
         this.updateToken = function (token, callback) {
-            frame.updateToken(token);
+            // do nothing
             callback();
         };
 

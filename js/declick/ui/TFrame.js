@@ -91,10 +91,6 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             window.platform.initWithTask(window.task);            
         };
 
-        this.updateToken = function(token) {
-            window.console.log("token received");
-        };
-
         this.lowerSeparator = function(value) {
             if (initialized) {
                 var totalHeight = $frame.height();
