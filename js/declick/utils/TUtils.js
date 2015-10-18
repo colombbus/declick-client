@@ -186,10 +186,19 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             "'": 222
         };
         
-        var keyNames = [];
-        for (var name in keyCodes) {
-            if (keyCodes.hasOwnProperty(name)) {
-                keyNames.push(name);
+        var keyNamesList = Object.keys(keyCodes);
+        
+        var keyNames = {};
+        for (var i = 0; i< keyNamesList.length; i++) {
+            var name = keyNamesList[i];
+            var codes = keyCodes[name];
+            if (!isNaN(codes)) {
+                // codes is indeed a code
+                keyNames[codes] = name;
+            } else {
+                for (var j=0; j<codes.length; j++) {
+                    keyNames[codes[j]] = name;
+                }
             }
         }
         
@@ -413,25 +422,14 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
         };
         
         this.getkeyName = function(value) {
-            for (var name in keyCodes) {
-                if (keyCodes.hasOwnProperty(name)) {
-                    var code = keyCodes[name];
-                    if (this.checkArray(code)) {
-                        if (code.indexOf(value) !== -1) {
-                            return name;
-                        }
-                    } else {
-                        if (value === code) {
-                            return name;
-                        }
-                    }
-                }
+            if (typeof keyNames[value] !== 'undefined') {
+                return keyNames[value];
             }
             return false;
         };
         
         this.getKeyNames = function() {
-            return keyNames;
+            return keyNamesList;
         };
         
         /**

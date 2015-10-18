@@ -20,9 +20,7 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
         };
         this.synchronousManager = new SynchronousManager();
         TRuntime.addInstance(this);
-        this.keyNamesInitialized = false;
-        this.initKeyNames();
-       
+        this.keyNamesInitialized = false;       
     };
 
     Keyboard.prototype = Object.create(TObject.prototype);
