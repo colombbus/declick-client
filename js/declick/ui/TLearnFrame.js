@@ -95,6 +95,11 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
             $solution.css('bottom', height + bottomSolution + "px");
             $solution.css('visibility', 'visible');
             $solution.hide();
+            // in case textmode was set before display
+            // TODO: fix this
+            if (textMode) {
+                this.setTextMode();
+            }
             $loading.fadeOut(1000, function() {
                 $(this).remove();
             });
