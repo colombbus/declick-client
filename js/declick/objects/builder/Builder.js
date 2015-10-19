@@ -144,10 +144,10 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze'], functio
         }
         tileNumber = TUtils.getInteger(tileNumber);
         value = TUtils.getBoolean(value);
-        if (tileNumber <0 || tileNumber >= this.maze.getTilesLength()) {
+        if (tileNumber <0 || tileNumber-1 >= this.maze.getTilesLength()) {
             throw new Error(TUtils.format(this.getMessage("incorrect index")), tileNumber);
         }
-        this.maze.setCollidableTile(tileNumber, value);
+        this.maze.setCollidableTile(tileNumber-1, value);
     };
     
     Builder.prototype.deleteObject = function() {
