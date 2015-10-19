@@ -90,23 +90,18 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
         };
 
         this.init = function() {
-            window.task.addViews({solution:{}});
-            window.platform.initWithTask(window.task);            
             var height = $solution.height();
             $solution.css('top', -height + "px");
             $solution.css('bottom', height + bottomSolution + "px");
             $solution.css('visibility', 'visible');
             $solution.hide();
-            // in case textmode was set before display
-            // TODO: fix this
-            if (textMode) {
-                this.setTextMode();
-            }
             $loading.fadeOut(1000, function() {
                 $(this).remove();
             });
             canvas.removeLoading();
             TRuntime.init();
+            window.task.addViews({solution:{}});
+            window.platform.initWithTask(window.task);            
         };
 
         var execute = function() {
@@ -381,13 +376,15 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
         
         this.setTextMode = function() {
             // copy current value if any
+            // TODO: fix this
+
             this.setText(this.getCode());
-            $text.show();
+            $text.css("display", "block");
             textMode = true;
         };
 
         this.setProgramMode = function() {
-            $text.hide();
+            $text.css("display", "none");
             textMode = false;
         };
 
