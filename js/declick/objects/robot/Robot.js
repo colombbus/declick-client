@@ -5,9 +5,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * @param {Boolean} auto
      * @exports Robot
      */
-    var Robot = function(auto) {
-        Hero.call(this, "robot");
-
+    var Robot = function(name, auto) {
+        if (typeof name !== 'undefined') {
+            Hero.call(this, name);
+        } else {
+            Hero.call(this, "robot");
+        }
+        
         if (typeof auto === 'undefined') {
             auto = true;
         }
