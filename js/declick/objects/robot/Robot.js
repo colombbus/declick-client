@@ -326,11 +326,19 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
     
     /**
-     * Get the Platform for Robot.
-     * @param {Number[][]} platform
+     * Returns gridX.
+     * @returns {Integer}
      */
-    Robot.prototype._getPlatform = function(platform) {
-        this.gObject.p.platform = platform;
+    Robot.prototype._getGridX = function() {
+        return (this.gObject.p.gridX);
+    };
+    
+    /**
+     * Returns gridY.
+     * @returns {Integer}
+     */
+    Robot.prototype._getGridY = function() {
+        return (this.gObject.p.gridY);
     };
     
     /**
