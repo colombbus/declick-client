@@ -7,7 +7,8 @@
             {"name":"_addColumn","translated":"ajouterColonne","displayed":"ajouterColonne([0,0])"},
             {"name":"_loadStructure","translated":"définirStructure","displayed":"définirStructure([[0,0],[0,0]])"},
             {"name":"_setBaseTile","translated":"définirBriqueFond","displayed":"définirBriqueFond(\"image\")"},
-            {"name":"_setTile","translated":"définirBrique","displayed":"définirBrique(0,0,1)"}
+            {"name":"_setTile","translated":"définirBrique","displayed":"définirBrique(0,0,1)"},
+            {"name":"_getStructure","translated":"récupérerStructure","displayed":"récupérerStructure()"}
          ]
     }
 }

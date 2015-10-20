@@ -406,6 +406,14 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     };
 
     /**
+     * Returns the 2D matrix.
+     * @returns {Integer[][]}
+     */
+    Platform.prototype._getStructure = function() {
+        return (this.gObject.p.tiles);
+    };
+
+    /**
      * Change the value of the tile [x,y] in structure to the value "number".
      * @param {Number} x
      * @param {Number} y
