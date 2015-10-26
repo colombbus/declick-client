@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'TObject', 'TLink'], function($, TEnvironment, TRuntime, TUtils, SynchronousManager, TObject, TLink) {
+define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, SynchronousManager, TObject) {
     /**
      * Defines Teacher, inherited from TObject.
      * Teacher is an object used to validate routes.
@@ -20,10 +20,10 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
 
     var statements = [];
     var frame = false;
-    var values = {};
-    var message = "";
-    var scoreLimit = 0.5;
     var score = 0;
+    var message = "";
+    var values = {};
+    var requiredScore = 1;
     var displayedClasses = [];
     var displayedMethods = [];
     var completions = {};
@@ -104,7 +104,7 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     Teacher.prototype.statementsLength = function()
     {
         return (statements.length);
-    }
+    };
     
     /**
      * Check if the code matches with the regexp
@@ -119,117 +119,71 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     /**
-     * Set message to "value".
-     * @param {string} value
-     */
-    Teacher.prototype.setMessage = function(value) {
-        message = value;
-    };
-    
-    function getMessage() {
-        if(typeof message === "undefined") {
-            message = "Message indéfini.";
-        }
-        return message;
-    };
-    
-     /**
-     * Get the value of message.
-     * @returns {string}
-     */
-    Teacher.prototype.getMessage = function() {
-        return getMessage();
-    };
-    
-    /**
-     * Changes the score.
+     * Set the score
      * @param {Number} value
      */
     Teacher.prototype.setScore = function(value) {
-        if(-1e-10 < value && value < 1 + 1e-10) {
-            score = value;
-        }
-        else {
-            log("Score must be between 0 and 1.");
-        }
-    };
-    
-    /**
-     * Returns the score.
-     * @returns {Number}
-     */
-    Teacher.prototype.getScore = function() {
-        return score;
-    };
-    
-    function validateStep(message) {
-        if (frame) {
-            frame.validateStep(message);
-        }
-    };
-    
-    /**
-     * Validate the current step if "frame" is true
-     * @param {String} message
-     */
-    Teacher.prototype.validateStep = function(message) {
-        validateStep(message);
+        score = value;
     };
 
-    function invalidateStep(message) {
-        if (frame) {
-            frame.invalidateStep(message);
-        }
+    /**
+     * Set the message.
+     * @param {Number} value
+     */
+    Teacher.prototype.setMessage = function(value) {
+        message  = value;
     };
     
+    
     /**
-     * Invalidate the current step if "frame" is true. Send a message.
+     * Validate the current exercise if "frame" is true
      * @param {String} message
      */
-    Teacher.prototype.invalidateStep = function(message) {
-        invalidateStep(message);
+    Teacher.prototype.validate = function(message) {
+        if (frame) {
+            frame.validateExercise(message);
+        }
+    };
+
+    /**
+     * Invalidate the current exercise if "frame" is true. Send a message.
+     * @param {String} message
+     */
+    Teacher.prototype.invalidate = function(message) {
+        if (frame) {
+            frame.invalidateExercise(message);
+        }
     };
     
     /**
      * Set the score needed to validate
      * @param {number} value
      */
-    Teacher.prototype.scoreToValidate = function(value) {
-        if (value < 0.5) {
-           log("Fixed score to validate is too low.");
-        }
-        scoreLimit = value;
+    Teacher.prototype.setRequiredScore = function(value) {
+        requiredScore = value;
     };
     
-    function taskValidated() {
-        return score > scoreLimit - 1e-10;
-    };
-    
-    /**
-     * Check if the current score is sufficiently high to validate the task
-     * @returns {Boolean}
-     */
-    Teacher.prototype.taskValidated = function() {
-        return taskValidated();
-    };
-    
+
     /**
      * Validate or invalidate the task, need to be appeal by 
-     * @param {String} value1 is an optionnal message
-     * @param {String} value2 is an optionnal score
+     * @param {String} optMessage is an optionnal message
+     * @param {Number} optScore is an optionnal score
      */
-    Teacher.prototype.done = function(value1, value2) {
-        if(typeof value1 !== "undefined") {
-           message = value1;
+    Teacher.prototype.done = function(optMessage, optScore) {
+        if(typeof optScore !== "undefined") {
+           this.setScore(optScore);
         }
-        if(typeof value2 !== "undefined") {
-           score = value2;
+        if(typeof optMessage !== "undefined") {
+           this.setMessage(optMessage);
         }
-        if (taskValidated()) {
-            validateStep(getMessage());
+        if (frame) {
+            frame.setScore(score);
+        }
+        if (score >= requiredScore) {
+            this.validate(message);
         }
         else {
-            invalidateStep(getMessage());
+            this.invalidate(message);
         }
     };
     
@@ -284,19 +238,6 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     /**
-     * Checks if two numbers have the same value.
-     * @param {Number} x
-     * @param {Number} y
-     * @returns {Boolean}
-     */
-    Teacher.prototype.equalNumbers = function(x, y) {
-        if (Math.abs(x - y) < 0.0000000001) {
-            return true;
-        }
-        return false;
-    };
-    
-    /**
      * Set Text Mode.
      */
     Teacher.prototype.setTextMode = function() {
@@ -311,51 +252,51 @@ define(['jquery', 'TEnvironment', 'TRuntime', 'TUtils', 'SynchronousManager', 'T
     };
     
     /**
-     * Set Comletions.
+     * Set Completions.
      */
     Teacher.prototype.setCompletions = function(json) {
-		completions = json;
-	};
+        completions = json;
+    };
     
     /**
      * Get classes completions.
      */
     Teacher.prototype.getDisplayedClasses = function() {
-		   for (var classes in completions) {
+        for (var classes in completions) {
             if (typeof completions[classes] === "undefined") {
                return [];
             }
             if (typeof completions[classes] === 'object') {
-					displayedClasses.push(classes);
+                displayedClasses.push(classes);
             }
         }
-		return displayedClasses;
+        return displayedClasses;
     };
 	
 	/**
      * Get displayed methods.
      */
     Teacher.prototype.getDisplayedMethods = function(aClass){
-		var displayedClass=completions[aClass];
-		var displayedMethods = [];
-		if (typeof displayedClass === "undefined"){
-			return [];
-		}
-		var methods = displayedClass['methods'];
-		//TODO really sort methods = TUtils.sortArray(methods);
-		if (typeof methods === "Array"){
-			return [];
-		}
+        var displayedClass=completions[aClass];
+        var displayedMethods = [];
+        if (typeof displayedClass === "undefined"){
+            return [];
+        }
+        var methods = displayedClass['methods'];
+        //TODO really sort methods = TUtils.sortArray(methods);
+        if (typeof methods === "Array"){
+            return [];
+        }
 
-		for (var i in methods) {
-			displayedMethods.push({
-				caption: methods[i]["translated"],
-				value: methods[i]["displayed"]
-			});
-		}
-				
-		return displayedMethods;
-	};
+        for (var i in methods) {
+            displayedMethods.push({
+                caption: methods[i]["translated"],
+                value: methods[i]["displayed"]
+            });
+        }
+
+        return displayedMethods;
+    };
 	
     Teacher.prototype.freeze = function(value) {
     };
