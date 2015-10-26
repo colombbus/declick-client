@@ -38,8 +38,8 @@ require.config({
         "TError": "utils/TError",
         "TUtils": "utils/TUtils",
         "TResource": "data/TResource",
-        /*"platform-pr": "http://algorea-beta.eroux.fr/platform-pr",*/
-        "platform-pr": "../libs/pem-task/platform-pr",
+        "platform-pr": "http://algorea-beta.eroux.fr/platform-pr",
+        /*"platform-pr": "../libs/pem-task/platform-pr",*/
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
         "Grader": "env/Grader"        
