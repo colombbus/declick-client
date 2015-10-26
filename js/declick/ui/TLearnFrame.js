@@ -211,6 +211,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             TRuntime.clear();
             editor.clear();
             $input.val();
+            score = 0;
             exercise.load(function() {
                 // set instruction
                 if (exercise.hasInstructions()) {
