@@ -54,18 +54,18 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             var p = this.p;
             var oldX = p.x;
             var oldY = p.y;
-            if (this.p.inJump && this.p.vy>0) {
+            if (p.inJump && p.vy>=0) {
                 // jump is over
-                this.p.inJump = false;
+                p.inJump = false;
                 this.synchronousManager.end();
             }
             if (this.p.mayFall && this.p.jumping) {
                 if (this.p.jumpAvailable > 0) {
                     // perform a jump
-                    this.p.vy = this.p.jumpSpeed;
-                    this.p.inJump = true;
+                    p.vy = this.p.jumpSpeed;
+                    p.inJump = true;
                 } else {
-                    this.p.jumping = false;
+                    p.jumping = false;
                     this.synchronousManager.end();
                 }
             }
