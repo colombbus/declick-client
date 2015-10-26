@@ -88,20 +88,43 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             initSplitPane();
             // declare itself as log 
             TRuntime.setLog(this);
+            
+            var self = this;
+            window.addEventListener("hashchange", function() {
+                self.loading();
+                var hash = document.location.hash;
+                var exerciseId = parseInt(hash.substring(1));
+                if (isNaN(exerciseId)) {
+                    TEnvironment.error("Could not find exercise id");
+                    self.loaded();
+                } else {
+                    self.loadExercise(exerciseId, function() {
+                        self.loaded();
+                    });
+                }
+            }, false);
         };
-
+        
         this.init = function() {
             var height = $solution.height();
             $solution.css('top', -height + "px");
             $solution.css('bottom', height + bottomSolution + "px");
             $solution.css('visibility', 'visible');
             $solution.hide();
-            $loading.fadeOut(1000, function() {
-                $(this).remove();
-            });
             canvas.removeLoading();
             TRuntime.init();
-            window.platform.initWithTask(window.task);            
+            window.platform.initWithTask(window.task);
+            this.loaded();
+        };
+        
+        this.loading = function() {
+            $loading.show();
+        };
+
+        this.loaded = function() {
+            $loading.fadeOut(1000, function() {
+                $(this).hide();
+            });
         };
 
         var execute = function() {
