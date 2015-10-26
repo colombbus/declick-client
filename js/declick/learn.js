@@ -96,7 +96,7 @@ function load() {
                         // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
                         $(window).resize();
                         if (isNaN(exerciseId)) {
-                            window.console.error("Could not find exercise id");
+                            TEnvironment.error("Could not find exercise id");
                             self.init();
                         } else {
                             self.loadExercise(exerciseId, function() {

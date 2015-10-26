@@ -152,8 +152,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             try {
                 platform.validate("stay");
             } catch (e) {
-                console.error("Error validating step");
-                console.debug(e);
+                TEnvironment.error("Error validating exercise");
             }
             if(typeof message === "undefined" || message === "") {
                 message = TEnvironment.getMessage("success-message");

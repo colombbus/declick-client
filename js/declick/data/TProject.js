@@ -350,7 +350,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                 if (arg instanceof TError) {
                     // error sent: stop there
                     TEnvironment.setProjectAvailable(false);
-                    TEnvironment.log(arg.getMessage());
+                    TEnvironment.error(arg.getMessage());
                     callback.call(this);                    
                 } else {
                     self.setId(id);

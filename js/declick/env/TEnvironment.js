@@ -16,7 +16,7 @@ define(['jquery', 'TResource'], function($, TResource) {
         this.language = "fr";
 
         // Config parameters: default values
-        this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache":true, "log":false};
+        this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache":true, "log":false, "error":true};
         this.debug;
 
         /**
@@ -39,6 +39,7 @@ define(['jquery', 'TResource'], function($, TResource) {
                     }
                     TResource.setCacheEnabled(self.isCacheEnabled());
                     TResource.setLog(self.config['log']);
+                    TResource.setError(self.config['error']);
                     self.log("* Retrieving translated messages");
                     var messageFile = self.getResource("messages.json");
                     var language = self.language;
@@ -239,6 +240,14 @@ define(['jquery', 'TResource'], function($, TResource) {
         this.log = function(message) {
             if (this.config["log"]) {
                 window.console.log(message);
+            }
+        };
+
+        this.error = function(message) {
+            if (this.config["error"]) {
+                window.console.error(message);
+            } else {
+                this.log("ERROR> "+message);                
             }
         };
         

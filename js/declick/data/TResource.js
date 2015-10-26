@@ -74,13 +74,13 @@ define(['jquery'], function($) {
                         try  {
                             localStorage.setItem(name,JSON.stringify(value));
                         } catch (e) {
-                            window.console.error("Error trying to cache value "+value+": "+e);
+                            this.error("Error trying to cache value "+value+": "+e);
                         }
                     }
                     callback.call(this, value);
                 },
                 error: function(data, status, error) {
-                    window.console.error("Error loading resource '"+name+"'");
+                    this.error("Error loading resource '"+name+"'");
                     callback.call(this, {});
                 }
             });
@@ -113,14 +113,14 @@ define(['jquery'], function($) {
                         try {
                             localStorage.setItem(name,data);
                         } catch (e) {
-                            window.console.error("Error trying to cache value "+data+": "+e);
+                            this.error("Error trying to cache value "+data+": "+e);
                         }
 
                     }
                     callback.call(this, data);
                 },
                 error: function(data, status, error) {
-                    window.console.error("Error loading resource '"+name+"'");
+                    this.error("Error loading resource '"+name+"'");
                     callback.call(this, "");
                 }
             });
@@ -130,9 +130,21 @@ define(['jquery'], function($) {
             log = value;
         };
         
+        this.setError = function(value) {
+            error = value;
+        };
+
         this.log = function(message) {
             if (log) {
                 window.console.log(message);
+            }
+        };
+
+        this.error = function(message) {
+            if (error) {
+                window.console.error(message);
+            } else {
+                this.log("ERROR> "+message);
             }
         };
     };

@@ -226,7 +226,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             if (typeof log !== 'undefined') {
                 log.addError(error);
             } else {
-                window.console.error(error);
+                TEnvironment.error(error);
             }
         };
 
