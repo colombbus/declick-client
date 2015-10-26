@@ -162,7 +162,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             showMessage(message);
         };
 
-        this.invalidateStep = function(message) {
+        this.invalidateExercise = function(message) {
             showMessage(message);
         };
 
