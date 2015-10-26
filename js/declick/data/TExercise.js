@@ -1,4 +1,4 @@
-define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teacher'], function(TEnvironment, TRuntime, TProject, TError, Teacher) {
+define(['TEnvironment', 'TRuntime', 'TProject', 'TError'], function(TEnvironment, TRuntime, TProject, TError) {
     /**
      * TExercise manage exercises in "Learn" part of Declick.
      * @exports TExercise
@@ -21,14 +21,6 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
          */
         this.setId = function(value) {
             project.setId(value);
-        };
-        
-        /**
-         * Set Teacher's frame.
-         * @param {String} value
-         */
-        this.setFrame = function(value) {
-            Teacher.setFrame(value);
         };
         
         /**
@@ -144,31 +136,19 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             }
         };
         
-        this.getScore = function() {
-            return Teacher.getScore();
-        };
-        
-        this.setScore = function(value) {
-            return Teacher.setScore(value);
-        };
-        
-        this.getMessage = function() {
-            return Teacher.getMessage();
-        };
-        
-        this.setMessage = function(value) {
-            return Teacher.setMessage(value);
-        };
-        
         /**
-         * Execute check statements.
-         * @param {Statements[]} statements
+         * Exectute end statements if any.
          */
-        this.check = function(statements) {
-            Teacher.setStatements(statements);
+        this.end = function() {
             if (endStatements !== false) {
                 TRuntime.executeStatements(endStatements);
             }
+        };
+        
+        /**
+         * Execute check statements if any.
+         */
+        this.check = function() {
             if (checkStatements !== false) {
                 TRuntime.executeStatements(checkStatements);
             }
