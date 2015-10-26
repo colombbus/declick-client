@@ -53,7 +53,6 @@ define(['jquery','platform-pr', 'json'], function($) {
         this.getAnswer = function (callback) {
             var res = JSON.stringify(
                 {score : frame.getScore(),
-                message : frame.getMessage(),
                 value : frame.getAnswer()});
             callback(res);
         };
@@ -63,7 +62,6 @@ define(['jquery','platform-pr', 'json'], function($) {
                 try {
                     var answer = JSON.parse(strAnswer);
                     frame.setScore(answer.score);
-                    frame.setMessage(answer.message);
                     frame.setAnswer(answer.value);
                 } catch(e) {
                     window.console.log(e);
@@ -71,7 +69,6 @@ define(['jquery','platform-pr', 'json'], function($) {
             }
             else {
                 frame.setScore(0);
-                frame.setMessage("");
                 frame.setAnswer("");
             }
             callback();
