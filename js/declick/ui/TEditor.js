@@ -87,6 +87,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             });
 
             aceEditor.completers = [editorCompleter];
+            aceEditor.setBehavioursEnabled(false);
 
             this.enableMethodHelper();
 

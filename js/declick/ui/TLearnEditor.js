@@ -62,6 +62,7 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
             });
             
             aceEditor.completers = [consoleCompleter];
+            aceEditor.setBehavioursEnabled(false);
 
             this.enableMethodHelper();
 
