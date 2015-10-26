@@ -78,48 +78,50 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                     var impactX = Math.abs(p.vx);
                     var impactY = Math.abs(p.vy);
                     collision.impact = 0;
-                    // Top collision
+                    p.skipCollide = false;
                     if(collision.normalY < -0.3) {
-                        if(!p.skipCollide && p.vy > 0) { 
-                            p.vy = 0; 
-                            blockedY = true;
-                        }
                         collision.impact = impactY;
                         this.trigger("bump.bottom",collision);
                         this.trigger("bump",collision);
-                    }
-                    if(collision.normalY > 0.3) {
-                        if(!p.skipCollide && p.vy < 0) { 
-                            p.vy = 0; 
+                        if(!p.skipCollide && p.vy > 0) { 
+                            p.vy = 0;
                             blockedY = true;
                         }
+                    }
+                    if(collision.normalY > 0.3) {
                         collision.impact = impactY;
                         this.trigger("bump.top",collision);
                         this.trigger("bump",collision);
+                        if(!p.skipCollide && p.vy < 0) { 
+                            p.vy = 0;
+                            blockedY = true;
+                        }
                     }
                     if(collision.normalX < -0.3) {
-                        if(!p.skipCollide && p.vx > 0) { 
-                            p.vx = 0;  
-                            blockedX = true;
-                        }
                         collision.impact = impactX;
                         this.trigger("bump.right",collision);
                         this.trigger("bump",collision);
+                        if(!p.skipCollide && p.vx > 0) { 
+                            p.vx = 0;
+                            blockedX = true;
+                        }
                     }
                     if(collision.normalX > 0.3) {
-                        if(!p.skipCollide && p.vx < 0) { 
-                            p.vx = 0; 
-                           blockedX = true;
-                        }
                         collision.impact = impactX;
                         this.trigger("bump.left",collision);
                         this.trigger("bump",collision);
+                        if(!p.skipCollide && p.vx < 0) { 
+                            p.vx = 0; 
+                            blockedX = true;
+                        }
                     }
-                    if (Math.abs(collision.separate[0])>Math.abs(separate[0])) {
-                        separate[0] = collision.separate[0];
-                    }
-                    if (Math.abs(collision.separate[1])>Math.abs(separate[1])) {
-                        separate[1] = collision.separate[1];
+                    if (!p.skipCollide) {
+                        if (Math.abs(collision.separate[0])>Math.abs(separate[0])) {
+                            separate[0] = collision.separate[0];
+                        }
+                        if (Math.abs(collision.separate[1])>Math.abs(separate[1])) {
+                            separate[1] = collision.separate[1];
+                        }
                     }
                 }
                 if (object.p.type === TGraphicalObject.TYPE_SPRITE || object.p.type === TGraphicalObject.TYPE_BLOCK) {
