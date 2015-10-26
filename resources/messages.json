@@ -117,6 +117,7 @@
         "button-next":"Suivant",
         "button-check":"Vérifier",
         "button-erase":"Effacer",
-        "repeat-keyword":"répéter"
+        "repeat-keyword":"répéter",
+        "success-message":"Bravo, tu as réussi !"
     }
 }
