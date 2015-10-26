@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/hero/Hero', 'objects/platform/Platform'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject, Sprite, Hero, Platform) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/hero/Hero', 'objects/platform/Platform', 'objects/platform/Maze'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject, Sprite, Hero, Platform, Maze) {
     /**
      * Defines Robot, inherited from Hero.
      * The main difference with Hero is that it executes commands one by one.
@@ -95,7 +95,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 }
             }
         },
-        bumpTop: function() {
+        bumpTop: function(collision) {
+            // check if collided is a ground
+            if (typeof collision.tile !== 'undefined' && collision.tile === Maze.GROUND) {
+                this.p.skipCollide = true;
+            }
             this.p.blocked[0] = true;
         },
         bumpBottom: function() {
