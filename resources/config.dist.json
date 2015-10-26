@@ -4,5 +4,6 @@
     "wpaint-path": "/js/libs/wpaint-2.5.0/",
     "document-domain": false,
     "cache": true,
-    "log": false
+    "log": false,
+    "error": true
 }
