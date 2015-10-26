@@ -54,19 +54,20 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             var p = this.p;
             var oldX = p.x;
             var oldY = p.y;
+            var endSM = false;
             if (p.inJump && p.vy>=0) {
                 // jump is over
                 p.inJump = false;
-                this.synchronousManager.end();
+                endSM = true;
             }
-            if (this.p.mayFall && this.p.jumping) {
-                if (this.p.jumpAvailable > 0) {
+            if (p.mayFall && p.jumping) {
+                if (p.jumpAvailable > 1) {
                     // perform a jump
                     p.vy = this.p.jumpSpeed;
                     p.inJump = true;
                 } else {
                     p.jumping = false;
-                    this.synchronousManager.end();
+                    endSM = true;
                 }
             }
             this._super(dt);
@@ -87,6 +88,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 if (p.inMovement && !p.moving) {
                     p.inMovement = false;
                     this.updateGridLocation();
+                    endSM = true;
+                }
+                if (endSM) {
                     this.synchronousManager.end();
                 }
             }
