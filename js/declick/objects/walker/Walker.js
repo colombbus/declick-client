@@ -34,34 +34,28 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         },
         step: function(dt) {
             var p = this.p;
-            var dtStep = dt;
-            
-            while (dtStep > 0) {
-                dt = Math.min(1/30,dtStep);
-                if (!this.p.dragging && !this.p.frozen && this.p.waitingForBlocks === 0) {
-                    if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
-                        // cannot move upward or downward when walker may fall
-                        this.p.direction = Sprite.DIRECTION_NONE;
+            if (!this.p.dragging && !this.p.frozen && this.p.waitingForBlocks === 0) {
+                if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
+                    // cannot move upward or downward when walker may fall
+                    this.p.direction = Sprite.DIRECTION_NONE;
+                }
+                if (this.p.mayFall) {
+                    this.p.vy += this.p.gravity * dt;
+                    if (this.p.jumpAvailable > 0)
+                        this.p.jumpAvailable--;
+                    if (this.p.jumping) {
+                        if (this.p.jumpAvailable > 0) {
+                            // perform a jump
+                            this.p.vy = this.p.jumpSpeed;
+                        }
+                        this.p.jumping = false;
                     }
-                    if (this.p.mayFall) {
-                        this.p.vy += this.p.gravity * dt;
-                        if (this.p.jumpAvailable > 0)
-                            this.p.jumpAvailable--;
-                        if (this.p.jumping) {
-                            if (this.p.jumpAvailable > 0) {
-                                // perform a jump
-                                this.p.vy = this.p.jumpSpeed;
-                            }
-                            this.p.jumping = false;
-                        }
-                        if (this.p.direction === Sprite.DIRECTION_NONE) {
-                            this.p.destinationY = this.p.y + this.p.vy * dt;
-                        }
+                    if (this.p.direction === Sprite.DIRECTION_NONE) {
+                        this.p.destinationY = this.p.y + this.p.vy * dt;
                     }
                 }
-                this._super(dt);
-                dtStep -= dt;
             }
+            this._super(dt);
         },
         checkCollisions: function() {
             // search for sprites and blocks
