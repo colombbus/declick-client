@@ -117,6 +117,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
                 } else {
                     value = editor.getStatements();
                     lastSubmission = editor.getValue();
+                    exercise.start();
                     TRuntime.executeStatements(value);
                     canvas.giveFocus();
                 }
@@ -161,7 +162,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
 
         this.validateStep = function(message) {
             try {
-                platform.validate("next");
+                platform.validate("stay");
             } catch (e) {
                 console.error("Error validating step");
                 console.debug(e);

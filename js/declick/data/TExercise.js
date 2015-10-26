@@ -8,6 +8,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         var project = new TProject();
         TEnvironment.setProject(project);
         var checkStatements = false;
+        var initStatements = false;
         var startStatements = false;
         var endStatements = false;
         var solutionCode = false;
@@ -70,6 +71,14 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             return (startStatements !== false);
         };
 
+        /**
+         * Checks if Exercise has iit statementse.
+         * @returns {Boolean}
+         */
+        this.hasInit = function() {
+            return (initStatements !== false);
+        };
+
 
         /**
          * Checks if Exercise has end statementse.
@@ -118,9 +127,18 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         };        
         
         /**
-         * Exectute start statements if any.
+         * Exectute init statements if any.
          */
         this.init = function() {
+            if (initStatements !== false) {
+                TRuntime.executeStatements(initStatements);
+            }
+        };
+
+        /**
+         * Exectute start statements if any.
+         */
+        this.start = function() {
             if (startStatements !== false) {
                 TRuntime.executeStatements(startStatements);
             }
@@ -156,6 +174,19 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             }
         };
         
+        /**
+         * Loads init statements.
+         * @param {Function} callback
+         */
+        var loadInit = function(callback) {
+            project.getProgramStatements("init", function(result) {
+                if (!(result instanceof TError)) {
+                    initStatements = result;
+                }
+                callback.call(this);
+            });
+        };
+
         /**
          * Loads start statements.
          * @param {Function} callback
@@ -211,9 +242,11 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         /**
          * Initialize Exercise.
          * @param {Function} callback
+         * @param {Integer} id
          */
         this.load = function(callback, id) {
             checkStatements = false;
+            initStatements = false;
             startStatements = false;
             endStatements = false;
             solutionCode = false;
@@ -223,12 +256,18 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             project.init(function() {
                 // 1st check existing programs
                 var programs = project.getProgramsNames();
+                var initPresent = false;
                 var startPresent = false;
                 var endPresent = false;
                 var checkPresent = false;
                 var solutionPresent = false;
                 var toLoad = 0;
                 
+                if (programs.indexOf("init") > -1) {
+                    toLoad++;
+                    initPresent = true;
+                }
+
                 if (programs.indexOf("start") > -1) {
                     toLoad++;
                     startPresent = true;
@@ -266,6 +305,9 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
                         callback.call(this);
                     }
                 };
+                if (initPresent) {
+                    loadInit(checkLoad);
+                }
                 if (startPresent) {
                     loadStart(checkLoad);
                 }
