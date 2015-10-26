@@ -21,13 +21,13 @@ define(['jquery','platform-pr', 'json'], function($) {
         };
         
         this.getViews = function(callback) {
-            /*var views = {
+            var views = {
                 task: {},
                 solution: {}
-                , hint: {requires: "task"},
+/*                , hint: {requires: "task"},
                 forum: {requires: "task"},
-                editor: {requires: "task"}
-            };*/
+                editor: {requires: "task"}*/
+            };
             callback(views);
         };
         
@@ -54,7 +54,7 @@ define(['jquery','platform-pr', 'json'], function($) {
             var res = JSON.stringify(
                 {score : frame.getScore(),
                 message : frame.getMessage(),
-                value : frame.getLastSubmission()});
+                value : frame.getAnswer()});
             callback(res);
         };
         
