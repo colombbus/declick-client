@@ -8,6 +8,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         var bottomSolution = 0;
         
         var score = 0;
+        var lastSubmission = "";
         
         var textMode = false;
         
@@ -109,18 +110,17 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 clear();
             }
             try {
-                var value;
                 if(textMode) {
-                    value = $input.val();
+                    lastSubmission = $input.val();
                 } else {
-                    value = editor.getStatements();
+                    lastSubmission = editor.getStatements();
                     exercise.start();
-                    TRuntime.executeStatements(value);
+                    TRuntime.executeStatements(lastSubmission);
                     canvas.giveFocus();
                     exercise.end();
                 }
                 //TODO: only if no error
-                Teacher.setStatements(value);
+                Teacher.setStatements(lastSubmission);
                 exercise.check();
             } catch (err) {
                 var error;
@@ -211,6 +211,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             editor.clear();
             $input.val();
             score = 0;
+            lastSubmission = "";
             exercise.load(function() {
                 // set instruction
                 if (exercise.hasInstructions()) {
@@ -269,6 +270,14 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 return this.getCode();
             }
         };
+        
+        /**
+         * Get the last submission entered by user
+         * @returns {string}
+         */
+        this.getLastSubmission = function() {
+            return lastSubmission;
+        };        
         
         /**
          * Set the code in the editor

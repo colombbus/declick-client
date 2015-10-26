@@ -53,7 +53,7 @@ define(['jquery','platform-pr', 'json'], function($) {
         this.getAnswer = function (callback) {
             var res = JSON.stringify(
                 {score : frame.getScore(),
-                value : frame.getAnswer()});
+                value : frame.getLastSubmission()});
             callback(res);
         };
         
