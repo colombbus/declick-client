@@ -100,7 +100,6 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             });
             canvas.removeLoading();
             TRuntime.init();
-            window.task.addViews({solution:{}});
             window.platform.initWithTask(window.task);            
         };
 
