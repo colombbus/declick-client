@@ -5,7 +5,8 @@
         "poison":"poison.png",
         "clé":"key.png",
         "balle":"ball.gif",
-        "coffre":"safe.png"
+        "coffre":"safe.png",
+        "panneau":"sign.png"
     },
     "en": {
     }
