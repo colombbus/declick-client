@@ -1,5 +1,5 @@
 {
-    "hide": ["_addImage", "_removeImage", "_addScene", "_addBlock", "_addPlatform", "_mayFall", "_jump", "_setGravity", "_startAutoAsset", "_setMovementDuration", "_setPauseDuration", "_setGravity", "_countItems", "_countCarriedItems", "_ifCatch", "_jump", "_stopAutoAsset", "_mayCatch", "_mayFall", "_pickupItem", "_rotate", "_setJumpSpeed", "_zoomIn", "_zoomOut", "_moveTo", "_centerGoTo", "_setAngle", "_setStep", "_setCenterLocation", "_scale", "_getX", "_getY", "_getXCenter", "_getYCenter", "_watchCollisions", "_ifCollision", "_ifCollisionWith"],
+    "hide": ["_addImage", "_removeImage", "_addScene", "_addBlock", "_addPlatform", "_mayFall", "_jump", "_setGravity", "_startAutoAsset", "_setMovementDuration", "_setPauseDuration", "_setGravity", "_countItems", "_countCarriedItems", "_ifCatch", "_jump", "_stopAutoAsset", "_mayCatch", "_mayFall", "_drop", "_pickup", "_rotate", "_setJumpSpeed", "_zoomIn", "_zoomOut", "_moveTo", "_centerGoTo", "_setAngle", "_setStep", "_setCenterLocation", "_scale", "_getX", "_getY", "_getXCenter", "_getYCenter", "_watchCollisions", "_ifCollision", "_ifCollisionWith"],
     "fr": {
         "methods":[
             {"name":"_buildGround","translated":"poserSol","displayed":"poserSol()"},
