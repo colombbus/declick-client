@@ -16,7 +16,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.sheet = null;
         this.built = false;
         this.entranceLocation = [0,0];
-        this.exitLocation = false;
+        this.exitLocations = false;
         this.counters = [0];
         TRuntime.addGraphicalObject(this, false);
         var g = TRuntime.getGraphics().getInstance();
@@ -553,16 +553,19 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }        
     };
 
-    Platform.prototype.getExitLocation = function() {
-        return this.exitLocation;
+    Platform.prototype.getExitLocations = function() {
+        return this.exitLocations;
     };
     
-    Platform.prototype.setExitLocation = function(x,y) {
-        this.exitLocation = [x,y];
+    Platform.prototype.addExitLocation = function(x,y) {
+        if (this.exitLocations === false) {
+            this.exitLocations = [];
+        }
+        this.exitLocations.push([x,y]);
         // warn every robots registered that entrance has been added
         for (var i=0;i<Platform.registered.length;i++) {
             var object = Platform.registered[i];
-            object.setExitLocation(x,y);
+            object.addExitLocation(x,y);
         }        
     };
     

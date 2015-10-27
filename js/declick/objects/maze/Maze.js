@@ -58,7 +58,7 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
         this._setTile(x,y,Maze.EXIT);
-        this.setExitLocation(x,y);
+        this.addExitLocation(x,y);
     };
     
     /*
@@ -78,7 +78,7 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
             if (row[i] === Maze.ENTRANCE) {
                 this.setEntranceLocation(x+i,y);
             } else if (row[i] === Maze.EXIT) {
-                this.setExitLocation(x+i,y);
+                this.addExitLocation(x+i,y);
             }
         }
         Platform.prototype._setRow.call(this,x,y,row);
@@ -89,11 +89,9 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
         for (var i=0; i<this.nbRows; i++) {
             for (var j=0; j<this.nbCols; j++) {
                 if (this.rows[i][j] === Maze.ENTRANCE) {
-                    console.log("setting entrance to: "+j+","+i);
                     this.setEntranceLocation(j,i);
                 } else if (this.rows[i][j] === Maze.EXIT) {
-                    console.log("setting exit to: "+j+","+i);
-                    this.setExitLocation(j,i);
+                    this.addExitLocation(j,i);
                 }
             }
         }

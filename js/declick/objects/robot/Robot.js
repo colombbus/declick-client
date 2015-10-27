@@ -17,7 +17,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         }
         this.synchronousManager = new SynchronousManager();
         this.gObject.synchronousManager = this.synchronousManager;
-        this.exitLocation = false;
+        this.exitLocations = false;
         if (auto) {
             Platform.register(this);
         }
@@ -388,9 +388,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     	Hero.prototype._addPlatform.call(this, platform);
         var entrance = platform.getEntranceLocation();
         this.setEntranceLocation(entrance[0],entrance[1]);
-        var exit = platform.getExitLocation();
-        if (exit) {
-            this.setExitLocation(exit[0],exit[1]);
+        var exit = platform.getExitLocations();
+        if (exit !== false) {
+            this.exitLocations = exit;
         }
     };
     
@@ -398,8 +398,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         this.gObject.setStartLocation(x,y);
     };
 
-    Robot.prototype.setExitLocation = function(x, y) {
-        this.exitLocation = [x, y];
+    Robot.prototype.addExitLocation = function(x, y) {
+        if (this.exitLocations === false) {
+            this.exitLocations = [];
+        }
+        this.exitLocations.push([x, y]);
     };
     
     Robot.prototype._getItemName = function() {
@@ -411,8 +414,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
     
     Robot.prototype._isOverExit = function() {
-        if (this.exitLocation) {
-            return (this.gObject.getGridX()=== this.exitLocation[0] && this.gObject.getGridY()=== this.exitLocation[1]);
+        if (this.exitLocations !== false) {
+            var x = this.gObject.getGridX();
+            var y = this.gObject.getGridY();
+            for (var i=0; i<this.exitLocations.length; i++) {
+                if (x === this.exitLocations[i][0] && y === this.exitLocations[i][1]) {
+                    return true;
+                }
+            }
         }
         return false;
     };
