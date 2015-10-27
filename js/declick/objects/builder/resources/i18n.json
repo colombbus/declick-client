@@ -7,6 +7,7 @@
             {"name":"_buildEntrance","translated":"poserEntrée","displayed":"poserEntrée()"},
             {"name":"_buildExit","translated":"poserSortie","displayed":"poserSortie()"},
             {"name":"_buildWall","translated":"poserMur","displayed":"poserMur()"},
+            {"name":"_dropItem","translated":"poserItem","displayed":"poserItem()"},
             {"name":"_addTile","translated":"ajouterElément","displayed":"ajouterElément(\"image\")"},
             {"name":"_addRow","translated":"poserLigne","displayed":"poserLigne(0,0)"},
             {"name":"_setFlash","translated":"sePresser","displayed":"sePresser()"},
