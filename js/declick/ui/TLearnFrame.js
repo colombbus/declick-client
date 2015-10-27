@@ -1,13 +1,14 @@
-define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TParser', 'TExercise', 'TError', 'platform-pr'], function(TComponent, $, SplitPane, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TParser, TExercise, TError) {
+define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExercise', 'TError', 'objects/teacher/Teacher', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExercise, TError, Teacher) {
     function TLearnFrame(callback) {
         var $text, $message, $textMessage, $textMessageContent, $messageContent, $instructions, $solution, $solutionContent, $input, $loading, $right;
         var canvas, editor;
 
         var exercise = new TExercise();
         
-        var lastSubmission = "";
-        
         var bottomSolution = 0;
+        
+        var score = 0;
+        var lastSubmission = "";
         
         var textMode = false;
         
@@ -80,28 +81,50 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
         this.displayed = function() {
             canvas.displayed();
             editor.displayed();
-            exercise.setFrame(this);
+            Teacher.setFrame(this);
             $right.on("splitpane:resized", function() {
                 editor.resize();
             });
             initSplitPane();
             // declare itself as log 
             TRuntime.setLog(this);
+            
+            var self = this;
+            window.addEventListener("hashchange", function() {
+                self.loading();
+                var hash = document.location.hash;
+                var exerciseId = parseInt(hash.substring(1));
+                if (isNaN(exerciseId)) {
+                    TEnvironment.error("Could not find exercise id");
+                    self.loaded();
+                } else {
+                    self.loadExercise(exerciseId, function() {
+                        self.loaded();
+                    });
+                }
+            }, false);
         };
-
+        
         this.init = function() {
             var height = $solution.height();
             $solution.css('top', -height + "px");
             $solution.css('bottom', height + bottomSolution + "px");
             $solution.css('visibility', 'visible');
             $solution.hide();
-            $loading.fadeOut(1000, function() {
-                $(this).remove();
-            });
             canvas.removeLoading();
             TRuntime.init();
-            window.task.addViews({solution:{}});
-            window.platform.initWithTask(window.task);            
+            window.platform.initWithTask(window.task);
+            this.loaded();
+        };
+        
+        this.loading = function() {
+            $loading.show();
+        };
+
+        this.loaded = function() {
+            $loading.fadeOut(1000, function() {
+                $(this).hide();
+            });
         };
 
         var execute = function() {
@@ -110,18 +133,18 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
                 clear();
             }
             try {
-                var value;
                 if(textMode) {
-                    value = $input.val();
-                    lastSubmission = value;
+                    lastSubmission = $input.val();
                 } else {
-                    value = editor.getStatements();
-                    lastSubmission = editor.getValue();
-                    TRuntime.executeStatements(value);
+                    lastSubmission = editor.getStatements();
+                    exercise.start();
+                    TRuntime.executeStatements(lastSubmission);
                     canvas.giveFocus();
+                    exercise.end();
                 }
                 //TODO: only if no error
-                exercise.check(value);
+                Teacher.setStatements(lastSubmission);
+                exercise.check();
             } catch (err) {
                 var error;
                 if (!(err instanceof TError)) {
@@ -148,29 +171,20 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
             exercise.init();
         };
 
-        var validateStep = function(message) {
-            if(typeof message === "undefined" || message === "") {
-                message = "Bravo, tu as réussi !";
-            }
-            showMessage(message);
-        };
-
-        var invalidateStep = function(message) {
-            showMessage(message);
-        };
-
-        this.validateStep = function(message) {
+        this.validateExercise = function(message) {
             try {
-                platform.validate("next");
+                platform.validate("stay");
             } catch (e) {
-                console.error("Error validating step");
-                console.debug(e);
+                TEnvironment.error("Error validating exercise");
             }
-            validateStep(message);
+            if(typeof message === "undefined" || message === "") {
+                message = TEnvironment.getMessage("success-message");
+            }
+            showMessage(message);
         };
 
-        this.invalidateStep = function(message) {
-            invalidateStep(message);
+        this.invalidateExercise = function(message) {
+            showMessage(message);
         };
 
         var showError = function(message) {
@@ -218,6 +232,8 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
             TRuntime.clear();
             editor.clear();
             $input.val();
+            score = 0;
+            lastSubmission = "";
             exercise.load(function() {
                 // set instruction
                 if (exercise.hasInstructions()) {
@@ -248,20 +264,6 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
             });
         };
         
-        /*due to the fact that some functions have to get through
-         * the editor before atteining Teacher, no direct appeal
-         * to Teacher are done here; there are all get through
-         * the editor
-         */
-        
-        /**
-         * Get the last submission
-         * @returns {string}
-         */
-        this.getLastSubmission = function() {
-            return lastSubmission;
-        };
-        
         /**
          * Get the code unparsed
          * @returns {string}
@@ -290,6 +292,14 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
                 return this.getCode();
             }
         };
+        
+        /**
+         * Get the last submission entered by user
+         * @returns {string}
+         */
+        this.getLastSubmission = function() {
+            return lastSubmission;
+        };        
         
         /**
          * Set the code in the editor
@@ -324,7 +334,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
          * @returns {number}
          */
         this.getScore = function() {
-            return exercise.getScore();
+            return score;
         };
         
         /**
@@ -332,7 +342,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TLearnCanvas', 'ui/TLearnEd
          * @param {number} value
          */
         this.setScore = function(value) {
-            return exercise.setScore(value);
+            score = value;
         };
         
         /**

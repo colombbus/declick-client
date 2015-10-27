@@ -34,34 +34,28 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         },
         step: function(dt) {
             var p = this.p;
-            var dtStep = dt;
-            
-            while (dtStep > 0) {
-                dt = Math.min(1/30,dtStep);
-                if (!this.p.dragging && !this.p.frozen && this.p.waitingForBlocks === 0) {
-                    if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
-                        // cannot move upward or downward when walker may fall
-                        this.p.direction = Sprite.DIRECTION_NONE;
+            if (!this.p.dragging && !this.p.frozen && this.p.waitingForBlocks === 0) {
+                if (this.p.mayFall && (this.p.direction === Sprite.DIRECTION_UP || this.p.direction === Sprite.DIRECTION_DOWN)) {
+                    // cannot move upward or downward when walker may fall
+                    this.p.direction = Sprite.DIRECTION_NONE;
+                }
+                if (this.p.mayFall) {
+                    this.p.vy += this.p.gravity * dt;
+                    if (this.p.jumpAvailable > 0)
+                        this.p.jumpAvailable--;
+                    if (this.p.jumping) {
+                        if (this.p.jumpAvailable > 0) {
+                            // perform a jump
+                            this.p.vy = this.p.jumpSpeed;
+                        }
+                        this.p.jumping = false;
                     }
-                    if (this.p.mayFall) {
-                        this.p.vy += this.p.gravity * dt;
-                        if (this.p.jumpAvailable > 0)
-                            this.p.jumpAvailable--;
-                        if (this.p.jumping) {
-                            if (this.p.jumpAvailable > 0) {
-                                // perform a jump
-                                this.p.vy = this.p.jumpSpeed;
-                            }
-                            this.p.jumping = false;
-                        }
-                        if (this.p.direction === Sprite.DIRECTION_NONE) {
-                            this.p.destinationY = this.p.y + this.p.vy * dt;
-                        }
+                    if (this.p.direction === Sprite.DIRECTION_NONE) {
+                        this.p.destinationY = this.p.y + this.p.vy * dt;
                     }
                 }
-                this._super(dt);
-                dtStep -= dt;
             }
+            this._super(dt);
         },
         checkCollisions: function() {
             // search for sprites and blocks
@@ -84,48 +78,50 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                     var impactX = Math.abs(p.vx);
                     var impactY = Math.abs(p.vy);
                     collision.impact = 0;
-                    // Top collision
+                    p.skipCollide = false;
                     if(collision.normalY < -0.3) {
-                        if(!p.skipCollide && p.vy > 0) { 
-                            p.vy = 0; 
-                            blockedY = true;
-                        }
                         collision.impact = impactY;
                         this.trigger("bump.bottom",collision);
                         this.trigger("bump",collision);
-                    }
-                    if(collision.normalY > 0.3) {
-                        if(!p.skipCollide && p.vy < 0) { 
-                            p.vy = 0; 
+                        if(!p.skipCollide && p.vy > 0) { 
+                            p.vy = 0;
                             blockedY = true;
                         }
+                    }
+                    if(collision.normalY > 0.3) {
                         collision.impact = impactY;
                         this.trigger("bump.top",collision);
                         this.trigger("bump",collision);
+                        if(!p.skipCollide && p.vy < 0) { 
+                            p.vy = 0;
+                            blockedY = true;
+                        }
                     }
                     if(collision.normalX < -0.3) {
-                        if(!p.skipCollide && p.vx > 0) { 
-                            p.vx = 0;  
-                            blockedX = true;
-                        }
                         collision.impact = impactX;
                         this.trigger("bump.right",collision);
                         this.trigger("bump",collision);
+                        if(!p.skipCollide && p.vx > 0) { 
+                            p.vx = 0;
+                            blockedX = true;
+                        }
                     }
                     if(collision.normalX > 0.3) {
-                        if(!p.skipCollide && p.vx < 0) { 
-                            p.vx = 0; 
-                           blockedX = true;
-                        }
                         collision.impact = impactX;
                         this.trigger("bump.left",collision);
                         this.trigger("bump",collision);
+                        if(!p.skipCollide && p.vx < 0) { 
+                            p.vx = 0; 
+                            blockedX = true;
+                        }
                     }
-                    if (Math.abs(collision.separate[0])>Math.abs(separate[0])) {
-                        separate[0] = collision.separate[0];
-                    }
-                    if (Math.abs(collision.separate[1])>Math.abs(separate[1])) {
-                        separate[1] = collision.separate[1];
+                    if (!p.skipCollide) {
+                        if (Math.abs(collision.separate[0])>Math.abs(separate[0])) {
+                            separate[0] = collision.separate[0];
+                        }
+                        if (Math.abs(collision.separate[1])>Math.abs(separate[1])) {
+                            separate[1] = collision.separate[1];
+                        }
                     }
                 }
                 if (object.p.type === TGraphicalObject.TYPE_SPRITE || object.p.type === TGraphicalObject.TYPE_BLOCK) {

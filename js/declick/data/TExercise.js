@@ -1,4 +1,4 @@
-define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teacher'], function(TEnvironment, TRuntime, TProject, TError, Teacher) {
+define(['TEnvironment', 'TRuntime', 'TProject', 'TError'], function(TEnvironment, TRuntime, TProject, TError) {
     /**
      * TExercise manage exercises in "Learn" part of Declick.
      * @exports TExercise
@@ -8,6 +8,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         var project = new TProject();
         TEnvironment.setProject(project);
         var checkStatements = false;
+        var initStatements = false;
         var startStatements = false;
         var endStatements = false;
         var solutionCode = false;
@@ -20,14 +21,6 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
          */
         this.setId = function(value) {
             project.setId(value);
-        };
-        
-        /**
-         * Set Teacher's frame.
-         * @param {String} value
-         */
-        this.setFrame = function(value) {
-            Teacher.setFrame(value);
         };
         
         /**
@@ -68,6 +61,14 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
          */
         this.hasStart = function() {
             return (startStatements !== false);
+        };
+
+        /**
+         * Checks if Exercise has iit statementse.
+         * @returns {Boolean}
+         */
+        this.hasInit = function() {
+            return (initStatements !== false);
         };
 
 
@@ -118,44 +119,54 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         };        
         
         /**
-         * Exectute start statements if any.
+         * Exectute init statements if any.
          */
         this.init = function() {
+            if (initStatements !== false) {
+                TRuntime.executeStatements(initStatements);
+            }
+        };
+
+        /**
+         * Exectute start statements if any.
+         */
+        this.start = function() {
             if (startStatements !== false) {
                 TRuntime.executeStatements(startStatements);
             }
         };
         
-        this.getScore = function() {
-            return Teacher.getScore();
-        };
-        
-        this.setScore = function(value) {
-            return Teacher.setScore(value);
-        };
-        
-        this.getMessage = function() {
-            return Teacher.getMessage();
-        };
-        
-        this.setMessage = function(value) {
-            return Teacher.setMessage(value);
-        };
-        
         /**
-         * Execute check statements.
-         * @param {Statements[]} statements
+         * Exectute end statements if any.
          */
-        this.check = function(statements) {
-            Teacher.setStatements(statements);
+        this.end = function() {
             if (endStatements !== false) {
                 TRuntime.executeStatements(endStatements);
             }
+        };
+        
+        /**
+         * Execute check statements if any.
+         */
+        this.check = function() {
             if (checkStatements !== false) {
                 TRuntime.executeStatements(checkStatements);
             }
         };
         
+        /**
+         * Loads init statements.
+         * @param {Function} callback
+         */
+        var loadInit = function(callback) {
+            project.getProgramStatements("init", function(result) {
+                if (!(result instanceof TError)) {
+                    initStatements = result;
+                }
+                callback.call(this);
+            });
+        };
+
         /**
          * Loads start statements.
          * @param {Function} callback
@@ -211,9 +222,11 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
         /**
          * Initialize Exercise.
          * @param {Function} callback
+         * @param {Integer} id
          */
         this.load = function(callback, id) {
             checkStatements = false;
+            initStatements = false;
             startStatements = false;
             endStatements = false;
             solutionCode = false;
@@ -223,12 +236,18 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
             project.init(function() {
                 // 1st check existing programs
                 var programs = project.getProgramsNames();
+                var initPresent = false;
                 var startPresent = false;
                 var endPresent = false;
                 var checkPresent = false;
                 var solutionPresent = false;
                 var toLoad = 0;
                 
+                if (programs.indexOf("init") > -1) {
+                    toLoad++;
+                    initPresent = true;
+                }
+
                 if (programs.indexOf("start") > -1) {
                     toLoad++;
                     startPresent = true;
@@ -266,6 +285,9 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/teacher/Teach
                         callback.call(this);
                     }
                 };
+                if (initPresent) {
+                    loadInit(checkLoad);
+                }
                 if (startPresent) {
                     loadStart(checkLoad);
                 }

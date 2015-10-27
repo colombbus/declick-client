@@ -28,6 +28,7 @@ require.config({
         "SynchronousManager": "utils/SynchronousManager",
         "TError": "utils/TError",
         "TUtils": "utils/TUtils",
+        /*"platform-pr": "http://algorea-beta.eroux.fr/platform-pr",*/
         "platform-pr": "../libs/pem-task/platform-pr",
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
@@ -95,7 +96,7 @@ function load() {
                         // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
                         $(window).resize();
                         if (isNaN(exerciseId)) {
-                            window.console.error("Could not find exercise id");
+                            TEnvironment.error("Could not find exercise id");
                             self.init();
                         } else {
                             self.loadExercise(exerciseId, function() {

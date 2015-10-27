@@ -756,7 +756,7 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
             }
             catch (e)
             {
-                console.error("addQuoteDelimiters error: " + e);
+                TEnvironment.error("addQuoteDelimiters error: " + e);
                 return text;
             }
         };

@@ -1,4 +1,4 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/hero/Hero', 'objects/platform/Platform'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject, Sprite, Hero, Platform) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/hero/Hero', 'objects/platform/Platform', 'objects/maze/Maze'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject, Sprite, Hero, Platform, Maze) {
     /**
      * Defines Robot, inherited from Hero.
      * The main difference with Hero is that it executes commands one by one.
@@ -54,19 +54,20 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             var p = this.p;
             var oldX = p.x;
             var oldY = p.y;
-            if (this.p.inJump && this.p.vy>0) {
+            var endSM = false;
+            if (p.inJump && p.vy>=0) {
                 // jump is over
-                this.p.inJump = false;
-                this.synchronousManager.end();
+                p.inJump = false;
+                endSM = true;
             }
-            if (this.p.mayFall && this.p.jumping) {
-                if (this.p.jumpAvailable > 0) {
+            if (p.mayFall && p.jumping) {
+                if (p.jumpAvailable > 1) {
                     // perform a jump
-                    this.p.vy = this.p.jumpSpeed;
-                    this.p.inJump = true;
+                    p.vy = this.p.jumpSpeed;
+                    p.inJump = true;
                 } else {
-                    this.p.jumping = false;
-                    this.synchronousManager.end();
+                    p.jumping = false;
+                    endSM = true;
                 }
             }
             this._super(dt);
@@ -87,11 +88,18 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 if (p.inMovement && !p.moving) {
                     p.inMovement = false;
                     this.updateGridLocation();
+                    endSM = true;
+                }
+                if (endSM) {
                     this.synchronousManager.end();
                 }
             }
         },
-        bumpTop: function() {
+        bumpTop: function(collision) {
+            // check if collided is a ground
+            if (typeof collision.tile !== 'undefined' && collision.tile === Maze.GROUND) {
+                this.p.skipCollide = true;
+            }
             this.p.blocked[0] = true;
         },
         bumpBottom: function() {

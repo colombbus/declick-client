@@ -179,7 +179,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             if (typeof log !== 'undefined') {
                 log.addMessage(text);
             } else {
-                window.console.log(text);
+                TEnvironment.log(text);
             }
         };
 
@@ -187,7 +187,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             if (typeof log !== 'undefined') {
                 log.addError(error);
             } else {
-                window.console.error(error);
+                TEnvironment.error(error);
             }
         };
 

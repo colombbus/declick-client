@@ -50,7 +50,7 @@ function load() {
                             TEnvironment.setProject(currentProject);
                             currentProject.getProgramStatements(init_programName, function(statements) {
                                 if (statements instanceof TError) {
-                                    window.console.error(statements.getMessage());
+                                    TEnvironment.error(statements.getMessage());
                                 }
                                 currentProject.preloadResources(function(count, total) {
                                         canvas.setLoadingValue(count, total);

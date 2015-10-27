@@ -49,7 +49,7 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
                                 codeChanged = false;
                             } catch (e) {
                                 statements = [];
-                                window.console.error("Error parsing program '" + name + "'");
+                                TEnvironment.error("Error parsing program '" + name + "'");
                             }
                         }
                         TLink.saveProgram(name, code, statements, function(error) {
@@ -71,7 +71,7 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
                         codeChanged = false;
                     } catch (e) {
                         statements = [];
-                        window.console.error("Error parsing program '" + name + "'");
+                        TEnvironment.error("Error parsing program '" + name + "'");
                     }
                 }
                 TLink.saveProgram(name, code, statements, function(error) {

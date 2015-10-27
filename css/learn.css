@@ -210,6 +210,7 @@ body {
     margin-right:5px;
     margin-top:2px;
     background-image:url(../images/clear_grey.png);
+    cursor:pointer;
 }
 
 #tlearnframe-separator {
@@ -443,6 +444,7 @@ body {
     margin-right:5px;
     margin-top:2px;
     background-image:url(../images/clear_grey.png);
+    cursor:pointer;    
 }
 
 #tlearnframe-loading {

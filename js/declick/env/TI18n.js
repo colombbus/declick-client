@@ -93,7 +93,7 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
                             }
                         });
                     } else {
-                        window.console.error("Error loading translated methods (" + file + "): " + status);
+                        TEnvironment.error("Error loading translated methods (" + file + "): " + status);
                     }
                     if (typeof callback !== 'undefined') {
                         callback.call(self, translatedMethods, hideMethods);
