@@ -97,8 +97,18 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                 pointer++;
             }
             if (loop) {
-                // remove statements up until loop
-                stack[executionLevel].splice(0,pointer); 
+                // set loop as interrupted
+                statement.controls.interrupt = true;
+                // remove statements before loop
+                if (pointer>0) {
+                    stack[executionLevel].splice(0,pointer-1);
+                }
+                // either interrupt is called from the stack,
+                // in which case interrupt statement is now replaced
+                // by the loop, which will be removed,
+                // either it is called from declick,
+                // in which case loop statement 
+                // will complete
             } else {
                 //  no loop encountered: we just stop
                 stop();
@@ -204,6 +214,8 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                     if (currentLevel === executionLevel) {
                         // We haven't changed execution level
                         if (consume === true) {
+                            // stack may have changed (e.g. interrupt)
+                            statement = stack[executionLevel][0];
                             stack[executionLevel].splice(stackPointer[executionLevel], 1);
                             if ((typeof statement.inserted === 'undefined' && typeof statement.priority === 'undefined') || statement.log) {
                                 logCommand(statement.raw);
@@ -485,6 +497,9 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                     statement.controls.count = null;
                 }
                 statement.controls.loop = 0;
+            } else if (typeof statement.controls.interrupt !== "undefined") {
+                // Loop interrupted
+                return true;
             }
             statement.controls.loop++;
             // loop management
