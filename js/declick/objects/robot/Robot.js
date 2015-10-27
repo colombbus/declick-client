@@ -190,7 +190,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             }
             return this.p.encountered.length;
         },
-        pickupItem: function() {
+        pickup: function() {
             var count = this.countItems();
             if (count === 0) {
                 throw "no item";
@@ -199,7 +199,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.p.carriedItems.push(newItem);
             newItem.setLocation(this.p.x - this.p.w / 2 + (this.p.carriedItems.length - 1) * 10, this.p.y - this.p.h / 2);
         },
-        dropItem: function() {
+        drop: function() {
             if (this.p.carriedItems.length === 0) {
                 throw "no carried item";
             }
@@ -314,15 +314,15 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     /**
      * Pick up an Item.
      */
-    Robot.prototype._pickupItem = function() {
-        this.gObject.pickupItem();
+    Robot.prototype._pickup = function() {
+        this.gObject.pickup();
     };
 
     /**
      * Drop an Item.
      */
-    Robot.prototype._dropItem = function() {
-        this.gObject.dropItem();
+    Robot.prototype._drop = function() {
+        this.gObject.drop();
     };
 
     /**
@@ -423,6 +423,15 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             if (name === current) {
                 return true;
             }
+        } catch (e) {
+        }
+        return false;
+    };    
+
+    Robot.prototype._isOverItem = function() {
+        try {
+            this.gObject.getItemName();
+            return true;
         } catch (e) {
         }
         return false;

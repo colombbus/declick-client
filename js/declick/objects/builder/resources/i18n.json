@@ -1,5 +1,5 @@
 {
-    "hide": ["_addImage", "_removeImage", "_addScene", "_addBlock", "_addPlatform", "_mayFall", "_jump", "_setGravity", "_startAutoAsset", "_setMovementDuration", "_setPauseDuration", "_setGravity", "_countItems", "_countCarriedItems", "_ifCatch", "_jump", "_stopAutoAsset", "_dropItem", "_mayCatch", "_mayFall", "_pickupItem", "_rotate", "_setJumpSpeed", "_zoomIn", "_zoomOut", "_moveTo", "_centerGoTo", "_setAngle", "_setStep", "_setCenterLocation", "_scale", "_getX", "_getY", "_getXCenter", "_getYCenter", "_watchCollisions", "_ifCollision", "_ifCollisionWith"],
+    "hide": ["_addImage", "_removeImage", "_addScene", "_addBlock", "_addPlatform", "_mayFall", "_jump", "_startAutoAsset", "_setGravity", "_countItems", "_countCarriedItems", "_ifCatch", "_stopAutoAsset", "_mayCatch", "_mayFall", "_drop", "_pickup", "_setJumpSpeed", "_zoomIn", "_zoomOut", "_moveTo", "_setStep", "_scale", "_getX", "_getY", "_watchCollisions", "_ifCollision", "_ifCollisionWith"],
     "fr": {
         "methods":[
             {"name":"_buildGround","translated":"poserSol","displayed":"poserSol()"},
@@ -7,6 +7,7 @@
             {"name":"_buildEntrance","translated":"poserEntrée","displayed":"poserEntrée()"},
             {"name":"_buildExit","translated":"poserSortie","displayed":"poserSortie()"},
             {"name":"_buildWall","translated":"poserMur","displayed":"poserMur()"},
+            {"name":"_dropItem","translated":"poserItem","displayed":"poserItem()"},
             {"name":"_addTile","translated":"ajouterElément","displayed":"ajouterElément(\"image\")"},
             {"name":"_addRow","translated":"poserLigne","displayed":"poserLigne(0,0)"},
             {"name":"_setFlash","translated":"sePresser","displayed":"sePresser()"},

@@ -1,5 +1,5 @@
 {
-    "hide": ["_alwaysMoveForward", "_alwaysMoveBackward", "_alwaysMoveUpward", "_alwaysMoveDownward", "_setImage", "_setTransparent", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImageSet", "_setCharacter", "_setCenterLocation"],
+    "hide": ["_alwaysMoveForward", "_alwaysMoveBackward", "_alwaysMoveUpward", "_alwaysMoveDownward", "_centerGoTo", "_getXCenter", "_getYCenter", "_rotate", "_setImage", "_setTransparent", "_setAngle", "_setMovementDuration", "_setPauseDuration", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImageSet", "_setCharacter", "_setCenterLocation"],
     "fr": {
         "methods":[
             {"name":"_moveForward","translated":"avancer","displayed":"avancer(1)"},
@@ -9,15 +9,16 @@
             {"name":"_setVelocity","translated":"d\u00e9finirVitesse","displayed":"d\u00e9finirVitesse(100)"},
             {"name":"_setStep","translated":"d\u00e9finirPas","displayed":"d\u00e9finirPas(50)"},
             {"name":"_countItems","translated":"compterItems","displayed":"compterItems()"},
-            {"name":"_pickupItem","translated":"ramasser","displayed":"ramasser()"},
-            {"name":"_dropItem","translated":"déposer","displayed":"déposer()"},
+            {"name":"_pickup","translated":"ramasser","displayed":"ramasser()"},
+            {"name":"_drop","translated":"déposer","displayed":"déposer()"},
             {"name":"_countCarriedItems","translated":"compterItemsRamass\u00e9s","displayed":"compterItemsRamass\u00e9s()"},
             {"name":"_wasBlocked","translated":"estBloqu\u00e9","displayed":"estBloqu\u00e9(\"haut\")"},
             {"name":"_getItemName","translated":"récupérerNomItem","displayed":"récupérerNomItem()"},
             {"name":"_getGridX","translated":"récupérerGrilleX","displayed":"récupérerGrilleX()"},
             {"name":"_getGridY","translated":"récupérerGrilleY","displayed":"récupérerGrilleY()"},
             {"name":"_isOverExit","translated":"estSurSortie","displayed":"estSurSortie()"},
-            {"name":"_isOver","translated":"estSur","displayed":"estSur(\"nom\")"}
+            {"name":"_isOver","translated":"estSur","displayed":"estSur(\"nom\")"},
+            {"name":"_isOverItem","translated":"estSurItem","displayed":"estSurItem()"}
             ]
     }
 }
