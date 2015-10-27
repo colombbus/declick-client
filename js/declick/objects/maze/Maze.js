@@ -84,6 +84,21 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
         Platform.prototype._setRow.call(this,x,y,row);
     };
     
+    Maze.prototype._loadStructure = function(structure) {
+        Platform.prototype._loadStructure.call(this, structure);
+        for (var i=0; i<this.nbRows; i++) {
+            for (var j=0; j<this.nbCols; j++) {
+                if (this.rows[i][j] === Maze.ENTRANCE) {
+                    console.log("setting entrance to: "+j+","+i);
+                    this.setEntranceLocation(j,i);
+                } else if (this.rows[i][j] === Maze.EXIT) {
+                    console.log("setting exit to: "+j+","+i);
+                    this.setExitLocation(j,i);
+                }
+            }
+        }
+    };
+    
     return Maze;
 });
 
