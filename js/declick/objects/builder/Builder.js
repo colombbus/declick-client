@@ -1,4 +1,4 @@
-define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze'], function($, TUtils, Robot, Maze) {
+define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze', 'objects/item/Item'], function($, TUtils, Robot, Maze, Item) {
     /**
      * Defines Builder, inherited from Robot.
      * It's a robot which can deposit tiles.
@@ -7,6 +7,7 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze'], functio
     var Builder = function() {
         // build maze before calling constructor in order to have builder drawn over the maze
         this.maze = new Maze();
+        this.items = [];
         Robot.call(this, "builder", false);
     };
 
@@ -148,6 +149,12 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze'], functio
             throw new Error(TUtils.format(this.getMessage("incorrect index")), tileNumber);
         }
         this.maze.setCollidableTile(tileNumber, value);
+    };
+    
+    Builder.prototype._dropItem = function(type) {
+        var item = new Item(type);
+        item._setLocation(this.gObject.p.x, this.gObject.p.y);
+        this.items.push(item);
     };
     
     Builder.prototype.deleteObject = function() {
