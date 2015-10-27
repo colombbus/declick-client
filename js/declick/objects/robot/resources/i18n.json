@@ -17,7 +17,8 @@
             {"name":"_getGridX","translated":"récupérerGrilleX","displayed":"récupérerGrilleX()"},
             {"name":"_getGridY","translated":"récupérerGrilleY","displayed":"récupérerGrilleY()"},
             {"name":"_isOverExit","translated":"estSurSortie","displayed":"estSurSortie()"},
-            {"name":"_isOver","translated":"estSur","displayed":"estSur(\"nom\")"}
+            {"name":"_isOver","translated":"estSur","displayed":"estSur(\"nom\")"},
+            {"name":"_isOverItem","translated":"estSurItem","displayed":"estSurItem()"}
             ]
     }
 }

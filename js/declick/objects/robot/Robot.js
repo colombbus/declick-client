@@ -419,6 +419,15 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         }
         return false;
     };    
+
+    Robot.prototype._isOverItem = function() {
+        try {
+            this.gObject.getItemName();
+            return true;
+        } catch (e) {
+        }
+        return false;
+    };    
     
     Robot.prototype.deleteObject = function() {
         this.synchronousManager.end();
