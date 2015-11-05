@@ -37,12 +37,15 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze', 'objects
      * @param {Integer} x
      * @param {Integer} y
      */
-    Builder.prototype._buildGround = function(x,y) {
-        if (typeof x === 'undefined') {
+    Builder.prototype._buildGround = function(x, y) {
+        if (typeof y === 'undefined') {
+            if (typeof x !== 'undefined') {
+                throw this.getMessage("parameter ground");
+            }
             x = this.gObject.getGridX();
             y = this.gObject.getGridY();
         }
-        this.maze._buildGround(x,y);
+        this.maze._buildGround(x, y);
     };
     
 
@@ -91,7 +94,10 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze', 'objects
      * @param {Integer} y
      */
     Builder.prototype._buildWall = function(x,y) {
-        if (typeof x === 'undefined') {
+        if (typeof y === 'undefined') {
+            if (typeof x !== 'undefined') {
+                throw this.getMessage("parameter wall");
+            }
             x = this.gObject.getGridX();
             y = this.gObject.getGridY();
         }
