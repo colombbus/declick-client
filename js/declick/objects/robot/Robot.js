@@ -249,12 +249,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * @param {Integer} number
      */
     Robot.prototype._moveForward = function(number) {
-        if (typeof number !== 'undefined') {
+        if (typeof number !== 'undefined')
             number = TUtils.getInteger(number);
-        } else {
+        else
             number = 1;
-        }
-        this.gObject.moveForward(number);
+        if (number >= 0)
+            this.gObject.moveForward(number);
+        else
+            this.gObject.moveBackward(-number);
     };
     
     /**
@@ -264,12 +266,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * @param {Integer} number
      */
     Robot.prototype._moveBackward = function(number) {
-        if (typeof number !== 'undefined') {
+        if (typeof number !== 'undefined')
             number = TUtils.getInteger(number);
-        } else {
+        else
             number = 1;
-        }
-        this.gObject.moveBackward(number);
+        if (number >= 0)
+            this.gObject.moveBackward(number);
+        else
+            this.gObject.moveForward(-number);
     };
    
     /**
@@ -279,12 +283,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * @param {Integer} number
      */
     Robot.prototype._moveUpward = function(number) {
-        if (typeof number !== 'undefined') {
+        if (typeof number !== 'undefined')
             number = TUtils.getInteger(number);
-        } else {
+        else
             number = 1;
-        }
-        this.gObject.moveUpward(number);
+        if (number >= 0)
+            this.gObject.moveUpward(number);
+        else
+            this.gObject.moveDownward(-number);
     };
 
     /**
@@ -294,12 +300,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * @param {Integer} number
      */
     Robot.prototype._moveDownward = function(number) {
-        if (typeof number !== 'undefined') {
+        if (typeof number !== 'undefined')
             number = TUtils.getInteger(number);
-        } else {
+        else
             number = 1;
-        }
-        this.gObject.moveDownward(number);
+        if (number >= 0)
+            this.gObject.moveDownward(number);
+        else
+            this.gObject.moveUpward(-number);
     };
 
     /**
