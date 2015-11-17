@@ -136,11 +136,11 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
         
         this.loading = function() {
-            $loading.show();
+            $loading.stop().show();
         };
 
         this.loaded = function() {
-            $loading.fadeOut(1000, function() {
+            $loading.stop().fadeOut(1000, function() {
                 $(this).hide();
             });
         };
