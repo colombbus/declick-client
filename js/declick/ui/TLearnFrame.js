@@ -12,6 +12,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         
         var textMode = false;
         
+        var initialized = false;
+        
         TComponent.call(this, "TLearnFrame.html", function(component) {
             $text = component.find("#tlearnframe-text");
             $input = $text.find("#tlearnframe-text-input");
@@ -91,17 +93,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             
             var self = this;
             window.addEventListener("hashchange", function() {
-                self.loading();
-                var hash = document.location.hash;
-                var exerciseId = parseInt(hash.substring(1));
-                if (isNaN(exerciseId)) {
-                    TEnvironment.error("Could not find exercise id");
-                    self.loaded();
-                } else {
-                    self.loadExercise(exerciseId, function() {
-                        self.loaded();
-                    });
-                }
+                self.load();
             }, false);
         };
         
@@ -114,7 +106,33 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             canvas.removeLoading();
             TRuntime.init();
             window.platform.initWithTask(window.task);
-            this.loaded();
+            initialized = true;
+        };
+        
+        this.load = function(callback) {
+            var hash = document.location.hash;
+            var exerciseId = parseInt(hash.substring(1));
+            if (isNaN(exerciseId)) {
+                TEnvironment.error("Could not find exercise id");
+                if (!initialized) {
+                    self.init();
+                }
+                if (typeof callback !== 'undefined') {
+                    callback.call(this);
+                }
+            } else if (exerciseId !== exercise.getId()) {
+                this.loading();
+                var self = this;
+                this.loadExercise(exerciseId, function() {
+                    if (!initialized) {
+                        self.init();
+                    }
+                    self.loaded();
+                    if (typeof callback !== 'undefined') {
+                        callback.call(this);
+                    }                    
+                });
+            }
         };
         
         this.loading = function() {

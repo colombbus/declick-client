@@ -90,19 +90,11 @@ function load() {
                     TEnvironment.log("********************");
                     var self = this;
                     $(document).ready(function() {
-                        // Create task and grader
                         self.displayed();
                         TRuntime.init();
                         // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
                         $(window).resize();
-                        if (isNaN(exerciseId)) {
-                            TEnvironment.error("Could not find exercise id");
-                            self.init();
-                        } else {
-                            self.loadExercise(exerciseId, function() {
-                                self.init();
-                            });
-                        }
+                        self.load();
                     });
                 });
             });

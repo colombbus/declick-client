@@ -5,8 +5,8 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
      */
     function TProject() {
 
-        var name;
-        var id;
+        var name="";
+        var id=-1;
         var programs = [];
         var resourcesNames = [];
         var resources = {};
