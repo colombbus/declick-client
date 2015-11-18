@@ -104,7 +104,6 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $solution.css('visibility', 'visible');
             $solution.hide();
             canvas.removeLoading();
-            TRuntime.init();
             window.platform.initWithTask(window.task);
             initialized = true;
         };
