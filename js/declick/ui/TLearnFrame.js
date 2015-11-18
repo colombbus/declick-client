@@ -257,13 +257,17 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     exercise.getInstructions(function(data) {
                         $instructions.html(data);
                         exercise.init();
+                        // TODO: send callback to exercise.init() when interpreter supports callbacks
+                        if (typeof callback !== 'undefined') {
+                            callback.call(this);
+                        }
                     });                    
                 } else {
                     exercise.init();
-                }
-                // TODO: send callback to exercise.init() when interpreter supports callbacks
-                if (typeof callback !== 'undefined') {
-                    callback.call(this);
+                    // TODO: send callback to exercise.init() when interpreter supports callbacks
+                    if (typeof callback !== 'undefined') {
+                        callback.call(this);
+                    }
                 }
             }, id);
         };
