@@ -150,17 +150,20 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 clear();
             }
             try {
+                var statements;
                 if(textMode) {
-                    lastSubmission = $input.val();
+                    statements = $input.val();
+                    lastSubmission = statements;
                 } else {
-                    lastSubmission = editor.getStatements();
+                    statements = editor.getStatements();
+                    lastSubmission = editor.getValue();
                     exercise.start();
-                    TRuntime.executeStatements(lastSubmission);
+                    TRuntime.executeStatements(statements);
                     canvas.giveFocus();
                     exercise.end();
                 }
                 //TODO: only if no error
-                Teacher.setStatements(lastSubmission);
+                Teacher.setStatements(statements);
                 exercise.check();
             } catch (err) {
                 var error;
