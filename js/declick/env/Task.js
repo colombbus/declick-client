@@ -75,7 +75,7 @@ define(['jquery','platform-pr', 'json'], function($) {
         };
     
         this.load = function (views, callback) {
-            this.reloadAnswer("", callback);
+            frame.load(callback);
         };
 
         this.unload = function (callback) {
