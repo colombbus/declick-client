@@ -131,6 +131,10 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                         callback.call(this);
                     }                    
                 });
+            } else {
+                if (typeof callback !== 'undefined') {
+                    callback.call(this);
+                }                    
             }
         };
         
