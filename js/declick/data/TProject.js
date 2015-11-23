@@ -34,9 +34,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
 
         /**
          * Set Project's ID.
-         * @param {String} value
+         * @param {Number} value
          */
         this.setId = function(value) {
+            if (value !== false && isNaN(value)) {
+                value = parseInt(value);
+            }
             id = value;
             TLink.setProjectId(value);
         };
@@ -330,6 +333,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
         /**
          * Initialize Project, get Programs list and Resources.
          * @param {Function} callback
+         * @param {Number} id
          */
         this.init = function(callback, id) {
             programs = [];

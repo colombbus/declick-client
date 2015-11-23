@@ -9,7 +9,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
 
         /**
          * Set the ID project to value.
-         * @param {String} value
+         * @param {Number} value
          */
         this.setProjectId = function(value) {
             projectId = value;
