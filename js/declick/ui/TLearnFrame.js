@@ -4,15 +4,13 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         var canvas, editor;
 
         var exercise = new TExercise();
-        
         var bottomSolution = 0;
-        
         var score = 0;
         var lastSubmission = "";
-        
         var textMode = false;
-        
         var initialized = false;
+        var messageDisplayed = false;
+        var solutionDisplayed = false;
         
         TComponent.call(this, "TLearnFrame.html", function(component) {
             $text = component.find("#tlearnframe-text");
@@ -233,6 +231,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 $message.addClass("tlearnframe-message");
                 $message.show();
             }
+            messageDisplayed = true;
         };
 
         var hideMessage = function() {
@@ -242,13 +241,14 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $textMessage.hide();
             $textMessage.removeClass("tlearnframe-error");
             $textMessage.removeClass("tlearnframe-message");
+            messageDisplayed = false;
         };
 
         this.loadExercise = function(id, callback) {
-            if ($solution.is(":visible")) {
+            if (solutionDisplayed) {
                 closeSolution();
             }
-            if ($message.is(":visible") || $textMessage.is(":visible")) {
+            if (messageDisplayed) {
                 hideMessage();
             }
             // by default: program mode
@@ -283,6 +283,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         var openSolution = function(solutionHTML) {
             $solutionContent.html(solutionHTML);
             $solution.show().stop().animate({top: "0px", bottom: bottomSolution + "px"}, 600);
+            solutionDisplayed = true;
         };
 
         var closeSolution = function() {
@@ -290,7 +291,10 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $solution.stop().animate({top: -height + "px", bottom: height + bottomSolution + "px"}, 600, function() {
                 $(this).hide();
             });
+            solutionDisplayed = false;
         };
+        
+        
         
         /**
          * Get the code unparsed
