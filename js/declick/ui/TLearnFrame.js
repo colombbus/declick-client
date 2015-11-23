@@ -219,6 +219,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 $message.addClass("tlearnframe-error");
                 $message.show();
             }
+            messageDisplayed = true;
         };
 
         var showMessage = function(message) {
