@@ -37,9 +37,12 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
          * @param {Number} value
          */
         this.setId = function(value) {
-            if (value !== false && isNaN(value)) {
+            if (value !== false && typeof value !== "number") {
                 value = parseInt(value);
             }
+            if (isNaN(value)) {
+                value = false;
+            } 
             id = value;
             TLink.setProjectId(value);
         };
