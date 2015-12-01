@@ -197,7 +197,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             }
             var newItem = this.p.encountered[0];
             this.p.carriedItems.push(newItem);
-            newItem.setLocation(this.p.x - this.p.w / 2 + (this.p.carriedItems.length - 1) * 10, this.p.y - this.p.h / 2);
+            newItem.setLocation(this.p.x - this.p.w / 2, this.p.y - this.p.h / 2 - (this.p.carriedItems.length - 1) * 4);
         },
         drop: function() {
             if (this.p.carriedItems.length === 0) {
