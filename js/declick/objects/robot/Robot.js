@@ -58,7 +58,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             if (p.inJump && p.vy>=0) {
                 // jump is over
                 p.inJump = false;
-                endSM = true;
+                // wait until robot has fallen to end movement and update grid location
+                p.inMovement = true;
             }
             if (p.mayFall && p.jumping) {
                 if (p.jumpAvailable > 1) {
