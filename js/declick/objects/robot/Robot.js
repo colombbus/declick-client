@@ -43,7 +43,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 x: 0,
                 y: 0,
                 blocked: [false, false, false, false],
-                inJump: false
+                inJump: false,
+                jumpAvailable: 10
             }, props), defaultProps);
             this.on("bump.top", "bumpTop");
             this.on("bump.bottom", "bumpBottom");
