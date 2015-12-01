@@ -77,7 +77,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                     var y = p.y - p.h / 2;
                     for (var i = 0; i < p.carriedItems.length; i++) {
                         var item = p.carriedItems[i];
-                        item.setLocation(x + i * 10, y);
+                        item.setLocation(x , y - 4 *i);
                     }
                 }   
                 if (p.inMovement && p.moving && oldX === p.x && oldY === p.y) {
