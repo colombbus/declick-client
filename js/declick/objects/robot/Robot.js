@@ -371,14 +371,22 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Pick up an Item.
      */
     Robot.prototype._pickup = function() {
-        this.gObject.pickup();
+        try {
+            this.gObject.pickup();
+        } catch (e) {
+            throw this.getMessage(e);
+        }
     };
 
     /**
      * Drop an Item.
      */
     Robot.prototype._drop = function() {
-        this.gObject.drop();
+        try {
+            this.gObject.drop();
+        } catch (e) {
+            throw this.getMessage(e);
+        }
     };
 
     /**
@@ -468,7 +476,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         try {
             return this.gObject.getItemName();
         } catch (e) {
-            throw new Error(this.getMessage("no items"));
+            throw this.getMessage(e);
         }
     };
     
@@ -507,7 +515,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
 
     Robot.prototype._isCarrying = function(what) {
         if (! (TUtils.checkString(what)||TUtils.checkObject(what))) {
-            throw new Error(this.getMessage("wrong carrying parameter"));
+            throw this.getMessage("wrong carrying parameter");
         }
         return this.gObject.isCarrying(what);
     };

@@ -5,6 +5,7 @@
         "resource not found":"Image « {0} » introuvable",
         "wrong set":"Ensemble d'images incorrect",
         "no item":"Il n'y a pas d'item à cet endroit",
+        "no carried item":"Aucun item n'est porté",
         "gauche":"left",
         "droite":"right",
         "haut":"top",
