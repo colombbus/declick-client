@@ -13,15 +13,14 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.addImage(translated, "", false);
             this.setDisplayedImage(translated);
             this.gObject.setName(name);
-            this._setCategory(translated);
         } else {
             Sprite.call(this, name);
             if (typeof name === 'undefined') {
                 this.addImage("coin.png", "", false);
                 this.setDisplayedImage("coin.png");
-                this._setCategory(this.getMessage("default"));                
-            } else {
-                this._setCategory(name);                
+                this.gObject.setName(this.getMessage("default"));                
+            } else { 
+                this.gObject.setName(name);                
             }
         }
     };
@@ -41,6 +40,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         },
         setName: function(value) {
             this.p.name = value;
+            this.setCategory(value);
         },
         getName: function() {
             return this.p.name;
@@ -54,8 +54,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             // name is one of the default category
             this.addImage(translated, "", false);
             this.setDisplayedImage(translated);
-        }        
-        this._setCategory(translated);
+        }
         this.gObject.setName(value);
     };
 
