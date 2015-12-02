@@ -206,8 +206,19 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             }
             this.p.carriedItems = this.p.carriedItems.slice(0, -1);
         },
-        countCarriedItems: function() {
-            return this.p.carriedItems.length;
+        countCarriedItems: function(category) {
+            if (typeof category === 'undefined') {
+                return this.p.carriedItems.length;
+            } else {
+                var count = 0;
+                for (var i=0; i< this.p.carriedItems.length; i++) {
+                    var object = this.p.carriedItems[i];
+                    if (object.p.category === category) {
+                        count++;
+                    }
+                }
+                return count;
+            }
         },
         setLocation: function(x, y) {
             this._super(x, y);            
@@ -374,8 +385,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Count the number of items carried by Robot.
      * @returns {Number}    Number of items carried.
      */
-    Robot.prototype._countCarriedItems = function() {
-        return this.gObject.countCarriedItems();
+    Robot.prototype._countCarriedItems = function(category) {
+        if (typeof category !== 'undefined') {
+            category = TUtils.getString(category);
+        }
+        return this.gObject.countCarriedItems(category);
     };
     
     /**
