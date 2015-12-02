@@ -43,8 +43,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 x: 0,
                 y: 0,
                 blocked: [false, false, false, false],
-                inJump: false,
-                jumpAvailable: 10
+                inJump: false
             }, props), defaultProps);
             this.on("bump.top", "bumpTop");
             this.on("bump.bottom", "bumpBottom");
@@ -239,6 +238,23 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         },
         getGridY:function() {
             return this.p.gridY;
+        },
+        mayFall: function(value) {
+            if (typeof value === 'undefined') {
+                value = true;
+            }
+            var startFalling = false;
+            if (!this.p.mayFall && value) {
+                // object starts to fall
+                startFalling = true;
+                this.synchronousManager.begin();
+            }
+            this.perform(function() {
+                this.p.mayFall = value;
+                if (startFalling) {
+                    this.p.inMovement = true;
+                }
+            });
         }
     });
 
@@ -454,7 +470,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         } catch (e) {
         }
         return false;
-    };    
+    };
     
     Robot.prototype.deleteObject = function() {
         this.synchronousManager.end();
