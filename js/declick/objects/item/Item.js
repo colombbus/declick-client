@@ -13,11 +13,15 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.addImage(translated, "", false);
             this.setDisplayedImage(translated);
             this.gObject.setName(name);
+            this._setCategory(translated);
         } else {
             Sprite.call(this, name);
             if (typeof name === 'undefined') {
                 this.addImage("coin.png", "", false);
                 this.setDisplayedImage("coin.png");
+                this._setCategory(this.getMessage("default"));                
+            } else {
+                this._setCategory(name);                
             }
         }
     };
@@ -51,6 +55,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.addImage(translated, "", false);
             this.setDisplayedImage(translated);
         }        
+        this._setCategory(translated);
         this.gObject.setName(value);
     };
 
