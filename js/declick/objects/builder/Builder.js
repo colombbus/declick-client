@@ -162,6 +162,8 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze', 'objects
         var p = this.gObject.p;
         item._setLocation(p.x - p.length / 2, p.y - p.length / 2);
         this.items.push(item);
+        // return created object
+        return item;
     };
     
     Builder.prototype.deleteObject = function() {
