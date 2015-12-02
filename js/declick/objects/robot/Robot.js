@@ -255,6 +255,25 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                     this.p.inMovement = true;
                 }
             });
+        },
+        isCarrying: function(what) {
+            var category = false;
+            if (TUtils.checkString(what)) {
+                category = true;
+            }
+            for (var i=0; i< this.p.carriedItems.length; i++) {
+                var object = this.p.carriedItems[i];
+                if (category) {
+                    if (object.p.category === what) {
+                        return true;
+                    }
+                } else {
+                    if (what.getGObject().getId() === object.getId()) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     });
 
@@ -470,6 +489,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         } catch (e) {
         }
         return false;
+    };
+
+    Robot.prototype._isCarrying = function(what) {
+        if (! (TUtils.checkString(what)||TUtils.checkObject(what))) {
+            throw new Error(this.getMessage("wrong carrying parameter"));
+        }
+        return this.gObject.isCarrying(what);
     };
     
     Robot.prototype.deleteObject = function() {

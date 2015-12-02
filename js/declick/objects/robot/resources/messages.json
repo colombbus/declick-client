@@ -8,7 +8,8 @@
         "gauche":"left",
         "droite":"right",
         "haut":"top",
-        "bas":"bottom"
+        "bas":"bottom",
+        "wrong carrying parameter":"Paramètre incorrect"
     },
     "en": {
         "file not found":"File '{0}' not found",
