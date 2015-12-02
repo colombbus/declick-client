@@ -16,17 +16,17 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
     TGraphicalObject.prototype.objectPath = "tgraphicalobject";
     
 
-    TGraphicalObject.TYPE_CHARACTER = 0x0100;
-    TGraphicalObject.TYPE_CATCHABLE = 0x0200;
-    TGraphicalObject.TYPE_SPRITE = 0x0400;
-    TGraphicalObject.TYPE_WALKER = 0x0800;
-    TGraphicalObject.TYPE_BLOCK = 0x1000;
-    TGraphicalObject.TYPE_INPUT = 0x2000;
-    TGraphicalObject.TYPE_INACTIVE = 0x4000;
-    TGraphicalObject.TYPE_ITEM = 0x8000;
-    TGraphicalObject.TYPE_PLATFORM = 0x0001;
-    TGraphicalObject.TYPE_TURTLE = 0x0002;
-    TGraphicalObject.TYPE_SHAPE = 0x0004;
+    TGraphicalObject.TYPE_SPRITE = 0x0001;
+    TGraphicalObject.TYPE_WALKER = 0x0002;
+    TGraphicalObject.TYPE_CHARACTER = 0x0004;
+    TGraphicalObject.TYPE_TURTLE = 0x0008;
+    TGraphicalObject.TYPE_BLOCK = 0x0010;
+    TGraphicalObject.TYPE_PLATFORM = 0x0020;
+    TGraphicalObject.TYPE_ITEM = 0x0040;
+    TGraphicalObject.TYPE_CATCHABLE = 0x0080;
+    TGraphicalObject.TYPE_SHAPE = 0x0100;
+    TGraphicalObject.TYPE_INPUT = 0x0200;
+    TGraphicalObject.TYPE_INACTIVE = 0x0400;
 
     var graphics = TRuntime.getGraphics();
 
