@@ -42,7 +42,7 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze', 'objects
             x = this.gObject.getGridX();
             y = this.gObject.getGridY();
         }
-        this.maze._setTile(x, y, tile);
+        this.maze._setTileMaze(x, y, tile);
     };
     /*
      * Put a ground at given location
