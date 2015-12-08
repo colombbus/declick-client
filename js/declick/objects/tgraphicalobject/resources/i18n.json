@@ -4,7 +4,7 @@
             {"name":"_zoomIn","translated":"agrandir","displayed":"agrandir(1)"},
             {"name":"_zoomOut","translated":"r\u00e9tr\u00e9cir","displayed":"r\u00e9tr\u00e9cir(1)"},
             {"name":"_setAngle","translated":"d\u00e9finirAngle","displayed":"d\u00e9finirAngle(360)"},
-            {"name":"_rotate","translated":"tourner","displayed":"tourner(30)"},
+            {"name":"_rotate","translated":"tourner","displayed":"pivoter(30)"},
             {"name":"_scale","translated":"zoomer","displayed":"zoomer(1)"},
             {"name":"_setCenterLocation","translated":"d\u00e9finirPositionCentre","displayed":"d\u00e9finirPositionCentre(0,0)"},
             {"name":"_setLocation","translated":"d\u00e9finirPosition","displayed":"d\u00e9finirPosition(0,0)"},
