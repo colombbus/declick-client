@@ -1,0 +1,8 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_moveForward","translated":"avancer","displayed":"avancer()"},
+            {"name":"_stop","translated":"arr\u00eater","displayed":"arr\u00eater()"}
+        ]
+    }
+}

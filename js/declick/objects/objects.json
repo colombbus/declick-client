@@ -314,6 +314,15 @@
         },
         "parents": true
     },
+        "Robis": {
+        "path": "robis",
+        "translations": {
+            "fr": "Robis",
+            "es": "TBD",
+            "en": "Robis"
+        },
+        "parents": true
+    },
     "Teacher": {
         "path": "teacher",
         "translations": {
