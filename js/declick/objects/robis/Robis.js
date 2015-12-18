@@ -34,11 +34,21 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils'], function($, TEnvironment
         this.command("fwd");
     };
 
+    Robis.prototype._moveBackward = function() {
+        this.command("bwd");
+    };
+    
+    Robis.prototype._turnLeft = function() {
+        this.command("left");
+    };
+    
+    Robis.prototype._turnRight = function() {
+        this.command("right");
+    };
+
     Robis.prototype._stop = function() {
         this.command("stop");
     };
     
     return Robis;
 });
-
-
