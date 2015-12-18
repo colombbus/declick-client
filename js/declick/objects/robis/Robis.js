@@ -7,7 +7,7 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils'], function($, TEnvironment
     var Robis = function() {
         TObject.call(this);
         this.prefix = 'http://';
-        this.suffix = '/declick.py';
+        this.suffix = '/';
         this.url = 'undefined';
     };
 
