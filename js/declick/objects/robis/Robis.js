@@ -1,7 +1,7 @@
 define(['jquery', 'TEnvironment', 'TObject', 'TUtils'], function($, TEnvironment, TObject, TUtils) {
     /**
      * Defines Robis, inherited from TObject.
-     * Is Robis really real ? :o
+     * Robis is a remote control robot.
      * @exports Robis
      */
     var Robis = function() {
@@ -19,33 +19,48 @@ define(['jquery', 'TEnvironment', 'TObject', 'TUtils'], function($, TEnvironment
         if (this.url !== 'undefined')
             $.get(this.url, {command: command});
         else
-            console.debug("Try again"); //Un message mon petit bonhomme ?
+            console.debug("failed");
     };
     
+    /**
+     * Define Robis's server URL.
+     * @param {String} url
+     */
     Robis.prototype._defineURL = function(url) {
         this.url = this.prefix + url + this.suffix;
     };
     
     /**
-     * ROBIS WILL WALK. BECAUSE ROBIS IS DA BEST.
-     * (Even if I don't know how yet)
+     * Move Robis forward.
      */
     Robis.prototype._moveForward = function() {
         this.command("fwd");
     };
 
+    /**
+     * Move Robis backward.
+     */
     Robis.prototype._moveBackward = function() {
         this.command("bwd");
     };
     
+    /**
+     * Spin round to left.
+    */
     Robis.prototype._turnLeft = function() {
         this.command("left");
     };
     
+    /**
+     * Spin round to right.
+    */
     Robis.prototype._turnRight = function() {
         this.command("right");
     };
 
+    /**
+     * Stop Robis.
+     */
     Robis.prototype._stop = function() {
         this.command("stop");
     };
