@@ -56,7 +56,6 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 this.p.destinationY += y;
                 if (this.p.trackPath) {
                     this.p.coordinates.push([this.p.destinationX, this.p.destinationY, this.p.strokeColor]);
-                console.debug(value + " " + x + " " + y + " / " + this.p.velocityX + " " + this.p.velocityY + " / " + this.p.destinationX + " " + this.p.destinationY);
                 }
             }, [value]);
 
