@@ -122,10 +122,10 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
 
         if (typeof window.updateEnvironment === 'undefined') {
             window.updateEnvironment = function(showEditor) {
+                TUI.init();
                 if (typeof showEditor !== 'undefined' && showEditor) {
                     TUI.enableEditor();
                 }
-                TUI.init();
             };
         }
 
