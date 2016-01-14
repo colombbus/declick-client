@@ -22,7 +22,22 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     Maze.WALL = 0x02;
     Maze.ENTRANCE = 0x03;
     Maze.EXIT = 0x04;
-
+    
+    /**
+     * Change the value of the tile [x,y] in structure to the value "number".
+     * Checks if there is an Entrance or an Exit.
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} number
+     */
+    Maze.prototype._setTileMaze = function(x, y, number) {
+        if (number === Maze.ENTRANCE)
+            this.setEntranceLocation(x, y);
+        if (number === Maze.EXIT)
+            this.addExitLocation(x, y);
+        this._setTile(x, y, number);
+    }
+    
     /*
      * Put a ground at given location
      * @param {Integer} x
@@ -31,7 +46,7 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     Maze.prototype._buildGround = function(x,y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this._setTile(x,y,Maze.GROUND);
+        this._setTileMaze(x,y,Maze.GROUND);
     };
     
 
@@ -44,8 +59,7 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     Maze.prototype._buildEntrance = function(x,y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this._setTile(x,y,Maze.ENTRANCE);
-        this.setEntranceLocation(x,y);
+        this._setTileMaze(x,y,Maze.ENTRANCE);
     };
 
     /*
@@ -57,8 +71,7 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     Maze.prototype._buildExit = function(x,y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this._setTile(x,y,Maze.EXIT);
-        this.addExitLocation(x,y);
+        this._setTileMaze(x,y,Maze.EXIT);
     };
     
     /*
@@ -70,7 +83,7 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     Maze.prototype._buildWall = function(x,y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this._setTile(x,y,Maze.WALL);
+        this._setTileMaze(x,y,Maze.WALL);
     };
 
     Maze.prototype._setRow = function(x, y, row) {

@@ -30,7 +30,20 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze', 'objects
             }
         }
     });
-    
+
+    /*
+     * Put a tile at given location.
+     * If no location given, use current location.
+     * @param {Integer} x
+     * @param {Integer} y
+     */
+    Builder.prototype._build = function(tile, x, y) {
+        if (typeof x === 'undefined') {
+            x = this.gObject.getGridX();
+            y = this.gObject.getGridY();
+        }
+        this.maze._setTileMaze(x, y, tile);
+    };
     /*
      * Put a ground at given location
      * If no location given, use current location
@@ -38,7 +51,7 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze', 'objects
      * @param {Integer} y
      */
     Builder.prototype._buildGround = function(x, y) {
-        if (typeof y === 'undefined') {
+        if (typeof x === 'undefined') {
             if (typeof x !== 'undefined') {
                 throw this.getMessage("parameter ground");
             }
