@@ -105,6 +105,9 @@ function load() {
                         $(document).ready(function() {
                             frame.displayed();
                             TRuntime.init();
+                            if (typeof window.parent !== 'undefined') {
+                                window.parent.postMessage('init', '*');
+                            }
                         });
                     });
                 });
