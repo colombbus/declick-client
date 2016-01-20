@@ -1,4 +1,4 @@
-define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TLink) {
+define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink','SynchronousManager'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TLink, SynchronousManager) {
     /**
      * Defines Declick, inherited from TObject.
      * Declick is an object created automatically with the launch of Declick.
@@ -6,6 +6,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
      * @exports Declick
      */
     var Declick = function() {
+        this.synchronousManager = new SynchronousManager();
         TRuntime.addInstance(this);
     };
 
@@ -78,6 +79,19 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     Declick.prototype._unpause = function() {
         TRuntime.start();
     };
+    
+    /**
+     * Wait for a given duration
+     * @param {Integer} duration
+     */
+    Declick.prototype._wait = function(duration) {
+        duration = TUtils.getInteger(duration);
+        var self = this;
+        window.setTimeout(function() {
+            self.synchronousManager.end();
+        }, duration);
+        this.synchronousManager.begin();
+    };
 
     /**
      * Ask a question and get the answer.
@@ -104,6 +118,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     };
 
     Declick.prototype.clear = function() {
+        this.synchronousManager.end();
     };
 
     Declick.prototype.init = function() {
