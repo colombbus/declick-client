@@ -31,6 +31,17 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
             this.activated = true;
     	}
     };
+
+    /**
+     * Deactivate Camera.
+     */
+    Camera.prototype.deactivate = function() {
+    	if (this.activated) {
+            var s = getStage();
+            s.del("viewport");
+            this.activated = false;
+    	}
+    };
     
     /**
      * Follow Object in this.followedObject.
@@ -122,6 +133,7 @@ define(['jquery', 'TUtils', 'TRuntime', 'TObject'], function($, TUtils, TRuntime
 
     Camera.prototype.clear = function() {
         this.stopFollow();
+        this.deactivate();
     };
     
     Camera.prototype.init = function() {
