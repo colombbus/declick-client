@@ -385,7 +385,6 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
                 var valueBefore = session.getDocument().getTextRange(range);
                 // Since regex do not support unicode...
                 var unicodeName = TUtils.toUnicode(name);
-                console.log("unicode " + name);
                 var regex = new RegExp("(?:^|\\s)" + unicodeName + "\\s*=\\s*new\\s*([\\S^\\" + endToken + "]*)\\s*\\" + endToken);
 
                 var result = regex.exec(valueBefore);
