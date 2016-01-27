@@ -83,7 +83,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             if (p.sheet) {
                 this.sheet().draw(ctx, -p.cx, -p.cy, p.frame);
             } else if (p.asset) {
-                ctx.drawImage(this.resources.getUnchecked(p.asset), -p.cx, -p.cy);
+                ctx.drawImage(this.resources.getUnchecked(p.asset), 0,0 , p.w, p.h, -p.cx, -p.cy, p.w, p.h);
             } else if (p.color) {
                 ctx.fillStyle = p.color;
                 ctx.fillRect(-p.cx, -p.cy, p.w, p.h);
