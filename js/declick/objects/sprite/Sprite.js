@@ -176,6 +176,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                     } else if (p.x > p.destinationX) {
                         p.x = Math.max(p.x + p.vx*dt, p.destinationX);
                         p.moving = true;
+                    } else {
+                        p.vx = 0;
                     }
                     if (p.y < p.destinationY) {
                         p.y = Math.min(p.y + p.vy*dt, p.destinationY);
@@ -183,7 +185,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                     } else if (p.y > p.destinationY) {
                         p.y = Math.max(p.y + p.vy*dt, p.destinationY);
                         p.moving = true;
-                    }                    
+                    } else {
+                        p.vy = 0;
+                    }        
                 } else {
                     p.x += p.vx*dt;
                     p.y += p.vy*dt;
