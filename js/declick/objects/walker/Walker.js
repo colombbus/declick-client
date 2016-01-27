@@ -74,7 +74,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 var collision = this.p.collisions.pop();
                 var object = collision.obj;
                 var id = object.getId();
-                if (this.blocks.indexOf(id) > -1 && (object.p.type === TGraphicalObject.TYPE_PLATFORM || (object.p.type === TGraphicalObject.TYPE_BLOCK && !object.checkTransparency(this, collision)))) {
+                if (this.blocks.indexOf(id) > -1 && ((object.p.type & TGraphicalObject.TYPE_PLATFORM !== 0 ) || ((object.p.type & TGraphicalObject.TYPE_BLOCK !==0) && !object.checkTransparency(this, collision)))) {
                     var impactX = Math.abs(p.vx);
                     var impactY = Math.abs(p.vy);
                     collision.impact = 0;
@@ -124,7 +124,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                         }
                     }
                 }
-                if (object.p.type === TGraphicalObject.TYPE_SPRITE || object.p.type === TGraphicalObject.TYPE_BLOCK) {
+                if (object.p.type & (TGraphicalObject.TYPE_SPRITE | TGraphicalObject.TYPE_BLOCK) !==0) {
                     this.trigger('hit', collision);
                     this.trigger('hit.collision', collision);
                     // Do the reciprical collision
