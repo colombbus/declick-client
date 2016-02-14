@@ -53,10 +53,22 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         
         var initRuntimeFrame = function() {
             if (typeof runtimeFrame === 'undefined') {
-                var iframe = document.createElement("iframe");
-                iframe.className = "runtime-frame";
-                document.body.appendChild(iframe);
+                var iframe;
+                var single = false;
+                // try to find runtime frame from parent 
+                iframe = window.top.document.getElementById("declick-runtime-frame");
+                if (iframe === null) {
+                    // no parent runtime frame: create a local one
+                    iframe = document.createElement("iframe");
+                    iframe.className = "runtime-frame";
+                    iframe.id = "declick-runtime-frame";
+                    document.body.appendChild(iframe);
+                } else {
+                    single = true;
+                    console.log("found parent runtime frame");
+                }
                 runtimeFrame = iframe.contentWindow || iframe;
+                return single;
             }
         };
 
