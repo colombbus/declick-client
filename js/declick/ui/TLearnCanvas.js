@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime) {
+define(['ui/TComponent', 'jquery', 'TProxyRuntime'], function(TComponent, $, TRuntime) {
 
     function TLearnCanvas(callback) {
         var $main, $canvas, $canvasLoading, $canvasLoadingValue;
@@ -15,8 +15,8 @@ define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime
         });
 
         this.displayed = function() {
+            TRuntime.plugGraphics("tcanvas");
             var graphics = TRuntime.getGraphics();
-            graphics.setCanvas("tcanvas");
             // resize canvas and its container when window is resized
             $(window).resize(function(e) {
                 var width = $main.width();

@@ -1,4 +1,4 @@
-define(['TRuntime'], function(TRuntime) {
+define(['TRuntimeProxy'], function(TRuntime) {
     /**
      * SynchronousManager runs the synchronicity between objects in TRuntime.
      * @exports SynchronousManager  

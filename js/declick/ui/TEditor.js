@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TEnvironment', 'TUI', 'TUtils', 'TRuntime'], function(TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TEnvironment, TUI, TUtils, TRuntime) {
+define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TEnvironment', 'TUI', 'TUtils', 'TRuntimeProxy'], function(TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TEnvironment, TUI, TUtils, TRuntime) {
     /**
      * TEditor manages the editor console. It runs with lib ace.
      * @param {Function} callback

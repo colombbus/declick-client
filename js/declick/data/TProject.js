@@ -1,4 +1,4 @@
-define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], function(TLink, TProgram, TEnvironment, TUtils, TError, TRuntime) {
+define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntimeProxy'], function(TLink, TProgram, TEnvironment, TUtils, TError, TRuntime) {
     /**
      * TProject is used to manage Declick's projects.
      * @exports TProject

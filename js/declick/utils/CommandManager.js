@@ -1,4 +1,4 @@
-define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
+define(['TRuntimeProxy', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
     /**
      * 
      * @exports CommandManager

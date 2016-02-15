@@ -1,4 +1,4 @@
-define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'platform-pr'], function(Teacher, TComponent, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range) {
+define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'platform-pr'], function(Teacher, TComponent, TParser, TLog, TEnvironment, TUtils, $, ace, ace_autocomplete, ace_range) {
     /**
      * TLearnEditor is like TEditor, but adapted to "Learn" part of Declick.
      * @exports TLearnEditor

@@ -275,11 +275,6 @@ define(['jquery', 'quintus'], function($, Quintus) {
             Q.stage().remove(object);
         };
 
-        this.setCanvas = function(id) {
-            Q.setup(id, {maximize: true}).touch(Q.SPRITE_ALL);
-            Q.stageScene(null);
-        };
-
         this.resize = function(width, height) {
             Q.el.style.height = height + "px";
             Q.el.style.width = width + "px";
@@ -329,6 +324,48 @@ define(['jquery', 'quintus'], function($, Quintus) {
 
         this.getAudio = function() {
             return Q.audio;
+        };
+        
+        this.setCanvas = function(element) {
+            Q.el = element;
+            var w = parseInt(Q.el.width,10),
+                h = parseInt(Q.el.height,10);
+
+            Q.el.width = w;
+            Q.el.height = h;
+
+            var elParent = Q.el.parentNode;
+
+            if(elParent && !Q.wrapper) {
+              var doc = Q.el.ownerDocument;
+              Q.wrapper = doc.createElement("div");
+              Q.wrapper.id = Q.el.id + '_container';
+              Q.wrapper.style.width = w + "px";
+              Q.wrapper.style.margin = "0 auto";
+              Q.wrapper.style.position = "relative";
+              elParent.insertBefore(Q.wrapper,Q.el);
+              Q.wrapper.appendChild(Q.el);
+            }
+
+            Q.el.style.position = 'relative';
+
+            Q.ctx = Q.el.getContext &&
+                    Q.el.getContext("2d");
+
+
+            Q.width = parseInt(Q.el.width,10);
+            Q.height = parseInt(Q.el.height,10);
+            Q.cssWidth = w;
+            Q.cssHeight = h;
+
+            window.addEventListener('orientationchange',function() {
+              setTimeout(function() { window.scrollTo(0,1); }, 0);
+            });
+            
+            //Q.setup(id, {maximize: true}).touch(Q.SPRITE_ALL);
+            Q.touch(Q.SPRITE_ALL);
+            Q.stageScene(null);
+        
         };
 
     }

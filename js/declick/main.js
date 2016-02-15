@@ -30,6 +30,7 @@ require.config({
         "TInterpreter": "run/TInterpreter",
         "TParser": "run/TParser",
         "TRuntime": "run/TRuntime",
+        "TRuntimeProxy": "run/TRuntimeProxy",
         "TGraphics": "run/TGraphics",
         "TUI": "ui/TUI",
         "CommandManager": "utils/CommandManager",
@@ -82,7 +83,7 @@ require.config({
 // Start the main app logic.
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject', 'Task', 'Grader'], function($, TEnvironment, TRuntime, TFrame, TProject) {
+    require(['jquery', 'TEnvironment', 'TRuntimeProxy', 'ui/TFrame', 'TProject', 'Task', 'Grader'], function($, TEnvironment, TRuntime, TFrame, TProject) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");

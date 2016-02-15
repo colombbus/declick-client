@@ -1,4 +1,4 @@
-define(['jquery', 'TRuntime', 'ui/TComponent'], function($, TRuntime, TComponent) {
+define(['jquery', 'TRuntimeProxy', 'ui/TComponent'], function($, TRuntime, TComponent) {
 
     function TCanvas(callback) {
         var $main, $canvas, $canvasDesign, $canvasDesignMouse, $canvasLoading, $canvasLoadingValue;
@@ -42,8 +42,8 @@ define(['jquery', 'TRuntime', 'ui/TComponent'], function($, TRuntime, TComponent
         };
 
         this.displayed = function() {
+            TRuntime.plugGraphics("tcanvas");
             var graphics = TRuntime.getGraphics();
-            graphics.setCanvas("tcanvas");
             // resize canvas and its container when window is resized
             $(window).resize(function(e) {
                 var width = $main.width();

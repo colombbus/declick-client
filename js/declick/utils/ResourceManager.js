@@ -1,4 +1,4 @@
-define(['TRuntime'], function(TRuntime) {
+define(['TRuntimeProxy'], function(TRuntime) {
     /**
      * ResourceManager defines several functions to manage resources :
      * it allows to create one, get its datas, make transparency, delete it...

@@ -1,4 +1,4 @@
-define(['TEnvironment', 'TRuntime', 'TProject', 'TError'], function(TEnvironment, TRuntime, TProject, TError) {
+define(['TEnvironment', 'TRuntimeProxy', 'TProject', 'TError'], function(TEnvironment, TRuntime, TProject, TError) {
     /**
      * TExercise manage exercises in "Learn" part of Declick.
      * @exports TExercise

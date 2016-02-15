@@ -16,6 +16,7 @@ require.config({
         "TInterpreter": "run/TInterpreter",
         "TParser": "run/TParser",
         "TRuntime": "run/TRuntime",
+        "TRuntimeProxy": "run/TRuntimeProxy",
         "TGraphics": "run/TGraphics",
         "TUI": "ui/TUI",
         "CommandManager": "utils/CommandManager",
@@ -28,7 +29,7 @@ require.config({
 });
 
 function load() {
-    require(['TEnvironment', 'TRuntime'], function(TEnvironment, TRuntime) {
+    require(['TEnvironment', 'TRuntimeProxy'], function(TEnvironment, TRuntime) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
@@ -36,7 +37,11 @@ function load() {
             TEnvironment.log("*******************");
             TEnvironment.log("* Loading Runtime *");
             TEnvironment.log("*******************");
-            TRuntime.load();
+            TRuntime.load(function() {
+                // expose TRuntime
+                window.runtime = TRuntime.getRuntime();
+                window.top.postMessage("ready", "*");
+            });
         });
     });
 }

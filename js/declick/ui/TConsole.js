@@ -1,4 +1,4 @@
-define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ui/TComponent'], function(TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range, TComponent) {
+define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntimeProxy', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ui/TComponent'], function(TUI, TParser, TLog, TEnvironment, TUtils, TRuntime, $, ace, ace_autocomplete, ace_range, TComponent) {
     /**
      * TConsole manages the console for Declick's users. It runs with lib ace.
      * @param {Function} callback
