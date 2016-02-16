@@ -224,6 +224,14 @@ define(['jquery', 'quintus'], function($, Quintus) {
             return Q;
         };
 
+        Q.scheduleFrame = function(callback) {
+            return Q.window.requestAnimationFrame(callback);
+        };
+
+        Q.cancelFrame = function(loop) {
+            Q.window.cancelAnimationFrame(loop);
+        };
+
         this.getInstance = function() {
             return Q;
         };
@@ -335,10 +343,11 @@ define(['jquery', 'quintus'], function($, Quintus) {
             Q.el.height = h;
 
             var elParent = Q.el.parentNode;
-
+            Q.document = Q.el.ownerDocument;
+            Q.window = Q.document.defaultView || Q.document.parentWindow;            
+            
             if(elParent && !Q.wrapper) {
-              var doc = Q.el.ownerDocument;
-              Q.wrapper = doc.createElement("div");
+              Q.wrapper = Q.document.createElement("div");
               Q.wrapper.id = Q.el.id + '_container';
               Q.wrapper.style.width = w + "px";
               Q.wrapper.style.margin = "0 auto";
@@ -358,7 +367,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
             Q.cssWidth = w;
             Q.cssHeight = h;
 
-            window.addEventListener('orientationchange',function() {
+            Q.window.addEventListener('orientationchange',function() {
               setTimeout(function() { window.scrollTo(0,1); }, 0);
             });
             

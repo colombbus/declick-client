@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Test single Runtime</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="../js/libs/jquery-1.11.1/jquery-1.11.1.min.js"></script>
+        <script>
+            window.addEventListener("message", receiveMessage, false);
+
+            function receiveMessage(event) {
+                if (event.data === "ready") {
+                    $("#declick-main-frame").attr("src", "../index.html");
+                }
+            }
+        </script>
+        
+        <style>
+            body, html {height:100%;padding:0; margin:0;}
+            #declick-runtime-frame {display:none;}
+            #declick-main-frame {width:100%; height:100%;margin:0;padding:0;overflow:hidden;}
+        </style>
+    </head>
+    <body>
+        <iframe id="declick-runtime-frame" src="../init.html">
+            
+        </iframe>
+        <iframe id="declick-main-frame">
+        </iframe>
+    </body>
+</html>
