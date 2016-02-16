@@ -224,13 +224,57 @@ define(['jquery', 'quintus'], function($, Quintus) {
             return Q;
         };
 
-        Q.scheduleFrame = function(callback) {
+        /*Q.scheduleFrame = function(callback) {
             return Q.window.requestAnimationFrame(callback);
         };
 
         Q.cancelFrame = function(loop) {
             Q.window.cancelAnimationFrame(loop);
+        };*/
+        
+          Q.gameLoop = function(callback) {
+            Q.lastGameLoopFrame = new Date().getTime();
+
+            // Short circuit the loop check in case multiple scenes
+            // are staged immediately
+            Q.loop = true; 
+
+            // Keep track of the frame we are on (so that animations can be synced
+            // to the next frame)
+            Q._loopFrame = 0;
+
+            // Wrap the callback to save it and standardize the passed
+            // in time. 
+            Q.gameLoopCallbackWrapper = function() {
+              var now = new Date().getTime();
+              Q._loopFrame++;
+              Q.loop = Q.window.requestAnimationFrame(Q.gameLoopCallbackWrapper);
+              var dt = now - Q.lastGameLoopFrame;
+              /* Prevent fast-forwarding by limiting the length of a single frame. */
+              if(dt > Q.options.frameTimeLimit) { dt = Q.options.frameTimeLimit; }
+              callback.apply(Q,[dt / 1000]);  
+              Q.lastGameLoopFrame = now;
+            };
+
+            Q.window.requestAnimationFrame(Q.gameLoopCallbackWrapper);
+            return Q;
+          };
+
+
+        Q.pauseGame = function() {
+          if(Q.loop) {
+            Q.window.cancelAnimationFrame(Q.loop); 
+          }
+          Q.loop = null;
         };
+
+        Q.unpauseGame = function() {
+          if(!Q.loop) {
+            Q.lastGameLoopFrame = new Date().getTime();
+            Q.loop = Q.window.requestAnimationFrame(Q.gameLoopCallbackWrapper);
+          }
+        };
+
 
         this.getInstance = function() {
             return Q;
