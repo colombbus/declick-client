@@ -4,7 +4,7 @@
         "garçon":"boy",
         "fille":"girl",
         "bob":"bob",
-        "unknown character":"Il n'existe pas de héros de type « {0} ». Les héros disponibles sont : « tangaraman », « bob », « garçon » et « fille »",
+        "unknown character":"Il n'existe pas de héros de type « {0} ». Les personnages disponibles sont : « tangaraman », « bob », « garçon » et « fille »",
         "forward":"avancer",
         "backward":"reculer",
         "front":"arrêt",
