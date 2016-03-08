@@ -1,5 +1,5 @@
 {
-    "hide": ["_alwaysMoveForward", "_alwaysMoveBackward", "_alwaysMoveUpward", "_alwaysMoveDownward", "_setImage", "_addImage", "_setTransparent", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImage", "_removeImageSet", "_setCharacter", "_stop", "_ifCollision", "_ifCollisionWith", "_watchCollisions", "_centerGoTo", "_zoomIn", "_zoomOut", "_scale", "_getXCenter", "_getYCenter", "_getX", "_getY", "_setCenterLocation", "_setCategory"],
+    "hide": ["_alwaysMoveForward", "_alwaysMoveBackward", "_alwaysMoveUpward", "_alwaysMoveDownward", "_setImage", "_addImage", "_setTransparent", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImage", "_removeImageSet", "_setAspect", "_stop", "_ifCollision", "_ifCollisionWith", "_watchCollisions", "_centerGoTo", "_zoomIn", "_zoomOut", "_scale", "_getXCenter", "_getYCenter", "_getX", "_getY", "_setCenterLocation", "_setCategory"],
     "fr": {
         "methods":[
             {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},

@@ -1,17 +1,17 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/hero/Hero', 'objects/platform/Platform', 'objects/maze/Maze'], function($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject, Sprite, Hero, Platform, Maze) {
+define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManager', 'TGraphicalObject', 'objects/sprite/Sprite', 'objects/character/Character', 'objects/platform/Platform', 'objects/maze/Maze'], function ($, TEnvironment, TUtils, CommandManager, SynchronousManager, TGraphicalObject, Sprite, Character, Platform, Maze) {
     /**
-     * Defines Robot, inherited from Hero.
-     * The main difference with Hero is that it executes commands one by one.
+     * Defines Robot, inherited from Character.
+     * The main difference with Character is that it executes commands one by one.
      * @param {Boolean} auto
      * @exports Robot
      */
-    var Robot = function(name, auto) {
+    var Robot = function (name, auto) {
         if (typeof name !== 'undefined') {
-            Hero.call(this, name);
+            Character.call(this, name);
         } else {
-            Hero.call(this, "robot");
+            Character.call(this, "robot");
         }
-        
+
         if (typeof auto === 'undefined') {
             auto = true;
         }
@@ -23,14 +23,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         }
     };
 
-    Robot.prototype = Object.create(Hero.prototype);
+    Robot.prototype = Object.create(Character.prototype);
     Robot.prototype.constructor = Robot;
     Robot.prototype.className = "Robot";
 
     var graphics = Robot.prototype.graphics;
 
-    Robot.prototype.gClass = graphics.addClass("THero", "TRobot", {
-        init: function(props, defaultProps) {
+    Robot.prototype.gClass = graphics.addClass("TCharacter", "TRobot", {
+        init: function (props, defaultProps) {
             this._super(TUtils.extend({
                 length: 40,
                 inMovement: false,
@@ -50,12 +50,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.on("bump.left", "bumpLeft");
             this.on("bump.right", "bumpRight");
         },
-        step: function(dt) {
+        step: function (dt) {
             var p = this.p;
             var oldX = p.x;
             var oldY = p.y;
             var endSM = false;
-            if (p.inJump && p.vy>=0) {
+            if (p.inJump && p.vy >= 0) {
                 // jump is over
                 p.inJump = false;
                 // wait until robot has fallen to end movement and update grid location
@@ -73,14 +73,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             }
             this._super(dt);
             if (!p.dragging && !p.frozen) {
-                if (p.moving && p.carriedItems.length>0) {
+                if (p.moving && p.carriedItems.length > 0) {
                     var x = p.x - p.w / 2;
                     var y = p.y - p.h / 2;
                     for (var i = 0; i < p.carriedItems.length; i++) {
                         var item = p.carriedItems[i];
-                        item.setLocation(x , y - 4 *i);
+                        item.setLocation(x, y - 4 * i);
                     }
-                }   
+                }
                 if (p.inMovement && p.moving && oldX === p.x && oldY === p.y) {
                     p.moving = false;
                     p.destinationX = p.x;
@@ -96,87 +96,86 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 }
             }
         },
-        bumpTop: function(collision) {
+        bumpTop: function (collision) {
             // check if collided is a ground
             if (typeof collision.tile !== 'undefined' && collision.tile === Maze.GROUND) {
                 this.p.skipCollide = true;
             }
             this.p.blocked[0] = true;
         },
-        bumpBottom: function() {
+        bumpBottom: function () {
             this.p.blocked[1] = true;
         },
-        bumpLeft: function() {
+        bumpLeft: function () {
             this.p.blocked[2] = true;
         },
-        bumpRight: function() {
+        bumpRight: function () {
             this.p.blocked[3] = true;
         },
-        initBumps: function() {
+        initBumps: function () {
             this.p.blocked = [false, false, false, false];
         },
-        wasBlockedTop: function() {
+        wasBlockedTop: function () {
             return (this.p.blocked[0]);
         },
-        wasBlockedBottom: function() {
+        wasBlockedBottom: function () {
             return (this.p.blocked[1]);
         },
-        wasBlockedLeft: function() {
+        wasBlockedLeft: function () {
             return (this.p.blocked[2]);
         },
-        wasBlockedRight: function() {
+        wasBlockedRight: function () {
             return (this.p.blocked[3]);
         },
-        
-        jump: function() {
+        jump: function () {
             if (this.p.mayFall) {
                 this.synchronousManager.begin();
-                this.perform(function() {
+                this.perform(function () {
                     this.p.jumping = true;
                 });
             }
         },
-        moveBackward: function(n) {
+        moveBackward: function (n) {
             this.synchronousManager.begin();
-            this.perform(function() {
+            this.perform(function () {
                 this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
-                this.p.destinationX -= this.p.length*n;
+                this.p.destinationX -= this.p.length * n;
                 this.p.vx = -this.p.speed;
             }, []);
         },
-        moveForward: function(n) {
+        moveForward: function (n) {
             this.synchronousManager.begin();
-            this.perform(function() {
+            this.perform(function () {
                 this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
-                this.p.destinationX += this.p.length*n;
+                this.p.destinationX += this.p.length * n;
                 this.p.vx = this.p.speed;
             }, []);
-        },        
-        moveUpward: function(n) {
+        },
+        moveUpward: function (n) {
             this.synchronousManager.begin();
-            this.perform(function() {
+            this.perform(function () {
                 this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
-                this.p.destinationY -= this.p.length*n;
+                this.p.destinationY -= this.p.length * n;
                 this.p.vy = -this.p.speed;
             }, []);
         },
-        moveDownward: function(n) {
+        moveDownward: function (n) {
             this.synchronousManager.begin();
-            this.perform(function() {
+            this.perform(function () {
                 this.initBumps();
                 this.p.direction = Sprite.DIRECTION_NONE;
                 this.p.inMovement = true;
-                this.p.destinationY += this.p.length*n;
+                this.p.destinationY += this.p.length * n;
                 this.p.vy = this.p.speed;
             }, []);
         },
-        countItems: function() {
+        countItems: function () {
             var skip = 0;
             var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_ITEM, skip);
             var object;
@@ -191,7 +190,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             }
             return this.p.encountered.length;
         },
-        pickup: function() {
+        pickup: function () {
             var count = this.countItems();
             if (count === 0) {
                 throw "no item";
@@ -200,18 +199,18 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.p.carriedItems.push(newItem);
             newItem.setLocation(this.p.x - this.p.w / 2, this.p.y - this.p.h / 2 - (this.p.carriedItems.length - 1) * 4);
         },
-        drop: function() {
+        drop: function () {
             if (this.p.carriedItems.length === 0) {
                 throw "no carried item";
             }
             this.p.carriedItems = this.p.carriedItems.slice(0, -1);
         },
-        countCarriedItems: function(category) {
+        countCarriedItems: function (category) {
             if (typeof category === 'undefined') {
                 return this.p.carriedItems.length;
             } else {
                 var count = 0;
-                for (var i=0; i< this.p.carriedItems.length; i++) {
+                for (var i = 0; i < this.p.carriedItems.length; i++) {
                     var object = this.p.carriedItems[i];
                     if (object.p.category === category) {
                         count++;
@@ -220,23 +219,23 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 return count;
             }
         },
-        setLocation: function(x, y) {
-            this._super(x, y);            
-            this.perform(function() {
+        setLocation: function (x, y) {
+            this._super(x, y);
+            this.perform(function () {
                 this.updateGridLocation();
             }, []);
         },
-        setGridLocation: function(x, y) {
-            this.setLocation(x*this.p.length, y*this.p.length);
-        },        
-        updateGridLocation: function() {
-            this.p.gridX = Math.floor(this.p.x/this.p.length);
-            this.p.gridY = Math.floor(this.p.y/this.p.length);
+        setGridLocation: function (x, y) {
+            this.setLocation(x * this.p.length, y * this.p.length);
         },
-        setStartLocation: function(x, y) {
-            this.setGridLocation(x,y);
+        updateGridLocation: function () {
+            this.p.gridX = Math.floor(this.p.x / this.p.length);
+            this.p.gridY = Math.floor(this.p.y / this.p.length);
         },
-        getItemName: function() {
+        setStartLocation: function (x, y) {
+            this.setGridLocation(x, y);
+        },
+        getItemName: function () {
             var count = this.countItems();
             if (count === 0) {
                 throw "no item";
@@ -244,13 +243,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             var item = this.p.encountered[0];
             return item.getName();
         },
-        getGridX:function() {
+        getGridX: function () {
             return this.p.gridX;
         },
-        getGridY:function() {
+        getGridY: function () {
             return this.p.gridY;
         },
-        mayFall: function(value) {
+        mayFall: function (value) {
             if (typeof value === 'undefined') {
                 value = true;
             }
@@ -260,19 +259,19 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 startFalling = true;
                 this.synchronousManager.begin();
             }
-            this.perform(function() {
+            this.perform(function () {
                 this.p.mayFall = value;
                 if (startFalling) {
                     this.p.inMovement = true;
                 }
             });
         },
-        isCarrying: function(what) {
+        isCarrying: function (what) {
             var category = false;
             if (TUtils.checkString(what)) {
                 category = true;
             }
-            for (var i=0; i< this.p.carriedItems.length; i++) {
+            for (var i = 0; i < this.p.carriedItems.length; i++) {
                 var object = this.p.carriedItems[i];
                 if (category) {
                     if (object.p.category === what) {
@@ -289,14 +288,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     });
 
     // MOVEMENT MANAGEMENT
-    
+
     /**
      * Move Robot of "number" tiles forward (to the right).
      * If no parameter is given, move it one case forward.
      * A tile corresponds to 'length' pixels.
      * @param {Integer} number
      */
-    Robot.prototype._moveForward = function(number) {
+    Robot.prototype._moveForward = function (number) {
         if (typeof number !== 'undefined')
             number = TUtils.getInteger(number);
         else
@@ -306,14 +305,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         else
             this.gObject.moveBackward(-number);
     };
-    
+
     /**
      * Move Robot of "number" tiles backward (to the left).
      * If no parameter is given, move it one case backward.
      * A tile corresponds to 'length' pixels.
      * @param {Integer} number
      */
-    Robot.prototype._moveBackward = function(number) {
+    Robot.prototype._moveBackward = function (number) {
         if (typeof number !== 'undefined')
             number = TUtils.getInteger(number);
         else
@@ -323,14 +322,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         else
             this.gObject.moveForward(-number);
     };
-   
+
     /**
      * Move Robot of "number" tiles upward.
      * If no parameter is given, move it one case upward.
      * A tile corresponds to 'length' pixels.
      * @param {Integer} number
      */
-    Robot.prototype._moveUpward = function(number) {
+    Robot.prototype._moveUpward = function (number) {
         if (typeof number !== 'undefined')
             number = TUtils.getInteger(number);
         else
@@ -347,7 +346,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * A tile corresponds to 'length' pixels.
      * @param {Integer} number
      */
-    Robot.prototype._moveDownward = function(number) {
+    Robot.prototype._moveDownward = function (number) {
         if (typeof number !== 'undefined')
             number = TUtils.getInteger(number);
         else
@@ -362,7 +361,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Count the number of items in Stage.
      * @returns {Number}
      */
-    Robot.prototype._countItems = function() {
+    Robot.prototype._countItems = function () {
         //TODO: handle case where gObject not initialized yet
         return this.gObject.countItems();
     };
@@ -370,7 +369,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     /**
      * Pick up an Item.
      */
-    Robot.prototype._pickup = function() {
+    Robot.prototype._pickup = function () {
         try {
             this.gObject.pickup();
         } catch (e) {
@@ -381,7 +380,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     /**
      * Drop an Item.
      */
-    Robot.prototype._drop = function() {
+    Robot.prototype._drop = function () {
         try {
             this.gObject.drop();
         } catch (e) {
@@ -393,98 +392,98 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
      * Count the number of items carried by Robot.
      * @returns {Number}    Number of items carried.
      */
-    Robot.prototype._countCarriedItems = function(category) {
+    Robot.prototype._countCarriedItems = function (category) {
         if (typeof category !== 'undefined') {
             category = TUtils.getString(category);
         }
         return this.gObject.countCarriedItems(category);
     };
-    
+
     /**
      * Returns gridX.
      * @returns {Integer}
      */
-    Robot.prototype._getGridX = function() {
+    Robot.prototype._getGridX = function () {
         return (this.gObject.p.gridX);
     };
-    
+
     /**
      * Returns gridY.
      * @returns {Integer}
      */
-    Robot.prototype._getGridY = function() {
+    Robot.prototype._getGridY = function () {
         return (this.gObject.p.gridY);
     };
-    
+
     /**
      * Set the coordinates of Robot.
      * @param {Number} x
      * @param {Number} y
      */
-    Robot.prototype._setLocation = function(x, y) {
+    Robot.prototype._setLocation = function (x, y) {
         x = TUtils.getInteger(x) * this.gObject.p.length + this.gObject.p.baseX;
         y = TUtils.getInteger(y) * this.gObject.p.length + this.gObject.p.baseY;
         this.gObject.setLocation(x, y);
     };
-    
+
     /**
      * Test if Robot was blocked during the last move
      * @param {String} way
      * @returns {Boolean}
      */
-    Robot.prototype._wasBlocked = function(way) {
+    Robot.prototype._wasBlocked = function (way) {
         way = this.getMessage(TUtils.getString(way));
         switch (way) {
             case "top":
                 return this.gObject.wasBlockedTop();
-            case "bottom": 
+            case "bottom":
                 return this.gObject.wasBlockedBottom();
             case "left":
                 return this.gObject.wasBlockedLeft();
-            case "right": 
+            case "right":
                 return this.gObject.wasBlockedRight();
         }
         return false;
     };
-    
+
     /**
      * Link a platform to the Walker. Walker will not pass through.
      * @param {String} platform
      */
-    Robot.prototype._addPlatform = function(platform) {
-    	Hero.prototype._addPlatform.call(this, platform);
+    Robot.prototype._addPlatform = function (platform) {
+        Character.prototype._addPlatform.call(this, platform);
         var entrance = platform.getEntranceLocation();
-        this.setEntranceLocation(entrance[0],entrance[1]);
+        this.setEntranceLocation(entrance[0], entrance[1]);
         var exit = platform.getExitLocations();
         if (exit !== false) {
             this.exitLocations = exit;
         }
     };
-    
-    Robot.prototype.setEntranceLocation = function(x, y) {
-        this.gObject.setStartLocation(x,y);
+
+    Robot.prototype.setEntranceLocation = function (x, y) {
+        this.gObject.setStartLocation(x, y);
     };
 
-    Robot.prototype.addExitLocation = function(x, y) {
+    Robot.prototype.addExitLocation = function (x, y) {
         if (this.exitLocations === false) {
             this.exitLocations = [];
         }
         this.exitLocations.push([x, y]);
     };
-    
-    Robot.prototype._getItemName = function() {
+
+    Robot.prototype._getItemName = function () {
         try {
             return this.gObject.getItemName();
         } catch (e) {
             throw this.getMessage(e);
         }
     };
-    
-    Robot.prototype._isOverExit = function() {
+
+    Robot.prototype._isOverExit = function () {
         if (this.exitLocations !== false) {
             var x = this.gObject.getGridX();
             var y = this.gObject.getGridY();
-            for (var i=0; i<this.exitLocations.length; i++) {
+            for (var i = 0; i < this.exitLocations.length; i++) {
                 if (x === this.exitLocations[i][0] && y === this.exitLocations[i][1]) {
                     return true;
                 }
@@ -492,8 +491,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         }
         return false;
     };
-    
-    Robot.prototype._isOver = function(name) {
+
+    Robot.prototype._isOver = function (name) {
         try {
             var current = this.gObject.getItemName();
             if (name === current) {
@@ -502,9 +501,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         } catch (e) {
         }
         return false;
-    };    
+    };
 
-    Robot.prototype._isOverItem = function() {
+    Robot.prototype._isOverItem = function () {
         try {
             this.gObject.getItemName();
             return true;
@@ -513,19 +512,19 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         return false;
     };
 
-    Robot.prototype._isCarrying = function(what) {
-        if (! (TUtils.checkString(what)||TUtils.checkObject(what))) {
+    Robot.prototype._isCarrying = function (what) {
+        if (!(TUtils.checkString(what) || TUtils.checkObject(what))) {
             throw this.getMessage("wrong carrying parameter");
         }
         return this.gObject.isCarrying(what);
     };
-    
-    Robot.prototype.deleteObject = function() {
+
+    Robot.prototype.deleteObject = function () {
         this.synchronousManager.end();
         // remove object from instances list
         Platform.unregister(this);
-        Hero.prototype.deleteObject.call(this);
+        Character.prototype.deleteObject.call(this);
     };
-    
+
     return Robot;
 });

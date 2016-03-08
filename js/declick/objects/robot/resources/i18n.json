@@ -1,5 +1,5 @@
 {
-    "hide": ["_alwaysMoveForward", "_alwaysMoveBackward", "_alwaysMoveUpward", "_alwaysMoveDownward", "_centerGoTo", "_getXCenter", "_getYCenter", "_setImage", "_setTransparent", "_setMovementDuration", "_setPauseDuration", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImageSet", "_setCharacter", "_setCenterLocation"],
+    "hide": ["_alwaysMoveForward", "_alwaysMoveBackward", "_alwaysMoveUpward", "_alwaysMoveDownward", "_centerGoTo", "_getXCenter", "_getYCenter", "_setImage", "_setTransparent", "_setMovementDuration", "_setPauseDuration", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImageSet", "_setAspect", "_setCenterLocation"],
     "fr": {
         "methods":[
             {"name":"_moveForward","translated":"avancer","displayed":"avancer(1)"},

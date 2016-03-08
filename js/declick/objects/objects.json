@@ -278,12 +278,12 @@
         },
         "parents": true
     },
-    "Hero": {
-        "path": "hero",
+    "Character": {
+        "path": "character",
         "translations": {
-            "fr": "Héros",
-            "es": "Héroe",
-            "en": "Hero"
+            "fr": "Personnage",
+            "es": "Personaje",
+            "en": "Character"
         },
         "parents": true
     },
