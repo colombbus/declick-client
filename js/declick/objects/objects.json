@@ -1,10 +1,10 @@
 {
-    "Character": {
-        "path": "character",
+    "Human": {
+        "path": "human",
         "translations": {
-            "fr": "Personnage",
-            "es": "Personaje",
-            "en": "Character"
+            "fr": "Bonhomme",
+            "es": "Hombre",
+            "en": "Human"
         },
         "parents": true
     },

@@ -1,43 +1,43 @@
-define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'], function($, TEnvironment, TUtils, TGraphicalObject, CommandManager) {
+define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'], function ($, TEnvironment, TUtils, TGraphicalObject, CommandManager) {
     /**
-     * Defines Character, inherited from TGraphicalObject.
-     * A Character have several appearances, can move, raise its arms,
+     * Defines Human, inherited from TGraphicalObject.
+     * A Human have several appearances, can move, raise its arms,
      * and catch Sprite objects.
-     * @param {String} characterName Character's name
-     * @exports Character
+     * @param {String} humanName Human's name
+     * @exports Human
      */
-    var Character = function(characterName) {
+    var Human = function (humanName) {
         TGraphicalObject.call(this);
-        if (typeof (characterName) === 'undefined') {
-            characterName = "boy";
+        if (typeof (humanName) === 'undefined') {
+            humanName = "boy";
         } else {
-            var simplifiedName = TUtils.removeAccents(characterName);
-            characterName = this.getMessage(simplifiedName);
+            var simplifiedName = TUtils.removeAccents(humanName);
+            humanName = this.getMessage(simplifiedName);
         }
         this._setLocation(0, 0);
-        this._loadSkeleton(characterName);
+        this._loadSkeleton(humanName);
     };
 
-    Character.prototype = Object.create(TGraphicalObject.prototype);
-    Character.prototype.constructor = Character;
-    Character.prototype.className = "Character";
+    Human.prototype = Object.create(TGraphicalObject.prototype);
+    Human.prototype.constructor = Human;
+    Human.prototype.className = "Human";
 
-    var graphics = Character.prototype.graphics;
+    var graphics = Human.prototype.graphics;
 
-    Character.prototype.gClass = graphics.addClass("TGraphicalObject", "Character", {
-        init: function(props, defaultProps) {
+    Human.prototype.gClass = graphics.addClass("TGraphicalObject", "Human", {
+        init: function (props, defaultProps) {
             this._super(TUtils.extend({
                 destinationX: 0,
                 destinationY: 0,
                 velocity: 200,
                 w: 0,
                 h: 0,
-                type: TGraphicalObject.TYPE_CHARACTER
+                type: TGraphicalObject.TYPE_HUMAN
             }, props), defaultProps);
             this.catchableObjects = new Array();
             this.commands = new CommandManager();
         },
-        step: function(dt) {
+        step: function (dt) {
             var p = this.p;
             if (!p.dragging && p.initialized) {
                 var step = p.velocity * dt;
@@ -53,19 +53,19 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
                 }
             }
         },
-        designDrag: function(touch) {
+        designDrag: function (touch) {
             if (!this.p.dragging) {
                 touch.origX = this.p.x;
                 touch.origY = this.p.y;
             }
             this._super(touch);
         },
-        designTouchEnd: function(touch) {
+        designTouchEnd: function (touch) {
             this.p.destinationX = this.p.x;
             this.p.destinationY = this.p.y;
             this._super(touch);
         },
-        getSideCoordinates: function(side) {
+        getSideCoordinates: function (side) {
             var element;
             if (side === 'left') {
                 element = this.leftElement;
@@ -74,48 +74,48 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
             }
             return [(element.c.points[0][0] + element.c.points[2][0]) / 2, (element.c.points[0][1] + element.c.points[2][1]) / 2];
         },
-        setLocation: function(x, y) {
+        setLocation: function (x, y) {
             this._super(x, y);
-            this.perform(function() {
+            this.perform(function () {
                 this.p.destinationX = this.p.x;
                 this.p.destinationY = this.p.y;
             }, {});
         },
-        setCenterLocation: function(x, y) {
+        setCenterLocation: function (x, y) {
             this._super(x, y);
-            this.perform(function() {
+            this.perform(function () {
                 this.p.destinationX = this.p.x;
                 this.p.destinationY = this.p.y;
             }, {});
         },
-        moveForward: function(value) {
-            this.perform(function(value) {
+        moveForward: function (value) {
+            this.perform(function (value) {
                 this.p.destinationX += value;
             }, [value]);
         },
-        moveBackward: function(value) {
-            this.perform(function(value) {
+        moveBackward: function (value) {
+            this.perform(function (value) {
                 this.p.destinationX -= value;
             }, [value]);
         },
-        moveUpward: function(value) {
-            this.perform(function(value) {
+        moveUpward: function (value) {
+            this.perform(function (value) {
                 this.p.destinationY -= value;
             }, [value]);
         },
-        moveDownward: function(value) {
-            this.perform(function(value) {
+        moveDownward: function (value) {
+            this.perform(function (value) {
                 this.p.destinationY += value;
             }, [value]);
         },
-        stop: function() {
-            this.perform(function() {
+        stop: function () {
+            this.perform(function () {
                 this.p.destinationX = this.p.x;
                 this.p.destinationY = this.p.y;
             }, {});
         },
-        mayCatch: function(object, command) {
-            this.perform(function(obj, cmd) {
+        mayCatch: function (object, command) {
+            this.perform(function (obj, cmd) {
                 if (this.catchableObjects.indexOf(obj) === -1) {
                     this.catchableObjects.push(obj);
                 }
@@ -128,7 +128,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
                 this.stage.addGrid(object);
             }, [object, command]);
         },
-        freeze: function(value) {
+        freeze: function (value) {
             if (value) {
                 for (var i = 0; i < this.children.length; i++) {
                     this.children[i].stopAnimation();
@@ -139,23 +139,23 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
                 }
             }
         },
-        raiseLeftArm: function(value) {
-            this.perform(function(value) {
+        raiseLeftArm: function (value) {
+            this.perform(function (value) {
                 this.leftElement.lower(value);
             }, [value]);
         },
-        raiseRightArm: function(value) {
-            this.perform(function(value) {
+        raiseRightArm: function (value) {
+            this.perform(function (value) {
                 this.rightElement.raise(value);
             }, [value]);
         },
-        lowerLeftArm: function(value) {
-            this.perform(function(value) {
+        lowerLeftArm: function (value) {
+            this.perform(function (value) {
                 this.leftElement.raise(value);
             }, [value]);
         },
-        lowerRightArm: function(value) {
-            this.perform(function(value) {
+        lowerRightArm: function (value) {
+            this.perform(function (value) {
                 this.rightElement.lower(value);
             }, [value]);
         }
@@ -163,8 +163,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
 
     var linear = graphics.getEasing("Linear");
 
-    var PartClass = graphics.addClass("CharacterPart", {
-        init: function(props, defaultProps) {
+    var PartClass = graphics.addClass("HumanPart", {
+        init: function (props, defaultProps) {
             this._super(TUtils.extend({
                 name: "",
                 moveUp: true,
@@ -174,12 +174,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
                 initX: 0,
                 initY: 0,
                 initAngle: 0,
-                type: TGraphicalObject.TYPE_CHARACTER,
+                type: TGraphicalObject.TYPE_HUMAN,
                 mayCatch: false
             }, props), defaultProps);
             this.add("tween");
         },
-        startAnimation: function() {
+        startAnimation: function () {
             this.p.initX = this.p.x;
             this.p.initY = this.p.y;
             this.p.initAngle = this.p.angle;
@@ -188,7 +188,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
                 this.breathe();
             }
         },
-        breathe: function() {
+        breathe: function () {
             var p = this.p;
             switch (p.name) {
                 case 'chest' :
@@ -237,35 +237,35 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
                     break;
             }
         },
-        stopAnimation: function() {
+        stopAnimation: function () {
             this.stop();
             this.p.x = this.p.initX;
             this.p.y = this.p.initY;
             this.p.angle = this.p.initAngle;
         },
-        raise: function(value) {
+        raise: function (value) {
             p = this.p;
             p.moving = true;
             this.stopAnimation();
             var duration = Math.abs(value * p.rotationSpeed);
             this.animate({angle: p.angle + value}, duration, linear, {callback: this.stopMoving});
         },
-        lower: function(value) {
+        lower: function (value) {
             p = this.p;
             p.moving = true;
             this.stopAnimation();
             var duration = Math.abs(value * this.p.rotationSpeed);
             this.animate({angle: this.p.angle - value}, duration, linear, {callback: this.stopMoving});
         },
-        stopMoving: function() {
+        stopMoving: function () {
             this.p.initAngle = this.p.angle;
             this.p.moving = false;
         },
-        step: function(dt) {
+        step: function (dt) {
             if (this.p.mayCatch)
                 this.stage.collide(this, TGraphicalObject.TYPE_CATCHABLE);
         },
-        objectEncountered: function(col) {
+        objectEncountered: function (col) {
             var collided = col.obj;
             var index = this.container.catchableObjects.indexOf(collided);
             if (typeof index !== -1 && ((collided.p.type & TGraphicalObject.TYPE_CATCHABLE) !== 0)) {
@@ -281,7 +281,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
                 collided.owner = this.container;
                 collided.ownerSide = this.side;
                 // Redefine collided object movement
-                collided.step = function() {
+                collided.step = function () {
                     var coordinates = this.owner.getSideCoordinates(this.ownerSide);
                     this.p.x = coordinates[0];
                     this.p.y = coordinates[1];
@@ -305,56 +305,56 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
     });
 
     /**
-     * Move Character of "value" pixels forward (to the right)?
+     * Move Human of "value" pixels forward (to the right)?
      * @param {Number} value
      */
-    Character.prototype._moveForward = function(value) {
+    Human.prototype._moveForward = function (value) {
         value = TUtils.getInteger(value);
         this.gObject.moveForward(value);
     };
-    
+
     /**
-     * Move Character of "value" pixels backward (to the left)?
+     * Move Human of "value" pixels backward (to the left)?
      * @param {Number} value
      */
-    Character.prototype._moveBackward = function(value) {
+    Human.prototype._moveBackward = function (value) {
         value = TUtils.getInteger(value);
         this.gObject.moveBackward(value);
     };
-    
+
     /**
-     * Move Character of "value" pixels upward.
+     * Move Human of "value" pixels upward.
      * @param {Number} value
      */
-    Character.prototype._moveUpward = function(value) {
+    Human.prototype._moveUpward = function (value) {
         value = TUtils.getInteger(value);
         this.gObject.moveUpward(value);
     };
-    
+
     /**
-     * Move Character of "value" pixels downward.
+     * Move Human of "value" pixels downward.
      * @param {Number} value
      */
-    Character.prototype._moveDownward = function(value) {
+    Human.prototype._moveDownward = function (value) {
         value = TUtils.getInteger(value);
         this.gObject.moveDownward(value);
     };
 
     /**
-     * Stops Character.
+     * Stops Human.
      */
-    Character.prototype._stop = function() {
+    Human.prototype._stop = function () {
         this.gObject.stop();
     };
 
     /**
-     * Build the new appearance of Character with
+     * Build the new appearance of Human with
      * the datas loaded by _loadSkeleton.
      * @param {String} baseUrl
-     * @param {String} elements     
+     * @param {String} elements
      * @param {String} assets
      */
-    Character.prototype.build = function(baseUrl, elements, assets) {
+    Human.prototype.build = function (baseUrl, elements, assets) {
         var gObject = this.gObject;
         // destroy previous elements
         for (var i = 0; i < gObject.children.length; i++) {
@@ -365,9 +365,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
         var rightArm = null;
         var leftElement = null;
         var rightElement = null;
-        var character = this;
-        graphics.load(assets, function() {
-            // Add elements to character
+        var human = this;
+        graphics.load(assets, function () {
+            // Add elements to human
             for (var i = 0; i < elements.length; i++) {
                 var val = elements[i];
                 var element = new PartClass({asset: baseUrl + val['image'], name: val['name']});
@@ -378,7 +378,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
                 if (typeof val['cy'] !== 'undefined') {
                     element.p.cy = val['cy'];
                 }
-                // Set elements coordinates (relative to character)
+                // Set elements coordinates (relative to human)
                 element.p.x = val['coordinateX'] + element.p.cx;
                 element.p.y = val['coordinateY'] + element.p.cy;
                 // Set collision if hand defined
@@ -429,10 +429,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
 
     /**
      * Called by _change. Loads the skeleton of the new appearance
-     * of Character, then call build to create it.
+     * of Human, then call build to create it.
      * @param {String} name
      */
-    Character.prototype._loadSkeleton = function(name) {
+    Human.prototype._loadSkeleton = function (name) {
         name = TUtils.getString(name);
         TEnvironment.log("loading skeleton");
         var baseImageUrl = this.getResource(name) + "/";
@@ -446,23 +446,23 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
             dataType: "json",
             url: skeletonUrl,
             async: false,
-            success: function(data) {
-                $.each(data['skeleton']['element'], function(key, val) {
+            success: function (data) {
+                $.each(data['skeleton']['element'], function (key, val) {
                     elements.push(val);
                     assets.push(baseImageUrl + val['image']);
                 });
                 parent.build(baseImageUrl, elements, assets);
             }
-        }).fail(function(jqxhr, textStatus, error) {
+        }).fail(function (jqxhr, textStatus, error) {
             throw new Error(TUtils.format(parent.getMessage("unknown skeleton"), name));
         });
     };
 
     /**
-     * Change the appearance of Character.
+     * Change the appearance of Human.
      * @param {String} name
      */
-    Character.prototype._change = function(name) {
+    Human.prototype._change = function (name) {
         name = TUtils.getString(name);
         var simplifiedName = TUtils.removeAccents(name);
         this._loadSkeleton(this.getMessage(simplifiedName));
@@ -472,16 +472,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
      * Raise the Left Arm of "value" degrees.
      * @param {Number} value
      */
-    Character.prototype._raiseLeftArm = function(value) {
+    Human.prototype._raiseLeftArm = function (value) {
         value = TUtils.getInteger(value);
         this.gObject.raiseLeftArm(value);
     };
-    
+
     /**
      * Raise the Right Arm of "value" degrees.
      * @param {Number} value
      */
-    Character.prototype._raiseRightArm = function(value) {
+    Human.prototype._raiseRightArm = function (value) {
         value = TUtils.getInteger(value);
         this.gObject.raiseRightArm(value);
     };
@@ -490,7 +490,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
      * Lower the Left Arm of "value" degrees.
      * @param {Number} value
      */
-    Character.prototype._lowerLeftArm = function(value) {
+    Human.prototype._lowerLeftArm = function (value) {
         value = TUtils.getInteger(value);
         this.gObject.lowerLeftArm(value);
     };
@@ -499,17 +499,17 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
      * Lower the Right Arm of "value" degrees.
      * @param {Number} value
      */
-    Character.prototype._lowerRightArm = function(value) {
+    Human.prototype._lowerRightArm = function (value) {
         value = TUtils.getInteger(value);
         this.gObject.lowerRightArm(value);
     };
 
     /**
-     * Let Character catch an object, and trigger an associated command.
-     * @param {String} object   Object that Character will be able to catch
-     * @param {String} command  Command triggered if Character catch object
+     * Let Human catch an object, and trigger an associated command.
+     * @param {String} object   Object that Human will be able to catch
+     * @param {String} command  Command triggered if Human catch object
      */
-    Character.prototype._mayCatch = function(object, command) {
+    Human.prototype._mayCatch = function (object, command) {
         object = TUtils.getObject(object);
         command = TUtils.getCommand(command);
         var gObject = this.gObject;
@@ -520,7 +520,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'TGraphicalObject', 'CommandManager'
         gObject.mayCatch(catchableGObject, command);
     };
 
-    //TEnvironment.internationalize(Character, true);
+    //TEnvironment.internationalize(Human, true);
 
-    return Character;
+    return Human;
 });

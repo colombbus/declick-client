@@ -12,7 +12,7 @@
         "girl":"girl",
         "dog":"dog",
         "cat":"cat",
-        "unknown skeleton":"Character '{0}' unknown",
+        "unknown skeleton":"Human '{0}' unknown",
         "wrong object type":"Object {0} cannot be caught"
     }
 }
