@@ -1,0 +1,9 @@
+{
+    "images": {
+            "forward":["tangaraman1.png", "tangaraman2.png", "tangaraman3.png", "tangaraman4.png", "tangaraman5.png", "tangaraman6.png", "tangaraman7.png", "tangaraman8.png", "tangaraman9.png", "tangaraman10.png"],
+            "backward":["tangaraman_l1.png", "tangaraman_l2.png", "tangaraman_l3.png", "tangaraman_l4.png", "tangaraman_l5.png", "tangaraman_l6.png", "tangaraman_l7.png", "tangaraman_l8.png", "tangaraman_l9.png", "tangaraman_l10.png"],
+            "front":["tangaraman1.png", "tangaraman2.png"]
+        },
+    "durationMove": 0.5,
+    "durationPause": 1
+}

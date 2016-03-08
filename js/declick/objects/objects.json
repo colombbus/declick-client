@@ -522,5 +522,14 @@
             "en": "Maze"
         },
         "parents": true
+    },
+     "Hero": {
+        "path": "hero",
+        "translations": {
+            "fr": "Héros",
+            "es": "Héroe",
+            "en": "Hero"
+        },
+        "parents": true
     }
 }
