@@ -1,6 +1,6 @@
 define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExercise', 'TError', 'objects/teacher/Teacher', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExercise, TError, Teacher) {
     function TLearnFrame(callback) {
-        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right;
+        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right, $success, $successText;
         var canvas, editor;
 
         var exercise = new TExercise();
@@ -47,6 +47,19 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $buttonCheck.click(function(e) {
                 execute();
             });
+            
+            var $buttonNext = component.find(".ttoolbar-button-next");
+            $buttonNext.prepend(TEnvironment.getMessage('button-next-step'));
+            $buttonNext.click(function(e) {
+                platform.validate("next");
+            });
+
+            var $buttonClose = component.find(".ttoolbar-button-close");
+            $buttonClose.prepend(TEnvironment.getMessage('button-close-success'));
+            $buttonClose.click(function(e) {
+                hideSuccess();
+            });
+            
             $instructions = component.find("#tlearnframe-instructions");
             $instruction = component.find("#tlearnframe-instruction");
             $solution = component.find("#tlearnframe-solution");
@@ -56,6 +69,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $loading = component.find("#tlearnframe-loading");
             
             $right = component.find("#tlearnframe-right");
+            
+            $success = component.find("#tlearnframe-success");
+            $successText = component.find("#tlearnframe-success-text");
             
             var self = this;
             canvas = new TLearnCanvas(function(c) {
@@ -203,7 +219,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             if(typeof message === "undefined" || message === "") {
                 message = TEnvironment.getMessage("success-message");
             }
-            showMessage(message);
+            showSuccess(message);
         };
 
         this.invalidateExercise = function(message) {
@@ -235,6 +251,15 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             }
             messageDisplayed = true;
         };
+        
+        var showSuccess = function(message) {
+            $successText.text(message);
+            $success.show();
+        };
+
+        var hideSuccess = function(message) {
+            $success.hide();
+        };
 
         var hideMessage = function() {
             $message.hide();
@@ -253,6 +278,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             if (messageDisplayed) {
                 hideMessage();
             }
+            hideSuccess();
             // by default: program mode
             this.setProgramMode();
             TRuntime.clear();
