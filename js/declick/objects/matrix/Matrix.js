@@ -1,4 +1,4 @@
-define([], function() {
+define(['TObject'], function(TObject) {
 	// TODO Add documentation.
 	// TODO Improve performances ?
 	//	    Seems complicated while keeping OOP cohesion.
@@ -14,6 +14,9 @@ define([], function() {
 		this.width = (width != undefined) ? width : dimensions.width;
 		this.height = (height != undefined) ? height : dimensions.height;
 	};
+
+	Matrix.prototype = Object.create(TObject);
+	Matrix.prototype.constructor = Matrix;
 
 	Matrix.prototype.reset = function () {
 		this.data = [];
