@@ -276,5 +276,14 @@ define(['TObject'], function(TObject) {
 		return this;
 	};
 
+	Matrix.Direction = {
+		TOP: 0,
+		BOTTOM: 1,
+		LEFT: 2,
+		RIGHT: 3,
+		CLOCKWISE: 4,
+		ANTICLOCKWISE: 5
+	};
+
 	return Matrix;
 });
