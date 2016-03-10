@@ -531,12 +531,5 @@
             "en": "Hero"
         },
         "parents": true
-    },
-	"Matrix": {
-		"path": "matrix",
-		"translations": {
-			"fr": "Matrice"
-		},
-		"parents": false
-	}
+    }
 }
