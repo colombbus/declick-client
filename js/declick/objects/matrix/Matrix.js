@@ -1,4 +1,6 @@
-define(['Direction'], function(Direction) {
+define(['TObject'], function(TObject) {
+	'use strict';
+
 	// TODO Add documentation.
 	// TODO Improve performances ?
 	//	    Seems complicated while keeping OOP cohesion.
@@ -14,6 +16,10 @@ define(['Direction'], function(Direction) {
 		this.width = (width != undefined) ? width : dimensions.width;
 		this.height = (height != undefined) ? height : dimensions.height;
 	};
+
+	Matrix.prototype = Object.create(TObject.prototype);
+	Matrix.prototype.constructor = Matrix;
+	Matrix.prototype.className = 'Matrix';
 
 	Matrix.prototype.reset = function () {
 		this.data = [];
@@ -160,6 +166,10 @@ define(['Direction'], function(Direction) {
 				this.set(this.width - 1 - XIndex, this.height - 1 - YIndex,
 					copy.get(XIndex, YIndex));
 		return this;
+	};
+
+	Matrix.prototype.includes = function (matrix) {
+		return (this.width >= matrix.width || this.height >= matrix.height);
 	};
 
 	Matrix.prototype.print = function () {

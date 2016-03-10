@@ -1,9 +1,0 @@
-{
-    "debug": false,
-    "backend-path": "/declick-server/web/app.php/",
-    "wpaint-path": "/js/libs/wpaint-2.5.0/",
-    "document-domain": false,
-    "cache": true,
-    "log": false,
-    "error": true
-}

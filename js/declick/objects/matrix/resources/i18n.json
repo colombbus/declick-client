@@ -15,7 +15,8 @@
             {"name":"extraire","translated":"extraire","displayed":"extraire()"},
             {"name":"shift","translated":"d\u00e9caler","displayed":"d\u00e9caler(direction, intensité)"},
             {"name":"rotate","translated":"pivoter","displayed":"pivoter(direction)"},
-            {"name":"reverse","translated":"retourner","displayed":"retourner()"}
+            {"name":"reverse","translated":"retourner","displayed":"retourner()"},
+            {"name":"includes","translated":"englobe","displayed":"englobe(matrice)"}
         ]
     }
 }
