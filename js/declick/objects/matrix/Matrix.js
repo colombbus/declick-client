@@ -15,7 +15,7 @@ define(['TObject'], function(TObject) {
 		this.height = (height != undefined) ? height : dimensions.height;
 	};
 
-	Matrix.prototype = Object.create(TObject);
+	Matrix.prototype = Object.create(TObject.prototype);
 	Matrix.prototype.constructor = Matrix;
 
 	Matrix.prototype.reset = function () {
