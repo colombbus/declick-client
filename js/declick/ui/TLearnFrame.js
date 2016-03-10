@@ -1,6 +1,6 @@
 define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExercise', 'TError', 'objects/teacher/Teacher', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExercise, TError, Teacher) {
     function TLearnFrame(callback) {
-        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instructions, $solution, $solutionContent, $input, $loading, $right;
+        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right;
         var canvas, editor;
 
         var exercise = new TExercise();
@@ -28,26 +28,27 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 $textMessage.fadeOut(500);
             });
             var $buttonClear = component.find(".ttoolbar-button-clear");
-            $buttonClear.append("Réinitialiser");
+            $buttonClear.attr("title", "Réinitialiser");
             $buttonClear.click(function(e) {
                 clear();
             });
             var $buttonExecute = component.find(".ttoolbar-button-execute");
-            $buttonExecute.append(TEnvironment.getMessage('button-execute'));
+            $buttonExecute.attr("title", TEnvironment.getMessage('button-execute'));
             $buttonExecute.click(function(e) {
                 execute();
             });
             var $buttonErase = component.find(".ttoolbar-button-erase");
-            $buttonErase.append(TEnvironment.getMessage('button-erase'));
+            $buttonErase.attr("title", TEnvironment.getMessage('button-erase'));
             $buttonErase.click(function(e) {
                 clear();
             });
             var $buttonCheck = component.find(".ttoolbar-button-check");
-            $buttonCheck.append(TEnvironment.getMessage('button-check'));
+            $buttonCheck.attr("title", TEnvironment.getMessage('button-check'));
             $buttonCheck.click(function(e) {
                 execute();
             });
             $instructions = component.find("#tlearnframe-instructions");
+            $instruction = component.find("#tlearnframe-instruction");
             $solution = component.find("#tlearnframe-solution");
             $solution = component.find("#tlearnframe-solution");
             $solutionContent = component.find("#tlearnframe-solution-content");
@@ -420,14 +421,15 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.setTextMode = function() {
             // copy current value if any
             // TODO: fix this
-
             this.setText(this.getCode());
             $text.css("display", "block");
+            $instruction.addClass("text-mode");
             textMode = true;
         };
 
         this.setProgramMode = function() {
             $text.css("display", "none");
+            $instruction.removeClass("text-mode");
             textMode = false;
         };
 
