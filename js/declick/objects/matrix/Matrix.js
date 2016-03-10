@@ -1,4 +1,4 @@
-define(['Direction'], function(Direction) {
+define([], function() {
 	// TODO Add documentation.
 	// TODO Improve performances ?
 	//	    Seems complicated while keeping OOP cohesion.
