@@ -532,11 +532,19 @@
         },
         "parents": true
     },
+	"Direction": {
+		"path": "direction",
+		"translations": {
+			"fr": "Direction"
+		},
+		"parents": false
+	},
 	"Matrix": {
 		"path": "matrix",
 		"translations": {
 			"fr": "Matrice"
 		},
-		"parents": false
+		"parents": false,
+		"instance": true
 	}
 }
