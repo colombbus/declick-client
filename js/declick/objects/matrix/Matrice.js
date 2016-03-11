@@ -285,7 +285,7 @@ define(['TObject'], function(TObject) {
 		var XLimit = Math.min(MatriceA.largeur, MatriceB.largeur);
 		var YLimit = Math.min(MatriceA.hauteur, MatriceB.hauteur);
 		for (var YIndex = 0; YIndex < YLimit; YIndex++)
-			for (var XIndex = 0; Xindex < XLimit; XIndex++)
+			for (var XIndex = 0; XIndex < XLimit; XIndex++)
 				if (MatriceA.obtenir(XIndex, YIndex) !== undefined &&
 					MatriceB.obtenir(XIndex, YIndex) !== undefined)
 					return true;
