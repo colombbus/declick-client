@@ -55,7 +55,6 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             });
 
             var $buttonClose = component.find(".ttoolbar-button-close");
-            $buttonClose.prepend(TEnvironment.getMessage('button-close-success'));
             $buttonClose.click(function(e) {
                 hideSuccess();
             });
@@ -219,7 +218,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             if(typeof message === "undefined" || message === "") {
                 message = TEnvironment.getMessage("success-message");
             }
-            showSuccess(message);
+            window.setTimeout(function() {
+                showSuccess(message);
+            }, 1000);
         };
 
         this.invalidateExercise = function(message) {
