@@ -264,7 +264,7 @@ define(['TObject'], function(TObject) {
 	};
 
 	Matrice.prototype.englobe = function (Matrice) {
-		if (Matrice instanceof Matrice.Selection)
+		if (Matrice instanceof Matrice.Sélection)
 			return this.width >= (Matrice.width + Matrice.XOffset)
 				&& this.height >= (Matrice.height + Matrice.YOffset);
 		return this.width >= Matrice.width && this.height >= Matrice.height;
