@@ -49,7 +49,9 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.backwardAssets = [];
             this.defaultAssets = [];
             this.assetOperations = [];
+            this.moves = [];
             this.catchableObjects = {};
+            this.on("stop", "nextMove");
         },
         step: function (dt) {
             this._super(dt);
@@ -389,6 +391,31 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             // check if asset is ready
             if (this.p.asset && this.resources.ready(this.p.asset)) {
                 this._super(ctx);
+            }
+        },
+        addMove: function(direction, value) {
+            this.moves.add({direction:direction, value:value});
+            if (this.p.direction !== Sprite.DIRECTION_NONE) {
+                
+            }
+        },
+        nextMove: function() {
+            if (this.moves.length>0) {
+                var next = this.moves.splice(0,1);
+                switch (next.direction) {
+                    case Sprite.DIRECTION_RIGHT:
+                        this.moveForward(next.value);
+                        break;
+                    case Sprite.DIRECTION_LEFT:
+                        this.moveBackward(next.value);
+                        break;
+                    case Sprite.DIRECTION_UP:
+                        this.moveUpward(next.value);
+                        break;
+                    case Sprite.DIRECTION_DOWN:
+                        this.moveDownward(next.value);
+                        break;
+                }
             }
         }
 

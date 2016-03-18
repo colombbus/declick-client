@@ -1,14 +1,29 @@
 <div id="tlearnframe">
 	<div id="tlearnframe-main">
 		<div id="tlearnframe-left">
-			<div id="tlearnframe-instruction">
-                            <div id="tlearnframe-instructions"></div>
+                    <div id="left-wrapper" class="split-pane fixed-bottom">
+			<div id="tlearnframe-instruction" class="split-pane-component">
+                            <div id="tlearnframe-instruction-scroller">
+                                <div id="tlearnframe-instructions"></div>
+                            </div>
+                            <div id="tlearnframe-solution">
+                                <div id="tlearnframe-solution-content"></div>
+                                </div>
 			</div>
-                        <div id="tlearnframe-solution">
-                            <div id="tlearnframe-solution-content"></div>
-                        </div>
-		</div>
-		<div id="tlearnframe-right" class="split-pane fixed-bottom">
+                        <div id="tlearnframe-separator" class="split-pane-divider"></div>                    
+			<div id="tlearnframe-canvas"  class="split-pane-component">
+				<div id="TLearnCanvas"></div>
+				<div id="tlearnframe-message">
+                                    <a id="tlearnframe-message-close"></a>
+                                    <div id="tlearnframe-message-content"></div>
+				</div>
+			</div>
+                    </div>
+                </div>
+		<div id="tlearnframe-right">
+                    <div id="right-wrapper">
+                        <div id="TLearnEditor"></div>
+                    
                         <div id="tlearnframe-text">
                             <div id="tlearnframe-text-input-frame">
                                 <textarea id="tlearnframe-text-input"></textarea>
@@ -19,35 +34,32 @@
                             </div>
                             <div id="tlearnframe-text-buttons">
                                 <button class="ttoolbar-button ttoolbar-button-check">
-                                    <img src="images/cogs_orange.png" class="ttoolbar-button-image">
                                 </button>
                                 <button class="ttoolbar-button ttoolbar-button-erase">
-                                    <img src="images/reset.png" class="ttoolbar-button-image">
                                 </button>
                             </div>
                         </div>
-			<div id="tlearnframe-canvas"  class="split-pane-component">
-				<div id="TLearnCanvas"></div>
-				<div id="tlearnframe-message">
-                                    <a id="tlearnframe-message-close"></a>
-                                    <div id="tlearnframe-message-content"></div>
-				</div>
-			</div>
-                        <div id="tlearnframe-separator" class="split-pane-divider"></div>
-			<div id="tlearnframe-bottom" class="split-pane-component">
+
+			<div id="tlearnframe-bottom">
                             <div id="tlearnframe-buttons">
                                 <button class="ttoolbar-button ttoolbar-button-execute">
-                                    <img src="images/play_orange.png" class="ttoolbar-button-image">
                                 </button>
                                 <button class="ttoolbar-button ttoolbar-button-clear">
-                                    <img src="images/reset.png" class="ttoolbar-button-image">
                                 </button>
                             </div>
-                            <div id="TLearnEditor"></div>
 			</div>
+                    </div>
 		</div>
 	</div>
 	<div id="tlearnframe-loading">
 		<img src="images/loader2.gif">
 	</div>    
+	<div id="tlearnframe-success">
+            <div id="tlearnframe-success-center">
+                <button class="ttoolbar-button ttoolbar-button-close"></button>
+                <div id="tlearnframe-success-image"><img src="images/thumb.png"></div>
+                <div id="tlearnframe-success-text"></div>
+                <div id="tlearnframe-success-actions"><div class="ttoolbar-button ttoolbar-button-next"></div></div>
+            </div>
+	</div>
 </div>

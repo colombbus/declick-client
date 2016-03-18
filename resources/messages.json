@@ -118,6 +118,8 @@
         "button-check":"Vérifier",
         "button-erase":"Effacer",
         "repeat-keyword":"répéter",
+        "button-next-step":"Etape Suivante",
+        "button-close-success":"Revenir à l'étape",
         "success-message":"Bravo, tu as réussi !"
     }
 }

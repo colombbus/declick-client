@@ -167,27 +167,29 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         },
         step: function(dt) {
             var p = this.p;
-            p.moving = false;
+            var wasMoving = p.moving;
             if (!p.dragging && !p.frozen) {
                 if (p.direction === Sprite.DIRECTION_NONE) {
+                    var movingX = false, movingY = false;
                     if (p.x < p.destinationX) {
                         p.x = Math.min(p.x + p.vx*dt, p.destinationX);
-                        p.moving = true;
+                        movingX = true;
                     } else if (p.x > p.destinationX) {
                         p.x = Math.max(p.x + p.vx*dt, p.destinationX);
-                        p.moving = true;
+                        movingX = true;
                     } else {
                         p.vx = 0;
                     }
                     if (p.y < p.destinationY) {
                         p.y = Math.min(p.y + p.vy*dt, p.destinationY);
-                        p.moving = true;
+                        movingY = true;
                     } else if (p.y > p.destinationY) {
                         p.y = Math.max(p.y + p.vy*dt, p.destinationY);
-                        p.moving = true;
+                        movingY = true;
                     } else {
                         p.vy = 0;
-                    }        
+                    }
+                    p.moving = movingX | movingY;
                 } else {
                     p.x += p.vx*dt;
                     p.y += p.vy*dt;
@@ -196,6 +198,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 this.p.collisions = [];
                 this.checkCollisions();
                 this.handleCollisions();
+                if (wasMoving && !p.moving) {
+                    this.trigger("stop");
+                }
+                if (!wasMoving && p.moving) {
+                    this.trigger("start");
+                }
             }
         },
         designTouchEnd: function(touch) {
