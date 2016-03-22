@@ -1,4 +1,4 @@
-define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUtils, TRuntime, TEnvironment) {
+define(['TObject', 'TUtils', 'TRuntime', 'CommandManager'], function (TObject, TUtils, TRuntime, CommandManager) {
     /**
      * Defines TGraphicalObject, inhetired from TObject.
      * It's an object which can be drawn on stage.
@@ -38,9 +38,11 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
                 designMode: false,
                 initialized: false,
                 w: 0,
-                h: 0
+                h: 0,
+                clickHandled: false
             }, props), defaultProps);
             this.operations = new Array();
+            this.clickCommands = new CommandManager();
         },
         designDrag: function (touch) {
             if (this.p.designMode) {
@@ -129,7 +131,41 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
         },
         freeze: function (value) {
             // to be implemented by subclasses
+        },
+        touch: function() {
+            if (!this.p.designMode && !this.p.clickHandled) {
+                this.clickCommands.executeCommands();
+                this.p.clickHandled = true;
+            }
+        },
+        touchEnd: function() {
+            if (!this.p.designMode) {
+                this.p.clickHandled = false;
+            }
+        },
+        addClickCommand: function(command) {
+            if (!this.clickCommands.hasCommands()) {
+                // need to set touch and touchEnd listeners
+                this.on("touch", this, "touch");
+                this.on("touchEnd", this, "touchEnd");
+                for (var i = 0; i < this.children.length; i++) {
+                    this.children[i].on("touch", this, "touch");
+                    this.children[i].on("touchEnd", this, "touchEnd");
+                }
+            }
+            this.clickCommands.addCommand(command);
+        },
+        removeClickCommands: function() {
+            this.clickCommands.removeCommands();
+            // un-register listeners
+            this.off("touch", this, "touch");
+            this.off("touchEnd", this, "touchEnd");
+            for (var i = 0; i < this.children.length; i++) {
+                this.children[i].off("touch", this, "touch");
+                this.children[i].off("touchEnd", this, "touchEnd");
+            }
         }
+        
     });
 
     TGraphicalObject.prototype.messages = null;
@@ -307,6 +343,24 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function (TObject, TUt
     TGraphicalObject.prototype._show = function () {
         this.gObject.p.hidden = false;
     };
+
+    /**
+     * Add command that will be executed when object is clicked.
+     * @param {(string|function}} command to be added
+     */
+    TGraphicalObject.prototype._ifClick = function (command) {
+        command = TUtils.getCommand(command);
+        this.gObject.addClickCommand(command);
+    };
+
+
+    /**
+     * Remove all commands associated to click.
+     */
+    TGraphicalObject.prototype._removeClickCommands = function() {
+        this.gObject.removeClickCommands();
+    };
+
 
     return TGraphicalObject;
 });
