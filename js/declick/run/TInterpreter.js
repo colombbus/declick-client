@@ -152,7 +152,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             }
         };
 
-        this.addPriorityStatements = function(statements, log) {
+        this.addPriorityStatements = function(statements, parameter, log) {
             // Find index at which insertion has to be made
             var index=0;
             while (index<stack[executionLevel].length && typeof stack[executionLevel][index].priority !== 'undefined') {
@@ -165,6 +165,10 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                 statement.priority = true;
                 // Set log information
                 statement.log = log;
+                if (statement.type === "ExpressionStatement") {
+                    // Add parameter
+                    statement.expression.parameter = parameter;
+                }
                 // Insert statement
                 stack[executionLevel].splice(index, 0, statement);
             }
@@ -536,7 +540,12 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                 saveVariable(identifier);
                 currentVariables.push(identifier);
                 if (declarator.init !== null) {
-                    var value = evalExpression(declarator.init);
+                    var value;
+                    if (typeof declarator.computed !=='undefined' && declarator.computed) {
+                        value = declarator.init;
+                    } else {
+                        value = evalExpression(declarator.init);
+                    }
                     defaultEval("var " + identifier + "=" + value);
                 } else {
                     defaultEval("var " + identifier);
@@ -555,7 +564,7 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             if (params.length > 0) {
                 paramsString = "(" + params[0].name;
                 for (var i = 1; i < params.length; i++) {
-                    paramsString += "," + params[i].name
+                    paramsString += "," + params[i].name;
                 }
                 paramsString += ")";
             } else {
@@ -680,10 +689,14 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
 
         var callFunction = function(block, params, args, expression) {
             var values = [];
-            for (var i = 0; i < args.length; i++) {
+            var i = 0;
+            for (i = 0; i < args.length; i++) {
                 if (i < params.length) {
                     values.push({'type': 'VariableDeclarator', 'id': params[i], 'init': args[i]});
                 }
+            }
+            if (typeof expression.parameter !== 'undefined') {
+                values.push({'type': 'VariableDeclarator', 'id': params[i], 'init': expression.parameter, 'computed':true});
             }
             if (block.body.length > 0 && block.body[0].type === 'ParametersDeclaration') {
                 // reuse existing parameters declaration
