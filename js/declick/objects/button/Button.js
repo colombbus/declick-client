@@ -37,9 +37,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
                 executed: false,
                 type: TGraphicalObject.TYPE_INPUT
             }, props), defaultProps);
-            this.on("touch");
-            this.on("touchEnd");
-            this.commands = new CommandManager();
         },
         updateSize: function() {
             var oldH = this.p.h;
@@ -95,16 +92,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         touch: function(touch) {
             if (!this.p.designMode) {
                 this.p.active = true;
-                if (!this.p.executed) {
-                    this.executeCommands();
-                    this.p.executed = true;
-                }
+                this._super(touch);
             }
         },
         touchEnd: function(touch) {
             if (!this.p.designMode) {
                 this.p.active = false;
-                this.p.executed = false;
+                this._super(touch);
             }
         },
         addCommand: function(command) {
@@ -176,18 +170,17 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
 
     /**
      * Associate a command to Button.
-     * @param {String} command
+     * @param {(string|function}} command to be added
      */
     Button.prototype._addCommand = function(command) {
-        command = TUtils.getCommand(command);
-        this.gObject.addCommand(command);
+        this._ifClick(command);
     };
 
     /**
      * Remove all commands associated to button.
      */
     Button.prototype._removeCommands = function() {
-        this.gObject.removeCommands();
+        this._removeClickCommands();
     };
 
     //TEnvironment.internationalize(Button, true);

@@ -13,7 +13,9 @@
             {"name":"_getX","translated":"r\u00e9cup\u00e9rerCoordonn\u00e9eX","displayed":"r\u00e9cup\u00e9rerCoordonn\u00e9eX()"},
             {"name":"_getY","translated":"r\u00e9cup\u00e9rerCoordonn\u00e9eY","displayed":"r\u00e9cup\u00e9rerCoordonn\u00e9eY()"},
             {"name":"_hide","translated":"cacher","displayed":"cacher()"},
-            {"name":"_show","translated":"montrer","displayed":"montrer()"}
+            {"name":"_show","translated":"montrer","displayed":"montrer()"},
+            {"name":"_ifClick","translated":"siClic","displayed":"siClic(\"commande\")"},
+            {"name":"_removeClickCommands","translated":"supprimerCommandesClic","displayed":"supprimerCommandesClic()"}
         ]
     }
 }
