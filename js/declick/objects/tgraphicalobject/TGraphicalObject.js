@@ -132,13 +132,13 @@ define(['TObject', 'TUtils', 'TRuntime', 'CommandManager'], function (TObject, T
         freeze: function (value) {
             // to be implemented by subclasses
         },
-        touch: function() {
+        touch: function(event) {
             if (!this.p.designMode && !this.p.clickHandled) {
-                this.clickCommands.executeCommands();
+                this.clickCommands.executeCommands({x:event.x, y:event.y});
                 this.p.clickHandled = true;
             }
         },
-        touchEnd: function() {
+        touchEnd: function(event) {
             if (!this.p.designMode) {
                 this.p.clickHandled = false;
             }

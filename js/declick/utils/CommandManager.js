@@ -61,6 +61,8 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
         if (typeof parameters !== 'undefined') {
             if (typeof parameters['parameter'] !== 'undefined') {
                 parameter = parameters['parameter'];
+            } else {
+                parameter = parameters;
             }
             if (typeof parameters['field'] !== 'undefined') {
                 field = parameters['field'];
