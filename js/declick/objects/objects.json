@@ -543,10 +543,10 @@
         "instance": true
     },
     "Matrice": {
-		"path": "matrix",
-		"translations": {
-			"fr": "Matrice"
-		},
-		"parents": false
+        "path": "matrix",
+        "translations": {
+            "fr": "Matrice"
+        },
+        "parents": false
     }
 }
