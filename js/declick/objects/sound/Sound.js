@@ -88,6 +88,8 @@ define(['TObject', 'TUtils', 'TRuntime', 'TEnvironment'], function(TObject, TUti
      * @param {String} name
      */
     Sound.prototype._play = function(name) {
+        if (typeof name === 'undefined')
+            name = 0;
         var asset = this.sounds[name];
         // TODO: wait for loading
         var audio = TRuntime.getGraphics().getAudio();
