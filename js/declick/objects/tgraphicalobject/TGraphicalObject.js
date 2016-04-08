@@ -123,6 +123,12 @@ define(['TObject', 'TUtils', 'TRuntime', 'CommandManager'], function (TObject, T
         getY: function () {
             return Math.round(this.p.y - this.p.h / 2);
         },
+        getWidth: function () {
+            return this.p.w;
+        },
+        getHeight: function () {
+            return this.p.h;
+        },
         setCenterLocation: function (x, y) {
             this.perform(function (x, y) {
                 this.p.x = x;
@@ -361,6 +367,19 @@ define(['TObject', 'TUtils', 'TRuntime', 'CommandManager'], function (TObject, T
         this.gObject.removeClickCommands();
     };
 
+    /**
+     * GetWidth TGraphicalObject.
+     */
+    TGraphicalObject.prototype._getWidth = function () {
+        return this.gObject.getWidth();
+    };
+
+    /**
+     * GetHeight TGraphicalObject.
+     */
+    TGraphicalObject.prototype._getHeight = function () {
+        return this.gObject.getHeight();
+    };
 
     return TGraphicalObject;
 });
