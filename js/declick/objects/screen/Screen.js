@@ -1,4 +1,4 @@
-define(['jquery', 'TUI', 'TRuntime', 'TUtils', 'TObject', 'SynchronousManager'], function ($, TUI, TRuntime, TUtils, TObject, SynchronousManager) {
+define(['jquery', 'TObject'], function ($, TObject) {
     /**
      * Defines Screen, inherited from TObject.
      * Screen is an object created automatically with the launch of Screen.
@@ -6,11 +6,10 @@ define(['jquery', 'TUI', 'TRuntime', 'TUtils', 'TObject', 'SynchronousManager'],
      * @exports Screen
      */
     var Screen = function () {
-        TRuntime.addInstance(this);
-		this.w = window;
-		this.d = document;
-		this.e = this.d.documentElement;
-		this.g = this.d.getElementsByTagName('body')[0];
+        this.w = window;
+        this.d = document;
+        this.e = this.d.documentElement;
+        this.g = this.d.getElementsByTagName('body')[0];
     };
 
     Screen.prototype = Object.create(TObject.prototype);
@@ -22,8 +21,8 @@ define(['jquery', 'TUI', 'TRuntime', 'TUtils', 'TObject', 'SynchronousManager'],
      * @param {String} value
      */
     Screen.prototype._getHeight = function () {
-		return this.w.innerHeight|| this.e.clientHeight|| this.g.clientHeight;
-	};
+        return this.w.innerHeight || this.e.clientHeight || this.g.clientHeight;
+    };
 
     /**
      * Get screen Width "value" in logs.
