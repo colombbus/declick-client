@@ -532,11 +532,21 @@
         },
         "parents": true
     },
-	"Matrice": {
-		"path": "matrix",
-		"translations": {
-			"fr": "Matrice"
-		},
-		"parents": false
-	}
+    "Screen": {
+        "path": "screen",
+        "translations": {
+            "fr": "écran",
+            "es": "pantalla",
+            "en": "screen"
+        },
+        "parents": false,
+        "instance": true
+    },
+    "Matrice": {
+        "path": "matrix",
+        "translations": {
+            "fr": "Matrice"
+        },
+        "parents": false
+    }
 }

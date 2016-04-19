@@ -696,7 +696,9 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
                 }
             }
             if (typeof expression.parameter !== 'undefined') {
-                values.push({'type': 'VariableDeclarator', 'id': params[i], 'init': expression.parameter, 'computed':true});
+                if (i < params.length) {
+                    values.push({'type': 'VariableDeclarator', 'id': params[i], 'init': expression.parameter, 'computed':true});
+                }
             }
             if (block.body.length > 0 && block.body[0].type === 'ParametersDeclaration') {
                 // reuse existing parameters declaration

@@ -12,6 +12,8 @@
             {"name":"_getYCenter","translated":"r\u00e9cup\u00e9rerCoordonn\u00e9eYCentre","displayed":"r\u00e9cup\u00e9rerCoordonn\u00e9eYCentre()"},
             {"name":"_getX","translated":"r\u00e9cup\u00e9rerCoordonn\u00e9eX","displayed":"r\u00e9cup\u00e9rerCoordonn\u00e9eX()"},
             {"name":"_getY","translated":"r\u00e9cup\u00e9rerCoordonn\u00e9eY","displayed":"r\u00e9cup\u00e9rerCoordonn\u00e9eY()"},
+            {"name":"_getWidth","translated":"r\u00e9cup\u00e9rerLargeur","displayed":"r\u00e9cup\u00e9rerLargeur()"},
+            {"name":"_getHeight","translated":"r\u00e9cup\u00e9rerHauteur","displayed":"r\u00e9cup\u00e9rerHauteur()"},
             {"name":"_hide","translated":"cacher","displayed":"cacher()"},
             {"name":"_show","translated":"montrer","displayed":"montrer()"},
             {"name":"_ifClick","translated":"siClic","displayed":"siClic(\"commande\")"},
