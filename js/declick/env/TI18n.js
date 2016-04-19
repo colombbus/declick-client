@@ -10,7 +10,7 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
         var waiting = {};
         var translatedClasses = [];
         var self;
-        
+
         /**
          * Translate a method.
          * @param {String} aClass
@@ -19,7 +19,7 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
          */
         var addTranslatedMethod = function(aClass, name, translated) {
             aClass.prototype[translated] = aClass.prototype[name];
-            //TODO: find a working way to prevent classes from being modified 
+            //TODO: find a working way to prevent classes from being modified
             // Object.freeze(initialClass.prototype); // TOO STRICT
             Object.defineProperty(aClass, translated, {
                 enumerable: false,
@@ -83,7 +83,9 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
                                 if (typeof aClass.prototype[val.translated] === 'undefined') {
                                     // only translate if not already translated
                                     addTranslatedMethod(aClass, val.name, val.translated);
-                                    translatedMethods[val.translated] = val.displayed;                                    
+                                    if (val.displayed !== false) {
+                                        translatedMethods[val.translated] = val.displayed;
+                                    }                            
                                     var value = {translated: val.translated, displayed: val.displayed};
     //                                    classMethods[aClass.prototype.className][val.translated] = val.displayed;
                                     processedFiles[file][val.name] = value;
@@ -186,7 +188,7 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
                         } else {
                            if (typeof callback !== 'undefined') {
                                 callback.call(self, translated);
-                            } 
+                            }
                         }
                     } else if (typeof callback !== 'undefined') {
                         callback.call(self, translated);
@@ -221,13 +223,11 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
                 }
             });
         };
-        
+
     };
-    
+
     var TI18nInstance = new TI18n();
-    
+
     return TI18nInstance;
-    
+
 });
-
-
