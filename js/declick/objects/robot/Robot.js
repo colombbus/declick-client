@@ -503,8 +503,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         return false;
     };
 
-    Robot.prototype._isOverItem = function () {
+    Robot.prototype._isOverItem = function (name) {
         try {
+            if (typeof name !== 'undefined')
+                return this._isOver(name);
             this.gObject.getItemName();
             return true;
         } catch (e) {
