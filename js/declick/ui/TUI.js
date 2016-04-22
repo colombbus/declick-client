@@ -440,18 +440,20 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             } else {
                 // Resource deletion
                 var name = sidebar.getCurrentResourceName();
-                var goOn = window.confirm(TEnvironment.getMessage('delete-resource-confirm', name));
-                if (goOn) {
-                    var self = this;
-                    project.deleteResource(name, function(error) {
-                        if (typeof error !== 'undefined') {
-                            self.addLogError(error);
-                        } else {
-                            nextProgram(name);
-                        }
-                        //update sidebar
-                        self.updateSidebarResources();
-                    });
+                if (name !== "") {
+                    var goOn = window.confirm(TEnvironment.getMessage('delete-resource-confirm', name));
+                    if (goOn) {
+                        var self = this;
+                        project.deleteResource(name, function(error) {
+                            if (typeof error !== 'undefined') {
+                                self.addLogError(error);
+                            } else {
+                                nextProgram(name);
+                            }
+                            //update sidebar
+                            self.updateSidebarResources();
+                        });
+                    }
                 }
             }
         };
@@ -540,4 +542,3 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
     return uiInstance;
 
 });
-
