@@ -69,7 +69,7 @@ define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime
         };
         this.removeLoading = function() {
             $canvasLoading.hide();
-            var grid = generateGrid(32);
+            var grid = generateGrid(40);
             $canvas.css('background', 'url(' + grid + ') repeat');
         };
         this.giveFocus = function() {
