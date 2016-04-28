@@ -143,11 +143,11 @@ body {
     position:relative;
     overflow:hidden;
     box-sizing:border-box;
-    border:solid 1px #DCDCDE;
 }
 
 #tcanvas-outer {
     height:100%;
+    border:solid 1px #DCDCDE;
     background-color:#ffffff;
 }
 
@@ -199,7 +199,7 @@ body {
     padding:10px;
     display:none;
     box-sizing:border-box;
-    z-index:2;    
+    z-index:2;
 }
 
 #tlearnframe-message.tlearnframe-error {
@@ -289,7 +289,7 @@ body {
 
 .ttoolbar-button-execute:hover {
     background-image:url('../images/run_on.png');
-   
+
 }
 .ttoolbar-button-check {
     height:35px;
@@ -299,7 +299,7 @@ body {
 
 .ttoolbar-button-check:hover {
     background-image:url('../images/check_on.png');
-   
+
 }
 
 .ttoolbar-button-clear,
@@ -311,7 +311,7 @@ body {
 
 .ttoolbar-button-clear:hover,
 .ttoolbar-button-erase:hover{
-    background-image:url('../images/reset_on.png');   
+    background-image:url('../images/reset_on.png');
 }
 
 
@@ -424,7 +424,7 @@ body {
     padding:10px;
     display:none;
     box-sizing:border-box;
-    z-index:3;    
+    z-index:3;
 }
 
 #tlearnframe-text-message.tlearnframe-error {
@@ -445,7 +445,7 @@ body {
     margin-right:5px;
     margin-top:2px;
     background-image:url(../images/clear_grey.png);
-    cursor:pointer;    
+    cursor:pointer;
 }
 
 #tlearnframe-loading {
@@ -524,7 +524,7 @@ body {
 
 .ttoolbar-button-close:hover {
     background-image:url('../images/close_success_on.png');
-   
+
 }
 
 
@@ -545,5 +545,5 @@ body {
 
 .ttoolbar-button-next:hover {
     background-image:url('../images/next_step_on.png');
-   
+
 }
