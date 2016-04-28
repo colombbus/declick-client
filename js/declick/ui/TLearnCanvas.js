@@ -9,10 +9,10 @@ define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime
         painter.beginPath();
         painter.lineWidth = 1;
         painter.strokeStyle = '#C8DEE5';
-        painter.moveTo(0, 0.5);
-        painter.lineTo(size * 2, 0.5);
-        painter.moveTo(0.5, 0);
-        painter.lineTo(0.5, size * 2);
+        painter.moveTo(0, 39.5);
+        painter.lineTo(size, 39.5);
+        painter.moveTo(39.5, 0);
+        painter.lineTo(39.5, size);
         painter.stroke();
 
         return canvas.toDataURL();
@@ -61,7 +61,6 @@ define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime
             $canvasLoading.hide();
             var grid = generateGrid(40);
             $canvas.css('background-image', 'url(' + grid + ')');
-            $canvas.css('background-position', '-1px -1px');
             $canvas.css('background-repeat', 'repeat');
         };
         this.giveFocus = function() {
