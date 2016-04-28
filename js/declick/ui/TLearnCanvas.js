@@ -8,7 +8,7 @@ define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime
 
         painter.beginPath();
         painter.lineWidth = 1;
-        painter.strokeStyle = '#C8DEE5';
+        painter.strokeStyle = '#E0E0E0';
         painter.moveTo(0, 39.5);
         painter.lineTo(size, 39.5);
         painter.moveTo(39.5, 0);
