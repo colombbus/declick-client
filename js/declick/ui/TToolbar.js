@@ -1,15 +1,15 @@
 define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, $, TEnvironment, TUI) {
     function TToolbar(callback) {
         var $buttonExecute, $buttonEditor;
-        var $optionDesignMode, $optionClear, $optionNewProgram, $optionSaveProgram, $optionNewResource, $optionDelete;
+        var $optionDesignMode, $optionConsole, $optionNewProgram, $optionSaveProgram, $optionNewResource, $optionDelete;
         var editorMode = false;
         var programOptions = true;
 
         TComponent.call(this, "TToolbar.html", function(component) {
             $buttonExecute = component.find(".ttoolbar-button-execute");
             $buttonEditor = component.find(".ttoolbar-mode-editor");
-            $optionDesignMode = component.find(".ttoolbar-option-design-mode");
-            $optionClear = component.find(".ttoolbar-option-clear");
+            $optionDesignMode = component.find("#ttoolbar-design-mode");
+            $optionConsole = component.find("#ttoolbar-console");
             $optionNewProgram = component.find(".ttoolbar-option-new-program");
             $optionSaveProgram = component.find(".ttoolbar-option-save");
             $optionNewResource = component.find(".ttoolbar-option-new-resource");
@@ -48,19 +48,16 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
                 event.stopPropagation();
             });
 
-            $optionClear.append(TEnvironment.getMessage('option-clear'));
-            $optionClear.click(function(e) {
-                TUI.clear(true);
-            });
-            // prevent double click from toggling console 
-            $optionClear.dblclick(function(event){
-                event.stopPropagation();
-            });
-
-            $optionDesignMode.append(TEnvironment.getMessage('option-design-mode'));
+            $optionDesignMode.attr("title", TEnvironment.getMessage('option-design-mode'));
             $optionDesignMode.click(function(e) {
                 TUI.toggleDesignMode();
             });
+
+            $optionConsole.attr("title", TEnvironment.getMessage('option-console'));
+            $optionConsole.click(function(e) {
+                TUI.toggleConsole();
+            });
+
             // prevent double click from toggling console 
             $optionDesignMode.dblclick(function(event){
                 event.stopPropagation();
@@ -124,11 +121,13 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
         };
 
         this.enableConsole = function() {
-            $buttonExecute.show();
+            $optionConsole.addClass("active");
+            //$buttonExecute.show();
         };
 
         this.disableConsole = function() {
-            $buttonExecute.hide();
+            $optionConsole.removeClass("active");
+            //$buttonExecute.hide();
         };
 
         this.enableDesignMode = function() {
@@ -142,7 +141,6 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
         this.enableEditor = function() {
             if (!editorMode) {
                 $buttonEditor.addClass("active");
-                $optionClear.hide();
                 $optionDesignMode.hide();
                 $buttonExecute.show();
                 editorMode = true;
@@ -162,7 +160,6 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
                 } else {
                     this.disableResourceOptions();
                 }
-                $optionClear.show();
                 $optionDesignMode.show();
                 $buttonExecute.hide();
                 editorMode = false;

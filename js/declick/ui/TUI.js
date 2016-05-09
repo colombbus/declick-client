@@ -7,7 +7,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var toolbar;
         var console;
         var editorEnabled = false;
-        var consoleDisplayed = true;
+        var consoleDisplayed = false;
         var designModeEnabled = false;
         var minimized = false;
         var designLogDisplayed = false;
@@ -59,6 +59,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 log.saveScroll();
                 console.hide();
                 log.update();
+                window.console.log("hauteur : "+console.getHeight());
                 frame.lowerSeparator(console.getHeight());
                 log.restoreScroll();
                 consoleDisplayed = false;
@@ -71,11 +72,21 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 log.saveScroll();
                 console.show();
                 log.update();
+                window.console.log("hauteur : "+console.getHeight());
                 frame.raiseSeparator(console.getHeight());
                 log.restoreScroll();
                 consoleDisplayed = true;
             }
         };
+
+        this.toggleConsole = function() {
+            if (consoleDisplayed) {
+                this.hideConsole();
+            } else {
+                this.showConsole();
+            }
+        };
+
 
         this.enableEditor = function() {
             if (!editorEnabled) {
@@ -465,8 +476,6 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
 
         this.toggleMinimized = function() {
             if (!minimized) {
-                // hide console
-                this.hideConsole();
                 log.saveScroll();
                 log.hide();
                 frame.lowerSeparator(log.getHeight());
@@ -477,10 +486,6 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 frame.enableSeparator();
                 frame.raiseSeparator(log.getHeight());
                 log.restoreScroll();
-                if (!editorEnabled) {
-                    // show console
-                    this.showConsole();
-                }
                 minimized = false;
             }
         };

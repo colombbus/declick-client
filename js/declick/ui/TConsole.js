@@ -10,10 +10,22 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
         TComponent.call(this, "TConsole.html", function(component) {
             $console = component;
             $consoleText = component.find("#tconsole-text");
+            var buttonExecute = component.find("#tconsole-play");
+            buttonExecute.attr("title",TEnvironment.getMessage('button-execute'));
+            buttonExecute.click(function(e) {
+                TUI.execute();
+            });
+
+            var buttonClear = component.find("#tconsole-clear");
+            buttonClear.attr("title",TEnvironment.getMessage('option-clear'));
+            buttonClear.click(function(e) {
+                TUI.clear(true);
+            });
 
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);
             }
+            component.hide();
         });
 
         var AceRange = ace_range.Range;
@@ -38,7 +50,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             aceEditor.renderer.setShowGutter(false);
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
-
+            aceEditor.setTheme("ace/theme/twilight");
             aceEditor.on('input', function() {
                 if (triggerPopup) {
                     triggerPopup = false;

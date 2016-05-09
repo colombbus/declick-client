@@ -27,6 +27,9 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $separator = component.find("#tframe-separator");
             $bottom = component.find("#tframe-bottom");
             $loading = component.find("#tframe-loading");
+            var loadingText = $loading.find("p");
+            loadingText.text(TEnvironment.getMessage('loading-message'));
+            
             canvas = new TCanvas(function(c) {
                 component.find("#TCanvas").replaceWith(c);
                 checkWaiting("canvas");
