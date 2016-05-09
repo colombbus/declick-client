@@ -66,6 +66,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $solutionContent = component.find("#tlearnframe-solution-content");
             
             $loading = component.find("#tlearnframe-loading");
+            var loadingText = $loading.find("p");
+            loadingText.text(TEnvironment.getMessage('loading-message'));
             
             $right = component.find("#tlearnframe-right");
             

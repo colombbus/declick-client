@@ -120,6 +120,7 @@
         "repeat-keyword":"répéter",
         "button-next-step":"Etape Suivante",
         "button-close-success":"Revenir à l'étape",
-        "success-message":"Bravo, tu as réussi !"
+        "success-message":"Bravo, tu as réussi !",
+        "loading-message":"Chargement..."
     }
 }
