@@ -5,7 +5,7 @@ define(['ui/TComponent', 'jquery', 'TUI', 'ui/TDesignLog', 'TEnvironment'], func
         var rowCount = 0;
         var currentRow = 0;
         var scrollTop = 0;
-        var currentHeight = 150; // initial height set to 150px
+        var currentHeight = -1; // initial height set to 150px
         var errors = new Array();
 
         TComponent.call(this, "TLog.html", function(component) {
@@ -183,11 +183,14 @@ define(['ui/TComponent', 'jquery', 'TUI', 'ui/TDesignLog', 'TEnvironment'], func
         };
 
         this.hide = function() {
-            currentHeight = $innerLog.outerHeight(false);
+            currentHeight = $main.outerHeight(false);
             $main.hide();
         };
 
         this.getHeight = function() {
+            if (currentHeight === -1) {
+                currentHeight = $main.outerHeight(false);
+            }
             return currentHeight;
         };
 

@@ -7,7 +7,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var toolbar;
         var console;
         var editorEnabled = false;
-        var consoleDisplayed = false;
+        var consoleDisplayed = true;
         var designModeEnabled = false;
         var programsDisplayed = true;
         var log;

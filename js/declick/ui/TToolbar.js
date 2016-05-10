@@ -22,7 +22,8 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             $buttonHelp.click(function(e) {
                 $buttonHelp.toggleClass("active");
                 parent.toggleHelp();
-            })
+            });
+            
             window.setHelpOpened = function() {
                 $buttonHelp.addClass("active");
             };

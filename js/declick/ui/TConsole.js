@@ -25,7 +25,6 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);
             }
-            component.hide();
         });
 
         var AceRange = ace_range.Range;
@@ -192,6 +191,9 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
          * Hide Console.
          */
         this.hide = function() {
+            if (computedHeight === -1) {
+                computedHeight = $console.outerHeight(false);
+            }
             $console.hide();
         };
 
@@ -202,7 +204,9 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
         this.getHeight = function() {
             if (computedHeight === -1) {
                 computedHeight = $console.outerHeight(false);
+                window.console.log("Console current height:"+computedHeight);            
             }
+            window.console.log("Console computed height:"+computedHeight);            
             return computedHeight;
         };
 

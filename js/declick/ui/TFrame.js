@@ -89,7 +89,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $('.split-pane').splitPane();
             initialized = true;
             // init separator position so that toolbar is visible
-            frame.raiseSeparator(toolbar.getHeight());
+            TUI.hideConsole();
             $loading.fadeOut(1000, function() {
                 $(this).remove();
             });

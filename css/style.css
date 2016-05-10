@@ -15,28 +15,25 @@ body, html {
 }
 
 #tframe-top {
-    bottom:0;
-    margin-bottom:16px;
+    bottom:33%;
+    margin-bottom:14px;
     overflow:hidden;
-    border:1px solid #dcdcde;
+    box-sizing: border-box;
+    padding:1px;
+    width:100%;
 }
 
 #tframe-separator {
-    bottom:0;
+    bottom:33%;
     background-color:#FFFFFF;
 }
 
 
 #tframe-bottom {
-    height:0;
+    height:33%;
     overflow:hidden;
     display:flex;
     flex-direction:column;
-}
-
-#tframe-bottom-bottom {
-    position:relative;
-    z-index:2;
 }
 
 #tframe-loading {
@@ -68,7 +65,8 @@ body, html {
 
 .split-pane-divider  {
     height:14px;
-    background:url("../images/handle.png") no-repeat scroll 50% 2px #FFFFFF;
+    background:url("../images/handle.png") no-repeat scroll 50% 3px #FFFFFF;
+    padding:0;
 }
 
 .split-pane-divider.disabled  {
@@ -82,11 +80,13 @@ body, html {
 /* TCanvas */
 
 #tcanvas-outer {
+    border:1px solid #dcdcde;
     width:100%;
     position:relative;
     overflow:hidden;
     height:100%;
     background-color:#FFFFFF;
+    box-sizing:border-box;
 }
 
 #tcanvas3d {
@@ -149,6 +149,7 @@ body, html {
 #teditor {
     height:100%;
     margin-right:200px;
+    display:none;
 }
 
 #teditor.editor-disabled {
@@ -192,6 +193,7 @@ body, html {
     font-family:'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
     overflow:hidden;
     position:relative;
+    display:none;
 }
 
 #tsidebar-switch {
@@ -491,6 +493,8 @@ textarea.tsidebar-rename {
     width:100%;
     padding:9px;
     box-sizing:border-box;
+    height:54px;
+    min-height:54px;
 }
 
 .ttoolbar-left {
@@ -569,7 +573,7 @@ textarea.tsidebar-rename {
     overflow:hidden;
     box-sizing: border-box;
     flex:1;
-    display:none;
+    height:100%;
 }
 
 #tlog-inner {
