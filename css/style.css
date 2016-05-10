@@ -15,20 +15,20 @@ body, html {
 }
 
 #tframe-top {
-    bottom:33%;
+    bottom:0;
     margin-bottom:16px;
     overflow:hidden;
     border:1px solid #dcdcde;
 }
 
 #tframe-separator {
-    bottom:33%;
+    bottom:0;
     background-color:#FFFFFF;
 }
 
 
 #tframe-bottom {
-    height:33%;
+    height:0;
     overflow:hidden;
     display:flex;
     flex-direction:column;
@@ -565,11 +565,11 @@ textarea.tsidebar-rename {
     position:relative;
     z-index:1;  
     width:100%;
-    height:100%;
     background-color:#FFFFFF;
     overflow:hidden;
     box-sizing: border-box;
     flex:1;
+    display:none;
 }
 
 #tlog-inner {
@@ -595,7 +595,7 @@ textarea.tsidebar-rename {
 }
             
 .tlog-success {
-    /*color:#009900;*/color:#0D7E49;
+    color:#470A2B;
 }
             
 .tlog-failure {
@@ -670,73 +670,30 @@ textarea.tsidebar-rename {
 #tdesign-log {
     height:100%;
     overflow:auto;
+    background-color:#A6A1A7;
 }
 
 .tdesign-log-row {
-    background-color:#efefef;
     padding:5px 10px 5px 10px;
     margin:0px 0px 5px 0px;
-    cursor:pointer;
-}
-
-.tdesign-log-row.selected {
-   background-color:#428bca;
 }
 
 .tdesign-log-name, .tdesign-log-location {
     display:inline-block;
-    cursor:pointer;
 }
 
 .tdesign-log-name {
-    color:#444444;
-}
-
-.selected .tdesign-log-name {
     color:#FFFFFF;
 }
 
 .tdesign-log-location {
-    color:#428bca;
-}
-
-.selected .tdesign-log-location {
-    color:#FFFFFF;
+    color:#470A2B;
 }
 
 .tdesign-log-location.active {
-    color:#E47637;
+    color:#CED718;
 }
 
-#tlog-switch {
-    float:right;
-    box-sizing:border-box;
-    height:100%;
-    width:40px;
-    background-color: #929292;
-}
-
-#tlog-switch-log {
-    cursor:pointer;
-    width:100%;
-    height:45px;
-    background-image:url('../images/output.png');
-    background-repeat:no-repeat;
-    background-position:50% 50%;
-}
-
-#tlog-switch-design {
-    cursor:pointer;
-    width:100%;
-    height:45px;
-    background-image:url('../images/design_mode.png');
-    background-repeat:no-repeat;
-    background-position:50% 50%;
-}
-
-#tlog-switch-log.active, #tlog-switch-design.active {
-    background-color: #dedede;
-}
 
 /* TRuntinme */
 

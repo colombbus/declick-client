@@ -88,12 +88,14 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $separator.on("mousedown", checkSeparatorEnabled);
             $('.split-pane').splitPane();
             initialized = true;
+            // init separator position so that toolbar is visible
+            frame.raiseSeparator(toolbar.getHeight());
             $loading.fadeOut(1000, function() {
                 $(this).remove();
             });
             window.platform.initWithTask(window.task);            
         };
-
+        
         this.lowerSeparator = function(value) {
             if (initialized) {
                 var totalHeight = $frame.height();
@@ -118,7 +120,6 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
         this.enableSeparator = function() {
             separatorEnabled = true;
             $separator.removeClass("disabled");
-            //$separator.show();
         };
 
         // Declare global functions
