@@ -139,6 +139,19 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             };
         }
 
+        if (typeof window.displayEditor === 'undefined') {
+            window.displayEditor = function() {
+                TUI.enableEditor();
+            };
+        }
+
+        if (typeof window.displayView === 'undefined') {
+            window.displayView = function() {
+                TUI.disableEditor();
+            };
+        }
+
+
     }
 
     TFrame.prototype = Object.create(TComponent.prototype);
