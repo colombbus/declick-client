@@ -91,7 +91,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'jquery', 'ui/TSidebar
             resources.hide();
             $switchResources.removeClass("active");
             $switchPrograms.addClass("active");
-            $sidebar.stop().animate({width: "250px"}, 200, function() {
+            $sidebar.stop().animate({width: "260px"}, 200, function() {
                 programs.show();
                 TUI.setEditionEnabled(programs.hasCurrent());
             });
@@ -120,7 +120,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'jquery', 'ui/TSidebar
             resources.hide();
             $switchPrograms.removeClass("active");
             $switchResources.removeClass("active");
-            $sidebar.stop().animate({width: "40px"}, 200);
+            $sidebar.stop().animate({width: "65px"}, 200);
         };
 
         this.selectResource = function(name) {

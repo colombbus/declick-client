@@ -2,11 +2,13 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
 
     function TSidebarPrograms(callback) {
 
-        var $programs;
+        var $programs, $list;
+        
 
         TComponent.call(this, "TSidebarPrograms.html", function(component) {
             $programs = component;
-            $programs.addClass("loading");
+            $list = component.find("#tsidebar-programs-list");
+            $list.addClass("loading");
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);
             }
@@ -16,7 +18,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
          * Init Sidebar.
          */
         this.init = function() {
-            $programs.removeClass("loading");
+            $list.removeClass("loading");
             this.update();
         };
 
@@ -24,8 +26,8 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
          * Loads Programs and Resources.
          */
         this.load = function() {
-            $programs.empty();
-            $programs.addClass("loading");
+            $list.empty();
+            $list.addClass("loading");
         };
 
         /**
@@ -38,7 +40,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
             var currentProgram = TUI.getCurrentProgram();
             var editedNames = [];
 
-            $programs.empty();
+            $list.empty();
 
             function addElement(name, id, displayedName, edited, current) {
                 var element = document.createElement("div");
@@ -94,7 +96,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
                     };
                     element.appendChild(closeElement);
                 }
-                $programs.append(element);
+                $list.append(element);
             }
 
             var currentName = "";
@@ -151,7 +153,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
         };
 
         this.hasCurrent = function() {
-            return ($programs.find(".tsidebar-current").length > 0);
+            return ($list.find(".tsidebar-current").length > 0);
         };
 
     }
