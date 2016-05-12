@@ -12,7 +12,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     Walker.prototype = Object.create(Sprite.prototype);
     Walker.prototype.constructor = Walker;
     Walker.prototype.className = "Walker";
-
+    
     var graphics = Walker.prototype.graphics;
 
     Walker.prototype.gClass = graphics.addClass("TSprite", "TWalker", {
@@ -83,7 +83,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                         collision.impact = impactY;
                         this.trigger("bump.bottom",collision);
                         this.trigger("bump",collision);
-                        if(!p.skipCollide && p.vy > 0) {
+                        if(!p.skipCollide && p.vy > 0) { 
                             p.vy = 0;
                             blockedY = true;
                         }
@@ -92,7 +92,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                         collision.impact = impactY;
                         this.trigger("bump.top",collision);
                         this.trigger("bump",collision);
-                        if(!p.skipCollide && p.vy < 0) {
+                        if(!p.skipCollide && p.vy < 0) { 
                             p.vy = 0;
                             blockedY = true;
                         }
@@ -101,7 +101,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                         collision.impact = impactX;
                         this.trigger("bump.right",collision);
                         this.trigger("bump",collision);
-                        if(!p.skipCollide && p.vx > 0) {
+                        if(!p.skipCollide && p.vx > 0) { 
                             p.vx = 0;
                             blockedX = true;
                         }
@@ -110,8 +110,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                         collision.impact = impactX;
                         this.trigger("bump.left",collision);
                         this.trigger("bump",collision);
-                        if(!p.skipCollide && p.vx < 0) {
-                            p.vx = 0;
+                        if(!p.skipCollide && p.vx < 0) { 
+                            p.vx = 0; 
                             blockedX = true;
                         }
                     }
@@ -145,13 +145,13 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 p.destinationX = p.x;
                 if (p.direction === Sprite.DIRECTION_RIGHT || p.direction === Sprite.DIRECTION_LEFT) {
                     p.direction = Sprite.DIRECTION_NONE;
-                }
+                } 
             }
             if (blockedY) {
                 p.destinationY = p.y;
                 if (p.direction === Sprite.DIRECTION_UP || p.direction === Sprite.DIRECTION_BOTTOM) {
                     p.direction = Sprite.DIRECTION_NONE;
-                }
+                } 
             }
         },
         landed: function(col) {
@@ -211,7 +211,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             	this.p.vy=0;
             }, {});
         }
-
+        
     });
 
     /**
@@ -269,9 +269,6 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
      * Walker will jump, depending of JumpSpeed.
      */
     Walker.prototype._jump = function() {
-		if (arguments.length > 0) {
-			throw this.getMessage('unexpected jump argument');
-		}
         this.gObject.jump();
     };
 
