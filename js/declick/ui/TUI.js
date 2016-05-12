@@ -10,6 +10,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var consoleDisplayed = true;
         var designModeEnabled = false;
         var programsDisplayed = true;
+        var resourcesDisplayed = false;
         var log;
 
         this.setFrame = function(element) {
@@ -148,7 +149,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
 
 
-        this.enableEditor = function() {
+        this.enableEditor = function(updateServer) {
             if (!editorEnabled) {
                 // hide console
                 this.hideConsole();
@@ -158,19 +159,26 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 editor.show();
                 sidebar.show();
                 editorEnabled = true;
+                if (typeof updateServer === 'undefined' || updateServer) {
+                    if (typeof window.parent !== 'undefined') {
+                        window.parent.switchEditor();
+                    }
+                }
             }
         };
 
-        this.disableEditor = function() {
+        this.disableEditor = function(updateServer) {
             if (editorEnabled) {
                 toolbar.disableEditor();
                 editor.hide();
                 sidebar.hide();
                 canvas.show();
                 editorEnabled = false;
-                // if not minimized, show console
-                /*if (!minimized)
-                    this.showConsole();*/
+                if (typeof updateServer === 'undefined' || updateServer) {
+                    if (typeof window.parent !== 'undefined') {
+                        window.parent.switchView();
+                    }
+                }
                 TRuntime.start();
             }
         };
@@ -276,7 +284,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             var project = TEnvironment.getProject();
             editor.updateProgram();
             var program = editor.getProgram();
-            sidebar.showLoading(program.getName());
+            sidebar.showLoadingProgram(program.getName());
             var self = this;
             project.saveProgram(program, function(error) {
                 if (typeof error !== 'undefined') {
@@ -286,7 +294,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                     self.updateProgramInfo(program);
                     editor.reset();
                 }
-                sidebar.removeLoading(program.getName());
+                sidebar.removeLoadingProgram(program.getName());
             }, editor.getSession());
         };
 
@@ -310,7 +318,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             }
             if (!project.isProgramEdited(name)) {
                 // Program has to be loaded
-                sidebar.showLoading(name);
+                sidebar.showLoadingProgram(name);
                 var self = this;
                 project.editProgram(name, function(error) {
                     if (typeof error !== 'undefined') {
@@ -425,14 +433,32 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
 
         this.displayPrograms = function() {
             sidebar.displayPrograms();
-            toolbar.enableProgramOptions();
             programsDisplayed = true;
+            resourcesDisplayed = false;
+        };
+        
+        this.togglePrograms = function() {
+            if (programsDisplayed) {
+                sidebar.close();
+                programsDisplayed = false;
+            } else {
+                this.displayPrograms();
+            }
         };
 
         this.displayResources = function() {
             if (sidebar.displayResources()) {
-                toolbar.enableResourceOptions();
+                resourcesDisplayed = true;
                 programsDisplayed = false;
+            }
+        };
+
+        this.toggleResources = function() {
+            if (resourcesDisplayed) {
+                sidebar.close();
+                resourcesDisplayed = false;
+            } else {
+                this.displayResources();
             }
         };
 

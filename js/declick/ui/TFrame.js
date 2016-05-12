@@ -2,7 +2,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
     function TFrame(callback) {
         var initialized = false;
         var canvas, editor, sidebar, toolbar, console, log;
-        var $frame, $top, $separator, $bottom, $loading;
+        var $frame, $main, $top, $separator, $bottom, $loading;
 
         var frame = this;
         var separatorEnabled = true;
@@ -23,6 +23,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             };
 
             $frame = component;
+            $main = component.find("#tframe-main");
             $top = component.find("#tframe-top");
             $separator = component.find("#tframe-separator");
             $bottom = component.find("#tframe-bottom");
@@ -81,7 +82,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             console.displayed();
             toolbar.displayed();
             log.displayed();
-            $frame.on("splitpane:resized", function() {
+            $main.on("splitpane:resized", function() {
                 editor.resize();
             });
             // Important to attach handler before calling splitPane
@@ -141,13 +142,13 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
 
         if (typeof window.displayEditor === 'undefined') {
             window.displayEditor = function() {
-                TUI.enableEditor();
+                TUI.enableEditor(false);
             };
         }
 
         if (typeof window.displayView === 'undefined') {
             window.displayView = function() {
-                TUI.disableEditor();
+                TUI.disableEditor(false);
             };
         }
 

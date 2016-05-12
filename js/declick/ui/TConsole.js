@@ -204,9 +204,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
         this.getHeight = function() {
             if (computedHeight === -1) {
                 computedHeight = $console.outerHeight(false);
-                window.console.log("Console current height:"+computedHeight);            
             }
-            window.console.log("Console computed height:"+computedHeight);            
             return computedHeight;
         };
 

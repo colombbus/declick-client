@@ -12,6 +12,14 @@ body, html {
     height:100%;
     width:100%;
     min-height:100%;
+    display:flex;
+    flex-direction:row;
+}
+
+#tframe-main {
+    flex:1;
+    height:100%;
+    position:relative;
 }
 
 #tframe-top {
@@ -148,7 +156,6 @@ body, html {
 
 #teditor {
     height:100%;
-    margin-right:200px;
     display:none;
 }
 
@@ -185,10 +192,10 @@ body, html {
 
 /* TSidebar */
 
-#tsidebar {
+#tframe-sidebar {
     background-color:#DEDEDE;
     width:250px;
-    float:right;
+    /*float:right;*/
     height:100%;
     font-family:'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
     overflow:hidden;
@@ -561,7 +568,14 @@ textarea.tsidebar-rename {
 
 #ttoolbar-save {
     display:none;
+    background-image:url('../images/save.png');
 }
+
+#ttoolbar-save:hover,
+#ttoolbar-save.active{
+    background-image:url('../images/save_on.png');
+}
+
 
 /* TLog */
 

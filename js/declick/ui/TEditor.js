@@ -47,6 +47,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
             aceEditor.setBehavioursEnabled(false);
+            aceEditor.setTheme("ace/theme/twilight");
 
             var self = this;
             aceEditor.on('input', function() {

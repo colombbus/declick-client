@@ -337,10 +337,6 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'jquery', 'wColorPicke
             }
         };
 
-        this.displayed = function() {
-
-        };
-
         this.setName = function(value) {
             currentName = value;
         };
