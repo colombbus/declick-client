@@ -1,5 +1,23 @@
 define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime) {
 
+    function generateGrid(size) {
+        var canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        var painter = canvas.getContext('2d');
+
+        painter.beginPath();
+        painter.lineWidth = 1;
+        painter.strokeStyle = '#C8DEE5';
+        painter.moveTo(0, 39.5);
+        painter.lineTo(size, 39.5);
+        painter.moveTo(39.5, 0);
+        painter.lineTo(39.5, size);
+        painter.stroke();
+
+        return canvas.toDataURL();
+    }
+
     function TLearnCanvas(callback) {
         var $main, $canvas, $canvasLoading, $canvasLoadingValue;
 
@@ -41,6 +59,9 @@ define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime
         };
         this.removeLoading = function() {
             $canvasLoading.hide();
+            var grid = generateGrid(40);
+            $canvas.css('background-image', 'url(' + grid + ')');
+            $canvas.css('background-repeat', 'repeat');
         };
         this.giveFocus = function() {
             $canvas.get(0).focus();

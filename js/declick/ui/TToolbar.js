@@ -1,15 +1,17 @@
 define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, $, TEnvironment, TUI) {
     function TToolbar(callback) {
-        var $buttonExecute, $buttonEditor;
-        var $optionDesignMode, $optionClear, $optionNewProgram, $optionSaveProgram, $optionNewResource, $optionDelete;
+        var $main, $buttonExecute, $buttonEditor;
+        var $optionDesignMode, $optionConsole, $optionNewProgram, $optionSaveProgram, $optionNewResource, $optionDelete;
         var editorMode = false;
         var programOptions = true;
+        var currentHeight = -1;
 
         TComponent.call(this, "TToolbar.html", function(component) {
+            $main = component;
             $buttonExecute = component.find(".ttoolbar-button-execute");
             $buttonEditor = component.find(".ttoolbar-mode-editor");
-            $optionDesignMode = component.find(".ttoolbar-option-design-mode");
-            $optionClear = component.find(".ttoolbar-option-clear");
+            $optionDesignMode = component.find("#ttoolbar-design-mode");
+            $optionConsole = component.find("#ttoolbar-console");
             $optionNewProgram = component.find(".ttoolbar-option-new-program");
             $optionSaveProgram = component.find(".ttoolbar-option-save");
             $optionNewResource = component.find(".ttoolbar-option-new-resource");
@@ -20,7 +22,8 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             $buttonHelp.click(function(e) {
                 $buttonHelp.toggleClass("active");
                 parent.toggleHelp();
-            })
+            });
+            
             window.setHelpOpened = function() {
                 $buttonHelp.addClass("active");
             };
@@ -34,79 +37,43 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
                 TUI.toggleEditor();
             });
             
-            // prevent double click from toggling console 
-            $buttonEditor.dblclick(function(event){
-                event.stopPropagation();
-            });
             
             $buttonExecute.append(TEnvironment.getMessage('button-execute'));
             $buttonExecute.click(function(e) {
                 TUI.execute();
             });
-            // prevent double click from toggling console 
-            $buttonExecute.dblclick(function(event){
-                event.stopPropagation();
-            });
 
-            $optionClear.append(TEnvironment.getMessage('option-clear'));
-            $optionClear.click(function(e) {
-                TUI.clear(true);
-            });
-            // prevent double click from toggling console 
-            $optionClear.dblclick(function(event){
-                event.stopPropagation();
-            });
-
-            $optionDesignMode.append(TEnvironment.getMessage('option-design-mode'));
+            $optionDesignMode.attr("title", TEnvironment.getMessage('option-design-mode'));
             $optionDesignMode.click(function(e) {
                 TUI.toggleDesignMode();
             });
-            // prevent double click from toggling console 
-            $optionDesignMode.dblclick(function(event){
-                event.stopPropagation();
+
+            $optionConsole.attr("title", TEnvironment.getMessage('option-console'));
+            $optionConsole.click(function(e) {
+                TUI.toggleConsole();
             });
+
             
             $optionSaveProgram.append(TEnvironment.getMessage('option-save-program'));
             $optionSaveProgram.click(function(e) {
                 TUI.saveProgram();
-            });
-            // prevent double click from toggling console 
-            $optionSaveProgram.dblclick(function(event){
-                event.stopPropagation();
             });
             
             $optionNewProgram.append(TEnvironment.getMessage('option-new-program'));
             $optionNewProgram.click(function(e) {
                 TUI.newProgram();
             });
-            // prevent double click from toggling console 
-            $optionNewProgram.dblclick(function(event){
-                event.stopPropagation();
-            });
             
             $optionNewResource.append(TEnvironment.getMessage('option-new-resource'));
             $optionNewResource.click(function(e) {
                 TUI.newResource();
-            });
-            // prevent double click from toggling console 
-            $optionNewResource.dblclick(function(event){
-                event.stopPropagation();
             });
 
             $optionDelete.append(TEnvironment.getMessage('option-delete'));
             $optionDelete.click(function(e) {
                 TUI.delete();
             });
-            // prevent double click from toggling console 
-            $optionDelete.dblclick(function(event){
-                event.stopPropagation();
-            });
 
-
-            // add double click handler for toggling log
-            component.dblclick(function() {
-                TUI.toggleMinimized();
-            });
             // Prevent text selection
             component.mousedown(function() {
                 return false;
@@ -124,11 +91,13 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
         };
 
         this.enableConsole = function() {
-            $buttonExecute.show();
+            $optionConsole.addClass("active");
+            //$buttonExecute.show();
         };
 
         this.disableConsole = function() {
-            $buttonExecute.hide();
+            $optionConsole.removeClass("active");
+            //$buttonExecute.hide();
         };
 
         this.enableDesignMode = function() {
@@ -142,7 +111,6 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
         this.enableEditor = function() {
             if (!editorMode) {
                 $buttonEditor.addClass("active");
-                $optionClear.hide();
                 $optionDesignMode.hide();
                 $buttonExecute.show();
                 editorMode = true;
@@ -162,7 +130,6 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
                 } else {
                     this.disableResourceOptions();
                 }
-                $optionClear.show();
                 $optionDesignMode.show();
                 $buttonExecute.hide();
                 editorMode = false;
@@ -199,6 +166,13 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             $optionSaveProgram.disabled = !value;
             $optionDelete.disabled = !value;
         };
+        
+        this.getHeight = function() {
+            if (currentHeight === -1) {
+                currentHeight = $main.outerHeight(false);
+            }
+            return currentHeight;
+        };        
     }
     ;
 

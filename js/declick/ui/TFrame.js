@@ -27,6 +27,9 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $separator = component.find("#tframe-separator");
             $bottom = component.find("#tframe-bottom");
             $loading = component.find("#tframe-loading");
+            var loadingText = $loading.find("p");
+            loadingText.text(TEnvironment.getMessage('loading-message'));
+            
             canvas = new TCanvas(function(c) {
                 component.find("#TCanvas").replaceWith(c);
                 checkWaiting("canvas");
@@ -85,12 +88,14 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $separator.on("mousedown", checkSeparatorEnabled);
             $('.split-pane').splitPane();
             initialized = true;
+            // init separator position so that toolbar is visible
+            TUI.hideConsole();
             $loading.fadeOut(1000, function() {
                 $(this).remove();
             });
             window.platform.initWithTask(window.task);            
         };
-
+        
         this.lowerSeparator = function(value) {
             if (initialized) {
                 var totalHeight = $frame.height();
@@ -115,7 +120,6 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
         this.enableSeparator = function() {
             separatorEnabled = true;
             $separator.removeClass("disabled");
-            //$separator.show();
         };
 
         // Declare global functions
@@ -134,6 +138,19 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
                 return TEnvironment.getProject().isUnsaved();
             };
         }
+
+        if (typeof window.displayEditor === 'undefined') {
+            window.displayEditor = function() {
+                TUI.enableEditor();
+            };
+        }
+
+        if (typeof window.displayView === 'undefined') {
+            window.displayView = function() {
+                TUI.disableEditor();
+            };
+        }
+
 
     }
 

@@ -1,50 +1,32 @@
 define(['ui/TComponent', 'jquery', 'TUI', 'ui/TDesignLog', 'TEnvironment'], function(TComponent, $, TUI, TDesignLog, TEnvironment) {
     function TLog(callback) {
         var designLog;
-        var $amin, $log, $designLog, $switch, $innerLog, $switchLog, $switchDesign;
+        var $main, $log, $designLog, $innerLog;
         var rowCount = 0;
         var currentRow = 0;
         var scrollTop = 0;
-        var currentHeight = -1;
+        var currentHeight = -1; // initial height set to 150px
         var errors = new Array();
 
         TComponent.call(this, "TLog.html", function(component) {
             $main = component;
             $log = component.find("#tlog");
-            $switch = component.find("#tlog-switch");
             $innerLog = component.find("#tlog-inner");
-            $switchDesign = $switch.find("#tlog-switch-design");
-            $switchDesign.click(function(e) {
-                TUI.showDesignLog();
-            });
-            $switchDesign.prop("title", TEnvironment.getMessage("switch-design"));
-            $switchLog = $switch.find("#tlog-switch-log");
-            $switchLog.click(function(e) {
-                TUI.hideDesignLog();
-            });
-            $switchLog.prop("title", TEnvironment.getMessage("switch-log"));
+                //TUI.showDesignLog();
+                //TUI.hideDesignLog();
             // add designLog
             var self = this;
             designLog = new TDesignLog(function(c) {
                 component.find("#TDesignLog").replaceWith(c);
                 $designLog = c;
-                if (typeof callback != 'undefined') {
+                if (typeof callback !== 'undefined') {
                     callback.call(self, component);
                 }
             });
         });
 
         this.displayed = function() {
-            this.update();
             $designLog.hide();
-            $switch.hide();
-        };
-
-        this.update = function() {
-            // compute the margin from the height of "tframe-bottom-top" div
-            var height = $("#tframe-bottom-top").height();
-            $main.css("margin-top", "-" + height + "px");
-            $main.css("padding-top", height + "px");
         };
 
         this.addCommand = function(text) {
@@ -122,7 +104,6 @@ define(['ui/TComponent', 'jquery', 'TUI', 'ui/TDesignLog', 'TEnvironment'], func
             errors.length = 0;
             designLog.clear();
             this.hideDesignLog();
-            this.hideSwitch();
         };
 
         this.getPreviousRow = function() {
@@ -178,38 +159,17 @@ define(['ui/TComponent', 'jquery', 'TUI', 'ui/TDesignLog', 'TEnvironment'], func
         this.showDesignLog = function() {
             $log.hide();
             $designLog.show();
-            $switchLog.removeClass("active");
-            $switchDesign.addClass("active");
-            this.showSwitch();
         };
 
-        this.hideDesignLog = function(hideSwitchIfEmpty) {
+        this.hideDesignLog = function() {
             $designLog.hide();
             $log.show();
-            $switchDesign.removeClass("active");
-            $switchLog.addClass("active");
-            if (typeof hideSwitchIfEmpty !== 'undefined' && hideSwitchIfEmpty) {
-                if (designLog.isEmpty()) {
-                    this.hideSwitch();
-                }
-            }
-        };
-
-        this.showSwitch = function() {
-            $switch.show();
-            $innerLog.css("margin-right", "40px");
-        };
-
-        this.hideSwitch = function() {
-            $switch.hide();
-            $innerLog.css("margin-right", "0px");
         };
 
         this.hideDesignLogIfEmpty = function() {
             var result = designLog.isEmpty();
             if (result) {
                 this.hideDesignLog();
-                this.hideSwitch();
             }
             return result;
         };
@@ -223,13 +183,13 @@ define(['ui/TComponent', 'jquery', 'TUI', 'ui/TDesignLog', 'TEnvironment'], func
         };
 
         this.hide = function() {
-            currentHeight = $innerLog.outerHeight(false);
+            currentHeight = $main.outerHeight(false);
             $main.hide();
         };
 
         this.getHeight = function() {
             if (currentHeight === -1) {
-                currentHeight = $innerLog.outerHeight(false);
+                currentHeight = $main.outerHeight(false);
             }
             return currentHeight;
         };

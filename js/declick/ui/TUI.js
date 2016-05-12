@@ -9,8 +9,6 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         var editorEnabled = false;
         var consoleDisplayed = true;
         var designModeEnabled = false;
-        var minimized = false;
-        var designLogDisplayed = false;
         var programsDisplayed = true;
         var log;
 
@@ -53,14 +51,23 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             return canvas;
         };
 
-        this.hideConsole = function() {
+        this.hideConsole = function(hideLog) {
+            if (typeof hideLog === 'undefined') {
+                hideLog = true;
+            }
             if (consoleDisplayed) {
                 toolbar.disableConsole();
                 log.saveScroll();
+                if (hideLog) {
+                    log.hide();
+                }
                 console.hide();
-                log.update();
-                frame.lowerSeparator(console.getHeight());
-                log.restoreScroll();
+                if (hideLog) {
+                    frame.lowerSeparator(console.getHeight()+log.getHeight());
+                    frame.disableSeparator();
+                } else {
+                    frame.lowerSeparator(console.getHeight());
+                }
                 consoleDisplayed = false;
             }
         };
@@ -68,14 +75,78 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.showConsole = function() {
             if (!consoleDisplayed) {
                 toolbar.enableConsole();
-                log.saveScroll();
                 console.show();
-                log.update();
-                frame.raiseSeparator(console.getHeight());
-                log.restoreScroll();
+                if (designModeEnabled) {
+                    // designMode enabled: disable it
+                    this.disableDesignMode(false);
+                    //frame.raiseSeparator(console.getHeight());
+                    log.restoreScroll();
+                    frame.raiseSeparator(console.getHeight());
+                } else {
+                    log.show();
+                    frame.enableSeparator();
+                    frame.raiseSeparator(log.getHeight()+console.getHeight());
+                    log.restoreScroll();
+                }
                 consoleDisplayed = true;
             }
         };
+
+        this.toggleConsole = function() {
+            if (consoleDisplayed) {
+                this.hideConsole();
+            } else {
+                this.showConsole();
+            }
+        };
+
+        this.enableDesignMode = function() {
+            if (!designModeEnabled) {
+                TRuntime.freeze(true);
+                canvas.setDesignMode(true);
+                TRuntime.setDesignMode(true);
+                toolbar.enableDesignMode();
+                if (consoleDisplayed) {
+                    // log already displayed, with console: hide console
+                    this.hideConsole(false);
+                } else {
+                    // log not displayed: show it
+                    log.show();
+                    frame.enableSeparator();
+                    frame.raiseSeparator(log.getHeight());
+                }
+                log.showDesignLog();
+                designModeEnabled = true;
+            }
+        };
+
+        this.disableDesignMode = function(hideLog) {
+            if (typeof hideLog === 'undefined') {
+                hideLog = true;
+            }
+            if (designModeEnabled) {
+                TRuntime.freeze(false);
+                canvas.setDesignMode(false);
+                TRuntime.setDesignMode(false);
+                toolbar.disableDesignMode();
+                log.hideDesignLog();
+                if (hideLog) {
+                    log.hide();
+                    frame.lowerSeparator(log.getHeight());
+                    frame.disableSeparator();
+                }
+                designModeEnabled = false;
+            }
+        };
+
+        this.toggleDesignMode = function() {
+            if (designModeEnabled) {
+                this.disableDesignMode();
+            } else {
+                this.enableDesignMode();
+            }
+        };
+
 
         this.enableEditor = function() {
             if (!editorEnabled) {
@@ -98,8 +169,8 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 canvas.show();
                 editorEnabled = false;
                 // if not minimized, show console
-                if (!minimized)
-                    this.showConsole();
+                /*if (!minimized)
+                    this.showConsole();*/
                 TRuntime.start();
             }
         };
@@ -112,55 +183,6 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             }
         };
 
-        this.enableDesignMode = function() {
-            if (!designModeEnabled) {
-                TRuntime.freeze(true);
-                canvas.setDesignMode(true);
-                TRuntime.setDesignMode(true);
-                toolbar.enableDesignMode();
-                designModeEnabled = true;
-                if (!designLogDisplayed) {
-                    this.showDesignLog();
-                }
-            }
-        };
-
-        this.disableDesignMode = function() {
-            if (designModeEnabled) {
-                TRuntime.freeze(false);
-                canvas.setDesignMode(false);
-                TRuntime.setDesignMode(false);
-                toolbar.disableDesignMode();
-                designModeEnabled = false;
-                designLogDisplayed = !log.hideDesignLogIfEmpty();
-            }
-        };
-
-        this.toggleDesignMode = function() {
-            if (designModeEnabled) {
-                this.disableDesignMode();
-            } else {
-                this.enableDesignMode();
-            }
-        };
-
-        this.showDesignLog = function() {
-            log.showDesignLog();
-            designLogDisplayed = true;
-        };
-
-        this.hideDesignLog = function() {
-            log.hideDesignLog(!designModeEnabled);
-            designLogDisplayed = false;
-        };
-
-        this.toggleDesignLog = function() {
-            if (designLogDisplayed) {
-                this.hideDesignLog();
-            } else {
-                this.showDesignLog();
-            }
-        };
 
         this.clear = function(confirm) {
             var goOn = true;
@@ -218,9 +240,6 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.execute = function() {
             if (designModeEnabled) {
                 this.disableDesignMode();
-            }
-            if (designLogDisplayed) {
-                this.hideDesignLog();
             }
             if (!editorEnabled) {
                 // execution from console
@@ -461,28 +480,6 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.recordObjectLocation = function(tObject, location) {
             var name = TRuntime.getTObjectName(tObject);
             log.addObjectLocation(name, location);
-        };
-
-        this.toggleMinimized = function() {
-            if (!minimized) {
-                // hide console
-                this.hideConsole();
-                log.saveScroll();
-                log.hide();
-                frame.lowerSeparator(log.getHeight());
-                frame.disableSeparator();
-                minimized = true;
-            } else {
-                log.show();
-                frame.enableSeparator();
-                frame.raiseSeparator(log.getHeight());
-                log.restoreScroll();
-                if (!editorEnabled) {
-                    // show console
-                    this.showConsole();
-                }
-                minimized = false;
-            }
         };
 
         this.setResourceContent = function(name, data, callback) {

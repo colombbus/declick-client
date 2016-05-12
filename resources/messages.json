@@ -7,6 +7,7 @@
         "mode-editor":"Editeur",
         "button-execute":"Exécuter",
         "option-design-mode":"Mode Construction",
+        "option-console":"Console",
         "option-clear":"Effacer",
         "option-save-program":"Enregistrer",
         "option-new-program":"Nouveau",
@@ -120,6 +121,7 @@
         "repeat-keyword":"répéter",
         "button-next-step":"Etape Suivante",
         "button-close-success":"Revenir à l'étape",
-        "success-message":"Bravo, tu as réussi !"
+        "success-message":"Bravo, tu as réussi !",
+        "loading-message":"Chargement..."
     }
 }
