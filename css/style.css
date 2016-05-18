@@ -307,6 +307,8 @@ body, html {
 
 #tsidebar-upload {
     padding-top:30px;
+    box-sizing: border-box;
+    height:100%;
 }
 
 #tsidebar-upload-header {
@@ -422,7 +424,10 @@ textarea.tsidebar-rename {
 }
 
 #tsidebar-files {
-    padding:0 5px;
+    padding:0 5px 0 0;
+    box-sizing: border-box;
+    height:100%;
+    overflow-y: auto;
 }
 
 #tsidebar-resources-empty {
@@ -445,7 +450,7 @@ textarea.tsidebar-rename {
 
 .tsidebar-file {
     float:left;
-    margin:10px;
+    margin:8px;
     padding:4px;
     width:90px;
     height:90px;
