@@ -54,6 +54,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
                 if (!program.isModified() && editionEnabled) {
                     program.setModified(true);
                     TUI.updateSidebarPrograms();
+                    TUI.setSaveEnabled(true);
                 }
                 codeChanged = true;
                 self.removeError();
@@ -163,6 +164,9 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
          * @returns {String}
          */
         this.getProgramName = function() {
+            if (disabled) {
+                return false;
+            }
             return program.getName();
         };
 
@@ -194,8 +198,8 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
          * Reset current Session.
          */
         this.reset = function() {
-            var undo = aceEditor.getSession().getUndoManager();
-            undo.reset();
+            /*var undo = aceEditor.getSession().getUndoManager();
+            undo.reset();*/
             codeChanged = false;
         };
 

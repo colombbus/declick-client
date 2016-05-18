@@ -159,7 +159,7 @@ body, html {
 }
 
 #teditor.editor-disabled {
-    background-color:#EFEFEF;
+    background-color:#232323;
 }
 
 #teditor.editor-disabled .ace_text-layer {
@@ -184,7 +184,7 @@ body, html {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    color:#333435;
+    color:#ffffff;
     font-size:0.8em;
     opacity:0.3;
 }
@@ -195,7 +195,7 @@ body, html {
     background-color:#DEDEDE;
     width:65px;
     height:100%;
-    font-family:'Monaco','Menlo','Ubuntu Mono','Consolas','source-code-pro',monospace;
+    font-family:'DejaVu Sans',Helvetica,Arial,sans-serif;
     overflow:hidden;
     position:relative;
     display:none;
@@ -243,11 +243,15 @@ body, html {
     margin-right:65px;
     position:relative;
     background-color:#a6a1a6;
-    margin-bottom:54px;
+    padding-bottom:54px;
+    box-sizing:border-box;
 }
 
 #tsidebar-programs-list {
     overflow-y:auto;
+    height:100%;
+    box-sizing:border-box;
+    padding:20px 0;
 }
 
 #tsidebar-programs-list.loading, #tsidebar-resources.loading {
@@ -273,24 +277,33 @@ body, html {
     border:none;
     height:36px;
     width:36px;
+    cursor:pointer;
 }
 
-#tsidebar-new-program {
+#tsidebar-new-program,
+#tsidebar-new-resource{
     background-image:url('../images/new.png');
 }
 
-#tsidebar-new-program:hover {
+#tsidebar-new-program:hover,
+#tsidebar-new-resource:hover{
     background-image:url('../images/new_on.png');
 }
 
-#tsidebar-delete-program {
+#tsidebar-delete-program,
+#tsidebar-delete-resource {
     background-image:url('../images/delete.png');
 }
+
+#tsidebar-delete-program:hover,
+#tsidebar-delete-resource:hover {
+    background-image:url('../images/delete_on.png');
+}
+
 
 #tsidebar-delete-program:hover {
     background-image:url('../images/delete_on.png');
 }
-
 
 #tsidebar-upload {
     padding-top:30px;
@@ -321,12 +334,9 @@ body, html {
     padding-left:8px;
     padding-right:8px;
     color:#000000;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
     border-style:solid;
     border-width:1px;
-    border-color:#CCCCCC;
+    border-color:#000000;
     background-color:transparent;
     cursor:pointer;
 }
@@ -358,10 +368,11 @@ body, html {
 }
 
 .tsidebar-program {
-    padding:5px 20px;
+    padding:10px 20px;
     color:#ffffff;
     cursor:pointer;
     position:relative;
+    font-size:14px;
 }
 
 .tsidebar-edited {
@@ -369,8 +380,7 @@ body, html {
 }
 
 .tsidebar-current {
-    color:#ffffff;
-    background-color:#000000;
+    background-color:#ffffff;
 }
 
 .tsidebar-close {
@@ -411,6 +421,10 @@ textarea.tsidebar-rename {
     height:50px;
 }
 
+#tsidebar-files {
+    padding:0 5px;
+}
+
 #tsidebar-resources-empty {
     position:absolute;
     z-index:10;
@@ -440,7 +454,6 @@ textarea.tsidebar-rename {
     font-size:0.8em;
     background-color:#FFFFFF;
     word-wrap: break-word;
-    border-radius:5px;
     cursor:pointer;
     text-align:center;
     position:relative;
@@ -528,7 +541,7 @@ textarea.tsidebar-rename {
     top:12px;
     height:16px;
     width:16px;
-    background-image:url('../images/loader.gif');
+    background-image:url('../images/spin.gif');
 }
 
 .tangara_error {    
@@ -596,6 +609,12 @@ textarea.tsidebar-rename {
     background-image:url('../images/play_on.png');
 }
 
+#ttoolbar-play:disabled {
+    background-image:url('../images/play.png');
+    opacity:0.2;
+}
+
+
 #ttoolbar-design-mode {
     background-image:url('../images/design_mode.png');
 }
@@ -619,9 +638,15 @@ textarea.tsidebar-rename {
     background-image:url('../images/save.png');
 }
 
-#ttoolbar-save:hover,
+
+
 #ttoolbar-save.active{
     background-image:url('../images/save_on.png');
+}
+
+#ttoolbar-save:disabled {
+    background-image:url('../images/save.png');
+    opacity:0.2;
 }
 
 
@@ -819,9 +844,6 @@ textarea.tsidebar-rename {
     box-sizing:border-box;
     background-color:#FFFFFF;
     border:solid 5px #FFFFFF;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
 }
 
 .tviewer-button-close {
@@ -919,9 +941,6 @@ textarea.tsidebar-rename {
     right:30px;
     background-color:#dedede;
     border:solid 5px #FFFFFF;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
 }
 
 .tviewer-editor-image {
@@ -948,9 +967,6 @@ textarea.tsidebar-rename {
 .tviewer-creation {
     background-color:#FFFFFF;
     border:solid 5px #FFFFFF;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
     position:absolute;
     top:50%;
     left:50%;
@@ -997,9 +1013,6 @@ textarea.tsidebar-rename {
     padding-left:8px;
     padding-right:8px;
     color:#000000;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
     border-style:solid;
     border-width:1px;
     border-color:#CCCCCC;
@@ -1094,4 +1107,48 @@ textarea.tsidebar-rename {
 
 .ttoolbar-button-execute:active {
     color:#E47637;
+}
+
+/* TMessage */
+#tmessage {
+    display:none;
+    position:absolute;
+    z-index:20;
+    bottom:0;
+    left:0;
+    width:100%;
+    min-height:50px;
+    padding:10px;
+    display:none;
+    box-sizing:border-box;
+    z-index:100;
+}
+
+#tmessage.error {
+    background-color:#ef6e13;
+    color:#ffffff;
+}
+
+#tmessage.message {
+    background-color:#6dbea9;
+    color:#ffffff;
+}
+
+#tmessage-close {
+    display:block;
+    float:right;
+    width:18px;
+    height:18px;
+    margin-right:5px;
+    margin-top:2px;
+    background-image:url(../images/clear_grey.png);
+    cursor:pointer;
+}
+
+#tmessage.error #tmessage-content {
+    cursor:pointer;
+}
+
+#tmessage.error #tmessage-content:hover {
+    text-decoration:underline;
 }

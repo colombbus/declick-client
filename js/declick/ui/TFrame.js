@@ -1,14 +1,14 @@
-define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'TUI', 'ui/TConsole', 'ui/TToolbar', 'ui/TLog', 'TRuntime', 'TEnvironment'], function(TComponent, $, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TRuntime, TEnvironment) {
+define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'TUI', 'ui/TConsole', 'ui/TToolbar', 'ui/TLog', 'ui/TMessage', 'TRuntime', 'TEnvironment'], function(TComponent, $, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TMessage, TRuntime, TEnvironment) {
     function TFrame(callback) {
         var initialized = false;
-        var canvas, editor, sidebar, toolbar, console, log;
+        var canvas, editor, sidebar, toolbar, console, log, message;
         var $frame, $main, $top, $separator, $bottom, $loading;
 
         var frame = this;
         var separatorEnabled = true;
 
         TComponent.call(this, "TFrame.html", function(component) {
-            waiting = ['canvas', 'editor', 'sidebar', 'toolbar', 'console', 'log'];
+            waiting = ['canvas', 'editor', 'sidebar', 'toolbar', 'console', 'log', 'message'];
 
             checkWaiting = function(name) {
                 var i = waiting.indexOf(name);
@@ -55,6 +55,10 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
                 component.find("#TLog").replaceWith(c);
                 checkWaiting("log");
             });
+            message = new TMessage(function(c) {
+                component.find("#TMessage").replaceWith(c);
+                checkWaiting("message");
+            });
         });
 
         var checkSeparatorEnabled = function(event) {
@@ -72,6 +76,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             TUI.setToolbar(toolbar);
             TUI.setConsole(console);
             TUI.setLog(log);
+            TUI.setMessage(message);
 
             // Plug Runtime with Log
             TRuntime.setLog(log);

@@ -19,11 +19,26 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
             $uploadButton.click(function(e) {
                 $("#tsidebar-upload-input").click();
             });
+            
+            var $buttonNewResource = component.find("#tsidebar-new-resource");
+            $buttonNewResource.attr("title", TEnvironment.getMessage('option-new-resource'));
+            $buttonNewResource.click(function(e) {
+                TUI.newResource();
+            });
+
+            var $buttonDeleteResource = component.find("#tsidebar-delete-resource");
+            $buttonDeleteResource.attr("title", TEnvironment.getMessage('option-delete'));
+            $buttonDeleteResource.click(function(e) {
+                TUI.delete();
+            });
+            
             var emptyMediaP = component.find("#tsidebar-resources-empty p");
             emptyMediaP.append(TEnvironment.getMessage("empty-media-library"));
 
             $files = component.find("#tsidebar-files");
             $emptyMedia = component.find("#tsidebar-resources-empty");
+
+
 
             $resources.on("keydown", function(event) {
                 switch (event.which) {
@@ -128,7 +143,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
                             $files.get(0).removeChild(newDivs[i]);
                         }
                         // 3rd check if there is some file left, otherwise add "empty" message
-                        if ($files.children().length() === 0 && !empty) {
+                        if ($files.children().length === 0 && !empty) {
                             $emptyMedia.show();
                             empty = true;
                         }

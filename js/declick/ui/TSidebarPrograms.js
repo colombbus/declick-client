@@ -9,6 +9,18 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
             $programs = component;
             $list = component.find("#tsidebar-programs-list");
             $list.addClass("loading");
+            
+            var $buttonNewProgram = component.find("#tsidebar-new-program");
+            $buttonNewProgram.attr("title", TEnvironment.getMessage('option-new-program'));
+            $buttonNewProgram.click(function(e) {
+                TUI.newProgram();
+            });
+            var $buttonDeleteProgram = component.find("#tsidebar-delete-program");
+            $buttonDeleteProgram.attr("title", TEnvironment.getMessage('option-delete'));
+            $buttonDeleteProgram.click(function(e) {
+                TUI.delete();
+            });
+
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);
             }

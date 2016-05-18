@@ -12,9 +12,6 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             $buttonDesignMode = component.find("#ttoolbar-design-mode");
             $buttonConsole = component.find("#ttoolbar-console");
             $buttonSaveProgram = component.find("#ttoolbar-save");
-            /*$optionNewProgram = component.find(".ttoolbar-option-new-program");
-            $optionNewResource = component.find(".ttoolbar-option-new-resource");
-            $optionDelete = component.find(".ttoolbar-option-delete");*/
 
             var $buttonHelp = component.find("#ttoolbar-help");
             $buttonHelp.prop("title", TEnvironment.getMessage('button-help'));
@@ -33,7 +30,9 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
 
             $buttonExecute.attr("title",TEnvironment.getMessage('button-execute'));
             $buttonExecute.click(function(e) {
-                TUI.execute();
+                if (!$(this).is(':disabled')) {
+                    TUI.execute();
+                }
             });
 
             $buttonDesignMode.attr("title", TEnvironment.getMessage('option-design-mode'));
@@ -49,23 +48,10 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             
             $buttonSaveProgram.attr("title", TEnvironment.getMessage('option-save-program'));
             $buttonSaveProgram.click(function(e) {
-                TUI.saveProgram();
+                if (!$(this).is(':disabled')) {
+                    TUI.saveProgram();
+                }
             });
-            
-            /*$optionNewProgram.append(TEnvironment.getMessage('option-new-program'));
-            $optionNewProgram.click(function(e) {
-                TUI.newProgram();
-            });
-            
-            $optionNewResource.append(TEnvironment.getMessage('option-new-resource'));
-            $optionNewResource.click(function(e) {
-                TUI.newResource();
-            });
-
-            $optionDelete.append(TEnvironment.getMessage('option-delete'));
-            $optionDelete.click(function(e) {
-                TUI.delete();
-            });*/
 
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);
@@ -113,11 +99,21 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
 
         this.setEditionEnabled = function(value) {
             if (value) {
+                $buttonSaveProgram.prop("disabled", false);
+                $buttonExecute.prop("disabled", false);
+            } else {
+                $buttonSaveProgram.prop("disabled", true);
+                $buttonExecute.prop("disabled", true);
+            }
+        };
+        
+        this.setSaveEnabled = function(value) {
+            if (value) {
                 $buttonSaveProgram.addClass("active");
             } else {
                 $buttonSaveProgram.removeClass("active");
             }
-        };
+        }
         
         this.getHeight = function() {
             if (currentHeight === -1) {
