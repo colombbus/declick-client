@@ -287,10 +287,11 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         this.handleError = function(index) {
             var error = log.getError(index);
             if (error.getProgramName() === null) {
-                // error from command
-                this.disableEditor();
-                console.setValue(error.getCode());
-                console.focus();
+                if (consoleDisplayed) {
+                    // error from command
+                    console.setValue(error.getCode());
+                    console.focus();
+                }
             } else {
                 // error from program
                 this.enableEditor();
