@@ -609,12 +609,6 @@ textarea.tsidebar-rename {
     background-image:url('../images/play_on.png');
 }
 
-#ttoolbar-play:disabled {
-    background-image:url('../images/play.png');
-    opacity:0.2;
-}
-
-
 #ttoolbar-design-mode {
     background-image:url('../images/design_mode.png');
 }
@@ -637,8 +631,6 @@ textarea.tsidebar-rename {
     display:none;
     background-image:url('../images/save.png');
 }
-
-
 
 #ttoolbar-save.active{
     background-image:url('../images/save_on.png');

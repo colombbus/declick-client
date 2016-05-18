@@ -100,10 +100,8 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
         this.setEditionEnabled = function(value) {
             if (value) {
                 $buttonSaveProgram.prop("disabled", false);
-                $buttonExecute.prop("disabled", false);
             } else {
                 $buttonSaveProgram.prop("disabled", true);
-                $buttonExecute.prop("disabled", true);
             }
         };
         
