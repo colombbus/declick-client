@@ -93,7 +93,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'jquery', 'ui/TSidebar
             $switchPrograms.addClass("active");
             $sidebar.stop().animate({width: "260px"}, 200, function() {
                 programs.show();
-                TUI.setEditionEnabled(programs.hasCurrent());
+                programs.setEditionEnabled(programs.hasCurrent());
             });
         };
 
@@ -109,7 +109,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'jquery', 'ui/TSidebar
                 $switchResources.addClass("active");
                 $sidebar.stop().animate({width: "440px"}, 200, function() {
                     resources.show();
-                    TUI.setEditionEnabled(resources.hasCurrent());
+                    resources.setEditionEnabled(resources.hasCurrent());
                 });
                 return true;
             }
@@ -137,6 +137,19 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'jquery', 'ui/TSidebar
 
         this.createResource = function() {
             resources.create();
+        };
+        
+        this.setEditionEnabled = function(value) {
+            programs.setEditionEnabled(value);
+            resources.setEditionEnabled(value);
+        };
+
+        this.setProgramsEditionEnabled = function(value) {
+            programs.setEditionEnabled(value);
+        };
+
+        this.setResourcesEditionEnabled = function(value) {
+            resources.setEditionEnabled(value);
         };
 
     }

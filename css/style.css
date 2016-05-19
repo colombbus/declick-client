@@ -557,6 +557,14 @@ textarea.tsidebar-rename {
     position: absolute;
 }
 
+
+#tsidebar-delete-resource:disabled,
+#tsidebar-delete-program:disabled {
+    background-image:url('../images/delete.png');
+    opacity:0.2;
+}
+
+
 /* TToolbar */
 
 #ttoolbar {

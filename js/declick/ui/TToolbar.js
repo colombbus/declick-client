@@ -3,7 +3,7 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
         var $main, $buttonExecute;
         var $buttonDesignMode, $buttonConsole, $buttonSaveProgram;
         var editorMode = false;
-        var programOptions = true;
+        var saveEnabled = false;
         var currentHeight = -1;
 
         TComponent.call(this, "TToolbar.html", function(component) {
@@ -97,7 +97,8 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             }
         };
 
-        this.setEditionEnabled = function(value) {
+        this.setSaveEnabled = function(value) {
+            saveEnabled = value;
             if (value) {
                 $buttonSaveProgram.prop("disabled", false);
             } else {
@@ -105,13 +106,13 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             }
         };
         
-        this.setSaveEnabled = function(value) {
-            if (value) {
+        this.setSaveAvailable = function(value) {
+            if (value && saveEnabled) {
                 $buttonSaveProgram.addClass("active");
             } else {
                 $buttonSaveProgram.removeClass("active");
             }
-        }
+        };
         
         this.getHeight = function() {
             if (currentHeight === -1) {

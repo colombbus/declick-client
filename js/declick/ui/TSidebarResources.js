@@ -2,10 +2,9 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
 
     function TSidebarResources(callback) {
 
-        var $resources, $upload, $files, $emptyMedia;
+        var $resources, $upload, $files, $emptyMedia, $buttonDelete;
         var viewer;
         var textEditor;
-        var programsVisible = false;
         var empty = true;
         var uploadingDivs = {};
 
@@ -26,10 +25,12 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
                 TUI.newResource();
             });
 
-            var $buttonDeleteResource = component.find("#tsidebar-delete-resource");
-            $buttonDeleteResource.attr("title", TEnvironment.getMessage('option-delete'));
-            $buttonDeleteResource.click(function(e) {
-                TUI.delete();
+            $buttonDelete = component.find("#tsidebar-delete-resource");
+            $buttonDelete.attr("title", TEnvironment.getMessage('option-delete'));
+            $buttonDelete.click(function(e) {
+                if (!$(this).is(':disabled')) {
+                    TUI.delete();
+                }
             });
             
             var emptyMediaP = component.find("#tsidebar-resources-empty p");
@@ -373,6 +374,14 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
 
         this.create = function() {
             viewer.create();
+        };
+
+        this.setEditionEnabled = function(value) {
+            if (value) {
+                $buttonDelete.prop("disabled", false);
+            } else {
+                $buttonDelete.prop("disabled", true);
+            }
         };
 
     }

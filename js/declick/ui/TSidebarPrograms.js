@@ -2,7 +2,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
 
     function TSidebarPrograms(callback) {
 
-        var $programs, $list;
+        var $programs, $list, $buttonDelete;
         
 
         TComponent.call(this, "TSidebarPrograms.html", function(component) {
@@ -15,10 +15,12 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
             $buttonNewProgram.click(function(e) {
                 TUI.newProgram();
             });
-            var $buttonDeleteProgram = component.find("#tsidebar-delete-program");
-            $buttonDeleteProgram.attr("title", TEnvironment.getMessage('option-delete'));
-            $buttonDeleteProgram.click(function(e) {
-                TUI.delete();
+            $buttonDelete = component.find("#tsidebar-delete-program");
+            $buttonDelete.attr("title", TEnvironment.getMessage('option-delete'));
+            $buttonDelete.click(function(e) {
+                if (!$(this).is(':disabled')) {
+                    TUI.delete();
+                }
             });
 
             if (typeof callback !== 'undefined') {
@@ -94,6 +96,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
                         TUI.editProgram(name);
                         e.stopPropagation();
                     }
+                    TUI.setEditionEnabled(true);
                 });
                 var nameElement = document.createElement("div");
                 nameElement.id = "tsidebar-program-" + id;
@@ -166,6 +169,14 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
 
         this.hasCurrent = function() {
             return ($list.find(".tsidebar-current").length > 0);
+        };
+
+        this.setEditionEnabled = function(value) {
+            if (value) {
+                $buttonDelete.prop("disabled", false);
+            } else {
+                $buttonDelete.prop("disabled", true);
+            }
         };
 
     }
