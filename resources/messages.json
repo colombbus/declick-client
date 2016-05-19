@@ -122,6 +122,7 @@
         "button-next-step":"Etape Suivante",
         "button-close-success":"Revenir à l'étape",
         "success-message":"Bravo, tu as réussi !",
-        "loading-message":"Chargement..."
+        "loading-message":"Chargement...",
+        "popup-ok":"Ok"
     }
 }

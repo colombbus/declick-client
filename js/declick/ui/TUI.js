@@ -179,6 +179,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 editor.hide();
                 sidebar.hide();
                 canvas.show();
+                canvas.resize();
                 editorEnabled = false;
                 if (typeof updateServer === 'undefined' || updateServer) {
                     if (typeof window.parent !== 'undefined') {
@@ -206,6 +207,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             if (goOn) {
                 TRuntime.clear();
                 console.clear();
+                canvas.clear();
                 this.clearLog();
                 this.disableDesignMode();
                 message.hide();
