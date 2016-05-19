@@ -32,7 +32,6 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
          * Init Sidebar.
          */
         this.init = function() {
-            $list.removeClass("loading");
             this.update();
         };
 
@@ -48,6 +47,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
          * Update Programs.
          */
         this.update = function() {
+            $list.removeClass("loading");
             var project = TEnvironment.getProject();
             var programList = project.getProgramsNames();
             var editedPrograms = project.getEditedPrograms();

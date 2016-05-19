@@ -211,7 +211,6 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
                     }
                 }
             });
-            $resources.removeClass("loading");
             this.update();
             viewer.init();
             textEditor.init();
@@ -302,6 +301,8 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
         }
 
         this.update = function() {
+            $resources.removeClass("loading");
+
             var project = TEnvironment.getProject();
             var resourcesNames = project.getResourcesNames();
             var resources = project.getResources();

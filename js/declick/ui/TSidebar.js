@@ -58,6 +58,11 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'jquery', 'ui/TSidebar
         this.updateResources = function() {
             resources.update();
         };
+        
+        this.update = function() {
+            this.updatePrograms();
+            this.updateResources();
+        };
 
         this.updateProgramInfo = function(program) {
             programs.updateInfo(program);
