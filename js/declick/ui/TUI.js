@@ -601,7 +601,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
 
         this.init = function() {
-            editor.disable();
+            //editor.disable();
             sidebar.load();
             TEnvironment.getProject().init(function() {
                 sidebar.update();
