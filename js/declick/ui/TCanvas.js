@@ -56,6 +56,7 @@ define(['jquery', 'TRuntime', 'ui/TComponent', 'TEnvironment'], function($, TRun
         };
 
         this.displayed = function() {
+            $popup.hide();
             var graphics = TRuntime.getGraphics();
             graphics.setCanvas("tcanvas");
             // resize canvas and its container when window is resized
