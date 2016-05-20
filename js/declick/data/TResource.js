@@ -2,32 +2,28 @@ define(['jquery'], function($) {
     var TResource = function() {
         var cacheEnabled = false;
         var log = false;
-        var MILISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
         
         /*
          * Set cache support (i.e. use of localStorage)
          * If true, check validity of cached data, ensuring that it is no older than 1 day
          * @param {boolean} value
          */
-        this.setCacheEnabled = function(value) {
+        this.setCacheEnabled = function(value, version) {
             cacheEnabled = value;
             if (cacheEnabled) {
                 // check validity of data
-                var oldTimeStamp = localStorage.getItem("timestamp");
-                var timeStamp = (new Date()).getTime();
-                if (oldTimeStamp) {
-                    if (timeStamp - oldTimeStamp > MILISECONDS_PER_DAY) {
-                        // More than one day has elapsed: we clear the cache
+                var oldVersion = localStorage.getItem("version");
+                if (oldVersion) {
+                    if (version !== oldVersion) {
+                        // Versions differ: clear cache
                         localStorage.clear();
-                    } else {
-                        timeStamp = oldTimeStamp;
                     }
                 } else {
-                    // initialize local storage
+                    // cache does not contain version: clear it
                     localStorage.clear();
                 }
                 try {
-                    localStorage.setItem("timestamp", timeStamp);
+                    localStorage.setItem("version", version);
                 } catch (e) {
                     // in case setItem throws an exception (e.g. private mode)
                     // set cacheEnabled to false

@@ -16,7 +16,7 @@ define(['jquery', 'TResource'], function($, TResource) {
         this.language = "fr";
 
         // Config parameters: default values
-        this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache":true, "log":false, "error":true};
+        this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache":true, "log":false, "error":true, "cache-version":0};
         this.debug;
 
         /**
@@ -37,7 +37,7 @@ define(['jquery', 'TResource'], function($, TResource) {
                     if (self.config['document-domain']) {
                         document.domain = self.config['document-domain'];
                     }
-                    TResource.setCacheEnabled(self.isCacheEnabled());
+                    TResource.setCacheEnabled(self.isCacheEnabled(), self.config['cache-version']);
                     TResource.setLog(self.config['log']);
                     TResource.setError(self.config['error']);
                     self.log("* Retrieving translated messages");
