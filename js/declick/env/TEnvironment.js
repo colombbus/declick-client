@@ -25,10 +25,11 @@ define(['jquery', 'TResource'], function($, TResource) {
          */
         this.load = function(callback) {
             if (typeof localStorage.version !== 'undefined') {
-               window.console.log("*** Loading Declick Environment v." +  + " ***");
+                window.console.log("*** Loading Declick Environment v." + localStorage.version + " ***");
             }
-            else
-               window.console.log("*** Loading Declick Environment ***");
+            else {
+                window.console.log("*** Loading Declick Environment ***");
+            }
             window.console.log("* Loading config");
             var configFile = this.getResource("config.json");
             var self = this;
