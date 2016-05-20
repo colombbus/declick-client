@@ -15,7 +15,7 @@ define(['ui/TComponent', 'TUI', 'jquery'], function(TComponent, TUI, $) {
         });
 
         var hide = function(fade) {
-            $main.stop(true).off("click");
+            $main.stop(true,true).off("click");
             if (fade) {
                 $main.fadeOut();
             } else {
@@ -27,14 +27,14 @@ define(['ui/TComponent', 'TUI', 'jquery'], function(TComponent, TUI, $) {
             $content.text(value);
             $main.removeClass("error");
             $main.addClass("message");
-            $main.stop(true).off("click").show().delay(2000).fadeOut();
+            $main.stop(true,true).off("click").show().delay(2000).fadeOut();
         };
 
         this.showError = function(value, index) {
             $content.text(value);
             $main.removeClass("message");
             $main.addClass("error");
-            $main.stop(true).off("click").on("click", function() {
+            $main.stop(true,true).off("click").on("click", function() {
                 TUI.handleError(index);
             }).show();
         };
