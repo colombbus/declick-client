@@ -182,7 +182,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 canvas.resize();
                 editorEnabled = false;
                 if (typeof updateServer === 'undefined' || updateServer) {
-                    if (typeof window.parent !== 'undefined') {
+                    if (typeof window.parent !== 'undefined' && typeof window.parent.switchView !== 'undefined') {
                         window.parent.switchView();
                     }
                 }
@@ -279,10 +279,13 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 this.clear(false);
                 this.disableEditor();
                 console.clear();
-                TRuntime.executeFrom(editor,editor.getProgramName());
-                window.setTimeout(function() {
-                    canvas.giveFocus();
-                });
+                var currentProgram = editor.getProgramName();
+                if (currentProgram !== false) {
+                    TRuntime.executeFrom(editor,currentProgram);
+                    window.setTimeout(function() {
+                        canvas.giveFocus();
+                    });
+                }
             }
         };
 
