@@ -43,6 +43,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'CommandManager'], function (TObject, T
             }, props), defaultProps);
             this.operations = new Array();
             this.clickCommands = new CommandManager();
+            this.initialized(false);
         },
         designDrag: function (touch) {
             if (this.p.designMode) {
@@ -64,12 +65,23 @@ define(['TObject', 'TUtils', 'TRuntime', 'CommandManager'], function (TObject, T
                 this.operations.push([action, parameters]);
             }
         },
-        initialized: function () {
-            this.p.initialized = true;
-            while (this.operations.length > 0) {
-                var operation = this.operations.shift();
-                operation[0].apply(this, operation[1]);
+        initialized: function (value) {
+            if (typeof value === 'undefined') {
+                value = true;
             }
+            this.p.initialized = value;
+            if (value) {
+                this.step = this.constructor.prototype.step;
+                this.draw = this.constructor.prototype.draw;
+                while (this.operations.length > 0) {
+                    var operation = this.operations.shift();
+                    operation[0].apply(this, operation[1]);
+                }
+            } else {
+                this.step = function(){};
+                this.draw = function(){};
+            }
+            return value;
         },
         scale: function (scale) {
             this.perform(function (scale) {

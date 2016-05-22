@@ -60,16 +60,16 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.p.showBlock = value;
         },
         reinit: function () {
-            this.p.initialized = false;
+            this.initialized(false);
             this.p.asset = null;
             this.p.assetBlock = null;
         },
         removeBlock: function () {
-            this.p.initialized = false;
+            this.initialized(false);
             this.p.assetBlock = null;
         },
         removeBackground: function () {
-            this.p.initialized = false;
+            this.initialized(false);
             this.p.asset = null;
         }
     });
