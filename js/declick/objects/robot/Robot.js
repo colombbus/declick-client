@@ -45,6 +45,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 blocked: [false, false, false, false],
                 inJump: false
             }, props), defaultProps);
+			this.move = null;
+			this.falling = false;
             this.on("bump.top", "bumpTop");
             this.on("bump.bottom", "bumpBottom");
             this.on("bump.left", "bumpLeft");
@@ -54,6 +56,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             var p = this.p;
             var oldX = p.x;
             var oldY = p.y;
+			var oldVY = p.vy;
             var endSM = false;
             if (p.inJump && p.vy >= 0) {
                 // jump is over
@@ -73,13 +76,12 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             }
             this._super(dt);
             if (!p.dragging && !p.frozen) {
+				if (p.mayFall && oldVY == 0 && p.vy > 0) {
+					this.falling = true;
+					this.handleFalling();
+				}
                 if (p.moving && p.carriedItems.length > 0) {
-                    var x = p.x - p.w / 2;
-                    var y = p.y - p.h / 2;
-                    for (var i = 0; i < p.carriedItems.length; i++) {
-                        var item = p.carriedItems[i];
-                        item.setLocation(x, y - 4 * i);
-                    }
+					this.updateItemsPosition();
                 }
                 if (p.inMovement && p.moving && oldX === p.x && oldY === p.y) {
                     p.moving = false;
@@ -87,9 +89,16 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                     p.destinationY = p.y;
                 }
                 if (p.inMovement && !p.moving) {
-                    p.inMovement = false;
-                    this.updateGridLocation();
-                    endSM = true;
+					if (this.falling) {
+						this.falling = false;
+						this.resumeMove();
+					}
+					else {
+						p.inMovement = false;
+						this.move = null;
+						this.updateGridLocation();
+						endSM = true;
+					}
                 }
                 if (endSM) {
                     this.synchronousManager.end();
@@ -135,46 +144,64 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 });
             }
         },
-        moveBackward: function (n) {
-            this.synchronousManager.begin();
-            this.perform(function () {
-                this.initBumps();
-                this.p.direction = Sprite.DIRECTION_NONE;
-                this.p.inMovement = true;
-                this.p.destinationX -= this.p.length * n;
-                this.p.vx = -this.p.speed;
-            }, []);
-        },
-        moveForward: function (n) {
-            this.synchronousManager.begin();
-            this.perform(function () {
-                this.initBumps();
-                this.p.direction = Sprite.DIRECTION_NONE;
-                this.p.inMovement = true;
-                this.p.destinationX += this.p.length * n;
-                this.p.vx = this.p.speed;
-            }, []);
-        },
-        moveUpward: function (n) {
-            this.synchronousManager.begin();
-            this.perform(function () {
-                this.initBumps();
-                this.p.direction = Sprite.DIRECTION_NONE;
-                this.p.inMovement = true;
-                this.p.destinationY -= this.p.length * n;
-                this.p.vy = -this.p.speed;
-            }, []);
-        },
-        moveDownward: function (n) {
-            this.synchronousManager.begin();
-            this.perform(function () {
-                this.initBumps();
-                this.p.direction = Sprite.DIRECTION_NONE;
-                this.p.inMovement = true;
-                this.p.destinationY += this.p.length * n;
-                this.p.vy = this.p.speed;
-            }, []);
-        },
+		handleFalling: function () {
+			if (this.move == null) {
+				return;
+			}
+			var delta = Math.abs(this.p.destinationX - this.p.x);
+			this.move[1] = delta;
+			this.p.destinationX = 0;
+			this.p.destinationY = 0;
+			this.p.vx = 0;
+		},
+		resumeMove: function () {
+			if (this.move == null) {
+				return;
+			}
+			var direction = this.move[0], intensity = this.move[1];
+			var X = 0, Y = 0;
+			switch (direction) {
+				case Sprite.DIRECTION_UP: Y = -1; break;
+				case Sprite.DIRECTION_DOWN: Y = 1; break;
+				case Sprite.DIRECTION_LEFT: X = -1; break;
+				case Sprite.DIRECTION_RIGHT: X = 1; break;
+			}
+			this.initBumps();
+			this.p.direction = Sprite.DIRECTION_NONE;
+			this.p.inMovement = true;
+			this.p.destinationX = this.p.x + intensity * X;
+			this.p.destinationY = this.p.y + intensity * Y;
+			this.p.vx = this.p.speed * X;
+			this.p.vy = this.p.speed * Y;
+		},
+		initializeMove: function (direction, intensity) {
+			this.synchronousManager.begin();
+			this.perform(function () {
+				this.move = [direction, intensity * this.p.length];
+				this.resumeMove();
+			}, []);
+		},
+		moveUpward: function (intensity) {
+			this.initializeMove(Sprite.DIRECTION_UP, intensity);
+		},
+		moveDownward: function (intensity) {
+			this.initializeMove(Sprite.DIRECTION_DOWN, intensity);
+		},
+		moveBackward: function (intensity) {
+			this.initializeMove(Sprite.DIRECTION_LEFT, intensity);
+		},
+		moveForward: function (intensity) {
+			this.initializeMove(Sprite.DIRECTION_RIGHT, intensity);
+		},
+		updateItemsPosition: function () {
+			var p = this.p;
+			var x = p.x - p.w / 2;
+			var y = p.y - p.h / 2;
+			for (var i = 0; i < p.carriedItems.length; i++) {
+				var item = p.carriedItems[i];
+				item.setLocation(x, y - 4 * i);
+			}
+		},
         countItems: function () {
             var skip = 0;
             var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_ITEM, skip);
