@@ -14,6 +14,7 @@ define(['jquery'], function($) {
                 // check validity of data
                 var oldVersion = localStorage.getItem("version");
                 if (oldVersion) {
+                    oldVersion = parseInt(oldVersion);
                     if (version !== oldVersion) {
                         // Versions differ: clear cache
                         localStorage.clear();
