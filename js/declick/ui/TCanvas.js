@@ -1,7 +1,8 @@
-define(['jquery', 'TRuntime', 'ui/TComponent'], function($, TRuntime, TComponent) {
+define(['jquery', 'TRuntime', 'ui/TComponent', 'TEnvironment'], function($, TRuntime, TComponent, TEnvironment) {
 
     function TCanvas(callback) {
-        var $main, $canvas, $canvasDesign, $canvasDesignMouse, $canvasLoading, $canvasLoadingValue;
+        var $main, $canvas, $canvasDesign, $canvasDesignMouse, $canvasLoading, $canvasLoadingValue, $popup, $popupContent;
+        var popupCallback = null;
 
         TComponent.call(this, "TCanvas.html", function(component) {
             $main = component;
@@ -13,6 +14,19 @@ define(['jquery', 'TRuntime', 'ui/TComponent'], function($, TRuntime, TComponent
 
             $canvasDesign.hide();
             $canvasLoading.hide();
+
+            $canvasLoadingValue = component.find("#tcanvas-loading-value");
+
+            $popup = component.find("#tcanvas-popup");
+            $popupContent = component.find("#tcanvas-popup-content");
+            var $buttonPopup = component.find("#tcanvas-popup-button");
+            $buttonPopup.text(TEnvironment.getMessage('popup-ok'));
+            $buttonPopup.click(function() {
+                $popup.hide();
+                if (popupCallback !== null) {
+                    popupCallback.call(this);
+                }
+            });
 
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);
@@ -42,13 +56,13 @@ define(['jquery', 'TRuntime', 'ui/TComponent'], function($, TRuntime, TComponent
         };
 
         this.displayed = function() {
+            $popup.hide();
             var graphics = TRuntime.getGraphics();
             graphics.setCanvas("tcanvas");
             // resize canvas and its container when window is resized
+            var self = this;
             $(window).resize(function(e) {
-                var width = $main.width();
-                var height = $main.height();
-                graphics.resize(width, height);
+                self.resize();
             });
         };
 
@@ -95,6 +109,26 @@ define(['jquery', 'TRuntime', 'ui/TComponent'], function($, TRuntime, TComponent
         
         this.giveFocus = function() {
             $canvas.get(0).focus();
+        };
+        
+        this.resize = function() {
+            var width = $main.width();
+            var height = $main.height();
+            TRuntime.getGraphics().resize(width, height);
+        };
+        
+        this.popup = function(text, callback) {
+            $popupContent.text(text);
+            if (typeof callback !== "undefined") {
+                popupCallback = callback;
+            } else {
+                popupCallback = null;
+            }
+            $popup.show();
+        };
+        
+        this.clear = function() {
+            $popup.hide();
         };
     }
     ;

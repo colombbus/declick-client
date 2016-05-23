@@ -453,7 +453,9 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     Robot.prototype._addPlatform = function (platform) {
         Character.prototype._addPlatform.call(this, platform);
         var entrance = platform.getEntranceLocation();
-        this.setEntranceLocation(entrance[0], entrance[1]);
+        if (entrance !==false) {
+            this.setEntranceLocation(entrance[0], entrance[1]);
+        }
         var exit = platform.getExitLocations();
         if (exit !== false) {
             this.exitLocations = exit;

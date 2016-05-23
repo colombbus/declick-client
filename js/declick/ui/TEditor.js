@@ -35,7 +35,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
         var popupTriggered = false;
         var popupTimeout;
         var triggerPopup = false;
-        var editionEnabled = false;
+        var saveEnabled = false;
 
         /**
          * Initialize Editor.
@@ -47,12 +47,14 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
             aceEditor.setBehavioursEnabled(false);
+            aceEditor.setTheme("ace/theme/twilight");
 
             var self = this;
             aceEditor.on('input', function() {
-                if (!program.isModified() && editionEnabled) {
+                if (!program.isModified() && saveEnabled) {
                     program.setModified(true);
                     TUI.updateSidebarPrograms();
+                    TUI.setSaveAvailable(true);
                 }
                 codeChanged = true;
                 self.removeError();
@@ -72,7 +74,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
                 name: "save",
                 bindKey: {win: "Ctrl-S", mac: "Command-S"},
                 exec: function(arg) {
-                    if (editionEnabled) {
+                    if (saveEnabled) {
                         TUI.saveProgram();
                     }
                 }
@@ -155,6 +157,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
         this.setProgram = function(value) {
             program = value;
             codeChanged = true;
+            TUI.setSaveAvailable(program.isModified());
         };
 
         /**
@@ -162,6 +165,9 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
          * @returns {String}
          */
         this.getProgramName = function() {
+            if (disabled) {
+                return false;
+            }
             return program.getName();
         };
 
@@ -176,7 +182,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
                 $editor.removeClass('editor-disabled');
                 $disabledMessage.remove();
                 disabled = false;
-                TUI.setEditionEnabled(true);
+                TUI.setSaveEnabled(true);
             }
             aceEditor.setSession(session);
         };
@@ -193,8 +199,8 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
          * Reset current Session.
          */
         this.reset = function() {
-            var undo = aceEditor.getSession().getUndoManager();
-            undo.reset();
+            /*var undo = aceEditor.getSession().getUndoManager();
+            undo.reset();*/
             codeChanged = false;
         };
 
@@ -214,7 +220,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             aceEditor.renderer.setShowGutter(false);
             $editor.addClass('editor-disabled');
             $editor.append($disabledMessage);
-            TUI.setEditionEnabled(false);
+            TUI.setSaveEnabled(false);
             disabled = true;
         };
 
@@ -287,8 +293,8 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
          * Enable or disable the edition.
          * @param {Boolean} value
          */
-        this.setEditionEnabled = function(value) {
-            editionEnabled = value;
+        this.setSaveEnabled = function(value) {
+            saveEnabled = value;
         };
 
         /**

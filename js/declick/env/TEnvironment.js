@@ -1,11 +1,11 @@
-define(['jquery', 'TResource'], function($, TResource) {
-     /**
+define(['jquery', 'TResource'], function ($, TResource) {
+    /**
      * TEnvironment defines the environment variables (language, project,
      * and project's availability), get several URLs, and have several other
      * interactions with the environment.
      * @exports TEnvironment
      */
-    var TEnvironment = function() {
+    var TEnvironment = function () {
         var project;
         var projectAvailable = false;
         var support3D = null;
@@ -16,34 +16,39 @@ define(['jquery', 'TResource'], function($, TResource) {
         this.language = "fr";
 
         // Config parameters: default values
-        this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache":true, "log":false, "error":true};
+        this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache": true, "log": false, "error": true, "cache-version": 0};
         this.debug;
 
         /**
          * Loads environment (config, messages), and calls callback if existing
          * @param {Function} callback
          */
-        this.load = function(callback) {
-            window.console.log("*** Loading Declick Environment ***");
+        this.load = function (callback) {
+            if (typeof localStorage.version !== 'undefined') {
+                window.console.log("*** Loading Declick Environment v." + localStorage.version + " ***");
+            }
+            else {
+                window.console.log("*** Loading Declick Environment ***");
+            }
             window.console.log("* Loading config");
             var configFile = this.getResource("config.json");
             var self = this;
             $.ajax({
                 dataType: "json",
                 url: configFile,
-                success: function(data) {
+                success: function (data) {
                     $.extend(self.config, data);
                     self.debug = self.config['debug'];
                     if (self.config['document-domain']) {
                         document.domain = self.config['document-domain'];
                     }
-                    TResource.setCacheEnabled(self.isCacheEnabled());
+                    TResource.setCacheEnabled(self.isCacheEnabled(), self.config['cache-version']);
                     TResource.setLog(self.config['log']);
                     TResource.setError(self.config['error']);
                     self.log("* Retrieving translated messages");
                     var messageFile = self.getResource("messages.json");
                     var language = self.language;
-                    TResource.get(messageFile,[language], function(data) {
+                    TResource.get(messageFile, [language], function (data) {
                         if (typeof data[language] !== 'undefined') {
                             self.log("found messages in language: " + language);
                             self.messages = data[language];
@@ -52,7 +57,7 @@ define(['jquery', 'TResource'], function($, TResource) {
                         }
                         if (typeof callback !== 'undefined') {
                             callback.call(self);
-                        }                        
+                        }
                     });
                 }
             });
@@ -62,7 +67,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * Get the base URL.
          * @returns {String}
          */
-        this.getBaseUrl = function() {
+        this.getBaseUrl = function () {
             return window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/");
         };
 
@@ -70,7 +75,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * Get the URL of objects.
          * @returns {String}
          */
-        this.getObjectsUrl = function() {
+        this.getObjectsUrl = function () {
             return this.getBaseUrl() + "/js/declick/objects";
         };
 
@@ -78,7 +83,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * Get the URL of the list of objects.
          * @returns {String}
          */
-        this.getObjectListUrl = function() {
+        this.getObjectListUrl = function () {
             return this.getObjectsUrl() + "/objects.json";
         };
 
@@ -87,7 +92,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * @param {String} module
          * @returns {String} Returns the URL of module.
          */
-        this.getBackendUrl = function(module) {
+        this.getBackendUrl = function (module) {
             var url = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -2).join("/");
             url += this.config['backend-path'] + "assets/";
             if (typeof module !== "undefined") {
@@ -100,7 +105,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * Get language.
          * @returns {String}
          */
-        this.getLanguage = function() {
+        this.getLanguage = function () {
             return this.language;
         };
 
@@ -108,7 +113,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * Set language to the one entered in parameter.
          * @param {String} language
          */
-        this.setLanguage = function(language) {
+        this.setLanguage = function (language) {
             this.language = language;
         };
 
@@ -117,7 +122,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * @param {String} name
          * @returns {String} Returns the URL of the resource.
          */
-        this.getResource = function(name) {
+        this.getResource = function (name) {
             return this.getBaseUrl() + "/resources/" + name;
         };
 
@@ -126,7 +131,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * @param {String} name
          * @returns {Resource}
          */
-        this.getProjectResource = function(name) {
+        this.getProjectResource = function (name) {
             return project.getResourceLocation(name);
         };
 
@@ -139,13 +144,13 @@ define(['jquery', 'TResource'], function($, TResource) {
          * @param {type} code
          * @returns {String}
          */
-        this.getMessage = function(code) {
+        this.getMessage = function (code) {
             if (typeof this.messages[code] !== 'undefined') {
                 var message = this.messages[code];
                 if (arguments.length > 1) {
                     // message has to be parsed
                     var elements = arguments;
-                    message = message.replace(/{(\d+)}/g, function(match, number) {
+                    message = message.replace(/{(\d+)}/g, function (match, number) {
                         number = parseInt(number) + 1;
                         return typeof elements[number] !== 'undefined' ? elements[number] : match;
                     });
@@ -160,7 +165,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * Set the project to the one entered in parameter.
          * @param {String} value
          */
-        this.setProject = function(value) {
+        this.setProject = function (value) {
             project = value;
         };
 
@@ -168,7 +173,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * Get the current project.
          * @returns {String}
          */
-        this.getProject = function() {
+        this.getProject = function () {
             return project;
         };
 
@@ -176,15 +181,15 @@ define(['jquery', 'TResource'], function($, TResource) {
          * Set the avaibility of the project.
          * @param {Boolean} value
          */
-        this.setProjectAvailable = function(value) {
+        this.setProjectAvailable = function (value) {
             projectAvailable = value;
         };
 
         /**
          * Get the avaibility of the project.
-         * @returns {Boolean} 
+         * @returns {Boolean}
          */
-        this.isProjectAvailable = function() {
+        this.isProjectAvailable = function () {
             return projectAvailable;
         };
 
@@ -193,7 +198,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * @param {String} value
          * @returns {Object}
          */
-        this.getConfig = function(value) {
+        this.getConfig = function (value) {
             return this.config[value];
         };
 
@@ -201,7 +206,7 @@ define(['jquery', 'TResource'], function($, TResource) {
          * Checks the suppport of 3D and write a message in log.
          * @returns {Boolean}   Returns true if 3D is supported, else false.
          */
-        this.is3DSupported = function() {
+        this.is3DSupported = function () {
             var canvas, gl;
             if (support3D !== null)
                 return support3D;
@@ -228,33 +233,33 @@ define(['jquery', 'TResource'], function($, TResource) {
             }
             return support3D;
         };
-        
+
         /**
          * Checks if cache (i.e. localStorage) is enabled.
          * @returns {Boolean}   Returns true cache is enabled, otherwise false
          */
-        this.isCacheEnabled = function() {
+        this.isCacheEnabled = function () {
             return (typeof window.localStorage !== 'undefined' && this.config['cache']);
         };
-        
-        this.log = function(message) {
+
+        this.log = function (message) {
             if (this.config["log"]) {
                 window.console.log(message);
             }
         };
 
-        this.error = function(message) {
+        this.error = function (message) {
             if (this.config["error"]) {
                 window.console.error(message);
             } else {
-                this.log("ERROR> "+message);                
+                this.log("ERROR> " + message);
             }
         };
-        
-        this.isLogEnabled = function() {
+
+        this.isLogEnabled = function () {
             return this.config["log"];
         };
-        
+
     };
 
     var environmentInstance = new TEnvironment();

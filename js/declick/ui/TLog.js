@@ -85,6 +85,7 @@ define(['ui/TComponent', 'jquery', 'TUI', 'ui/TDesignLog', 'TEnvironment'], func
             }
             $log.append(wrapper);
             $log.scrollTop($log.prop("scrollHeight"));
+            TUI.showErrorMessage(message, index);
         };
 
         this.addMessage = function(text) {
@@ -94,6 +95,7 @@ define(['ui/TComponent', 'jquery', 'TUI', 'ui/TDesignLog', 'TEnvironment'], func
                 row.appendChild(document.createTextNode(text));
                 $log.append(row);
                 $log.scrollTop($log.prop("scrollHeight"));
+                TUI.showMessage(text);
             }
         };
 

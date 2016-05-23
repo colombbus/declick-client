@@ -1,21 +1,17 @@
 define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, $, TEnvironment, TUI) {
     function TToolbar(callback) {
-        var $main, $buttonExecute, $buttonEditor;
-        var $optionDesignMode, $optionConsole, $optionNewProgram, $optionSaveProgram, $optionNewResource, $optionDelete;
+        var $main, $buttonExecute;
+        var $buttonDesignMode, $buttonConsole, $buttonSaveProgram;
         var editorMode = false;
-        var programOptions = true;
+        var saveEnabled = false;
         var currentHeight = -1;
 
         TComponent.call(this, "TToolbar.html", function(component) {
             $main = component;
-            $buttonExecute = component.find(".ttoolbar-button-execute");
-            $buttonEditor = component.find(".ttoolbar-mode-editor");
-            $optionDesignMode = component.find("#ttoolbar-design-mode");
-            $optionConsole = component.find("#ttoolbar-console");
-            $optionNewProgram = component.find(".ttoolbar-option-new-program");
-            $optionSaveProgram = component.find(".ttoolbar-option-save");
-            $optionNewResource = component.find(".ttoolbar-option-new-resource");
-            $optionDelete = component.find(".ttoolbar-option-delete");
+            $buttonExecute = component.find("#ttoolbar-play");
+            $buttonDesignMode = component.find("#ttoolbar-design-mode");
+            $buttonConsole = component.find("#ttoolbar-console");
+            $buttonSaveProgram = component.find("#ttoolbar-save");
 
             var $buttonHelp = component.find("#ttoolbar-help");
             $buttonHelp.prop("title", TEnvironment.getMessage('button-help'));
@@ -32,51 +28,29 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
                 $buttonHelp.removeClass("active");
             };
 
-            $buttonEditor.append(TEnvironment.getMessage('mode-editor'));
-            $buttonEditor.click(function(e) {
-                TUI.toggleEditor();
-            });
-            
-            
-            $buttonExecute.append(TEnvironment.getMessage('button-execute'));
+            $buttonExecute.attr("title",TEnvironment.getMessage('button-execute'));
             $buttonExecute.click(function(e) {
-                TUI.execute();
+                if (!$(this).is(':disabled')) {
+                    TUI.execute();
+                }
             });
 
-            $optionDesignMode.attr("title", TEnvironment.getMessage('option-design-mode'));
-            $optionDesignMode.click(function(e) {
+            $buttonDesignMode.attr("title", TEnvironment.getMessage('option-design-mode'));
+            $buttonDesignMode.click(function(e) {
                 TUI.toggleDesignMode();
             });
 
-            $optionConsole.attr("title", TEnvironment.getMessage('option-console'));
-            $optionConsole.click(function(e) {
+            $buttonConsole.attr("title", TEnvironment.getMessage('option-console'));
+            $buttonConsole.click(function(e) {
                 TUI.toggleConsole();
             });
 
             
-            $optionSaveProgram.append(TEnvironment.getMessage('option-save-program'));
-            $optionSaveProgram.click(function(e) {
-                TUI.saveProgram();
-            });
-            
-            $optionNewProgram.append(TEnvironment.getMessage('option-new-program'));
-            $optionNewProgram.click(function(e) {
-                TUI.newProgram();
-            });
-            
-            $optionNewResource.append(TEnvironment.getMessage('option-new-resource'));
-            $optionNewResource.click(function(e) {
-                TUI.newResource();
-            });
-
-            $optionDelete.append(TEnvironment.getMessage('option-delete'));
-            $optionDelete.click(function(e) {
-                TUI.delete();
-            });
-
-            // Prevent text selection
-            component.mousedown(function() {
-                return false;
+            $buttonSaveProgram.attr("title", TEnvironment.getMessage('option-save-program'));
+            $buttonSaveProgram.click(function(e) {
+                if (!$(this).is(':disabled')) {
+                    TUI.saveProgram();
+                }
             });
 
             if (typeof callback !== 'undefined') {
@@ -85,86 +59,59 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
         });
 
         this.displayed = function() {
-            // Start with editor mode disabled
-            this.disableProgramOptions();
-            this.disableResourceOptions();
         };
 
         this.enableConsole = function() {
-            $optionConsole.addClass("active");
-            //$buttonExecute.show();
+            $buttonConsole.addClass("active");
         };
 
         this.disableConsole = function() {
-            $optionConsole.removeClass("active");
-            //$buttonExecute.hide();
+            $buttonConsole.removeClass("active");
         };
 
         this.enableDesignMode = function() {
-            $optionDesignMode.addClass("active");
+            $buttonDesignMode.addClass("active");
         };
 
         this.disableDesignMode = function() {
-            $optionDesignMode.removeClass("active");
+            $buttonDesignMode.removeClass("active");
         };
 
         this.enableEditor = function() {
             if (!editorMode) {
-                $buttonEditor.addClass("active");
-                $optionDesignMode.hide();
+                $buttonDesignMode.hide();
+                $buttonConsole.hide();
                 $buttonExecute.show();
+                $buttonSaveProgram.show();
                 editorMode = true;
-                if (programOptions) {
-                    this.enableProgramOptions();
-                } else {
-                    this.enableResourceOptions();
-                }
             }
         };
 
         this.disableEditor = function() {
             if (editorMode) {
-                $buttonEditor.removeClass("active");
-                if (programOptions) {
-                    this.disableProgramOptions();
-                } else {
-                    this.disableResourceOptions();
-                }
-                $optionDesignMode.show();
+                $buttonDesignMode.show();
+                $buttonConsole.show();
                 $buttonExecute.hide();
+                $buttonSaveProgram.hide();
                 editorMode = false;
             }
         };
 
-        this.enableProgramOptions = function() {
-            this.disableResourceOptions();
-            $optionNewProgram.show();
-            $optionSaveProgram.show();
-            $optionDelete.show();
-            programOptions = true;
+        this.setSaveEnabled = function(value) {
+            saveEnabled = value;
+            if (value) {
+                $buttonSaveProgram.prop("disabled", false);
+            } else {
+                $buttonSaveProgram.prop("disabled", true);
+            }
         };
-
-        this.disableProgramOptions = function() {
-            $optionNewProgram.hide();
-            $optionSaveProgram.hide();
-            $optionDelete.hide();
-        };
-
-        this.enableResourceOptions = function() {
-            this.disableProgramOptions();
-            $optionNewResource.show();
-            $optionDelete.show();
-            programOptions = false;
-        };
-
-        this.disableResourceOptions = function() {
-            $optionNewResource.hide();
-            $optionDelete.hide();
-        };
-
-        this.setEditionEnabled = function(value) {
-            $optionSaveProgram.disabled = !value;
-            $optionDelete.disabled = !value;
+        
+        this.setSaveAvailable = function(value) {
+            if (value && saveEnabled) {
+                $buttonSaveProgram.addClass("active");
+            } else {
+                $buttonSaveProgram.removeClass("active");
+            }
         };
         
         this.getHeight = function() {

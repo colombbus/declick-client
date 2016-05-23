@@ -38,7 +38,15 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
         } else {
             value = TUtils.getString(value);
         }
-        window.alert(value);
+        var canvas = TUI.getCanvas();
+        if (typeof canvas !== 'undefined') {
+            this.synchronousManager.begin();
+            var self = this;
+            canvas.popup(value, function() {
+                self.synchronousManager.end();
+            });
+        }
+        //window.alert(value);
     };
 
     /**

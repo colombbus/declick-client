@@ -438,7 +438,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             url: configUrl,
             async: false,
             success: function (data) {
-                parent.gObject.p.initialized = false;
+                parent.gObject.initialized(false);
                 var currentLocation = parent.gObject.getLocation();
                 var frontImages = data['images']['front'];
                 //var frontAssets = [];
@@ -567,7 +567,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.gObject.computeDts();
             if (!this.custom) {
                 this.custom = true;
-                this.gObject.p.initialized = false;
+                this.gObject.initialized(false);
                 this._displayNextImage(set);
                 /*if (currentLocation !== false) {
                  this.gObject.setLocation(currentLocation.x, currentLocation.y);
