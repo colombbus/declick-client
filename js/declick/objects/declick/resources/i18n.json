@@ -8,7 +8,7 @@
             {"name":"_loadScript","translated":"chargerProgramme","displayed":"chargerProgramme(\"programme\")"},
             {"name":"_ask","translated":"demander","displayed":"demander(\"question\")"},
             {"name":"_init","translated":"initialiser","displayed":"initialiser()"},
-            {"name":"_clearScreen","translated":"effacerEcran","displayed":"effacerEcran()"},
+            {"name":"_clearScreen","translated":"effacerEcran","displayed":false},
             {"name":"_interrupt","translated":"interrompre","displayed":"interrompre()"},
             {"name":"_wait","translated":"attendre","displayed":"attendre(1000)"}
         ]

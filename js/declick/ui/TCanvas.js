@@ -3,6 +3,7 @@ define(['jquery', 'TRuntime', 'ui/TComponent', 'TEnvironment'], function($, TRun
     function TCanvas(callback) {
         var $main, $canvas, $canvasDesign, $canvasDesignMouse, $canvasLoading, $canvasLoadingValue, $popup, $popupContent;
         var popupCallback = null;
+        var cursorX, cursorY;
 
         TComponent.call(this, "TCanvas.html", function(component) {
             $main = component;
@@ -14,6 +15,9 @@ define(['jquery', 'TRuntime', 'ui/TComponent', 'TEnvironment'], function($, TRun
 
             $canvasDesign.hide();
             $canvasLoading.hide();
+
+            $canvas.on("mousemove", cursorHandler);
+            $canvas.on("touchmove", cursorHandler);
 
             $canvasLoadingValue = component.find("#tcanvas-loading-value");
 
@@ -33,10 +37,12 @@ define(['jquery', 'TRuntime', 'ui/TComponent', 'TEnvironment'], function($, TRun
             }
         });
 
-        var designMouseHandler = function(event) {
-            var x = event.clientX + $main.scrollLeft();
-            var y = event.clientY + $main.scrollTop();
-            $canvasDesignMouse.text(x + "," + y);
+        var cursorHandler = function (event) {
+            cursorX = event.clientX + $main.scrollLeft();
+            cursorY = event.clientY + $main.scrollTop();
+        };
+        var designMouseHandler = function (event) {
+            $canvasDesignMouse.text(cursorX + "," + cursorY);
         };
 
         /**
@@ -129,6 +135,13 @@ define(['jquery', 'TRuntime', 'ui/TComponent', 'TEnvironment'], function($, TRun
         
         this.clear = function() {
             $popup.hide();
+        };
+
+        this.getCursorX = function () {
+            return cursorX;
+        };
+        this.getCursorY = function () {
+            return cursorY;
         };
     }
     ;

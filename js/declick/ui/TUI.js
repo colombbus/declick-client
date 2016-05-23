@@ -58,6 +58,13 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             return canvas;
         };
 
+        this.getCanvasCursorX = function () {
+            return canvas.getCursorX();
+        };
+        this.getCanvasCursorY = function () {
+            return canvas.getCursorY();
+        };
+
         this.hideConsole = function(hideLog) {
             if (typeof hideLog === 'undefined') {
                 hideLog = true;
@@ -159,6 +166,8 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             if (!editorEnabled) {
                 // hide console
                 this.hideConsole();
+                // disable design mode
+                this.disableDesignMode();
                 toolbar.enableEditor();
                 TRuntime.stop();
                 canvas.hide();
