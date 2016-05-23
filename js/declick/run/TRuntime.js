@@ -365,11 +365,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 object.deleteObject();
             }
         };
-
-        this.clear = function() {
-            interpreter.clear();
-            // TODO: clear RuntimeFrame as well (e.g. to erase declared functions)
-            this.clearGraphics();
+        
+        this.clearObjects = function() {
             while (tObjects.length > 0) {
                 var object = tObjects[0];
                 // deleteObject will remove object from tGraphicalObjects
@@ -379,6 +376,13 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             for (var i=0;i<tInstances.length;i++) {
                 tInstances[i].clear();
             }
+        };
+
+        this.clear = function() {
+            interpreter.clear();
+            // TODO: clear RuntimeFrame as well (e.g. to erase declared functions)
+            this.clearGraphics();
+            this.clearObjects();
         };
         
         this.init = function() {

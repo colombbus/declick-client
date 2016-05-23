@@ -64,7 +64,8 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
      * Clear screen, commands history and console.
      */
     Declick.prototype._init = function() {
-        TRuntime.clear();
+        TRuntime.clearGraphics();
+        TRuntime.clearObjects();
     };
 
     /**
