@@ -37,6 +37,10 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         /* Lifecycle management */
 
         var clear = function() {
+            // clear functions
+            for (var prop in definedFunctions) {
+                defaultEval(prop+"= undefined");
+            }
             definedFunctions = {};
             localVariables = [];
             stop();
