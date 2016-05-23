@@ -166,6 +166,8 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
             if (!editorEnabled) {
                 // hide console
                 this.hideConsole();
+                // disable design mode
+                this.disableDesignMode();
                 toolbar.enableEditor();
                 TRuntime.stop();
                 canvas.hide();
