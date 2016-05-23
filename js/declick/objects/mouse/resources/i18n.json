@@ -1,0 +1,8 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_getX","translated":"r\u00e9cup\u00e9rerX","displayed":"r\u00e9cup\u00e9rerX()"},
+            {"name":"_getY","translated":"r\u00e9cup\u00e9rerY","displayed":"r\u00e9cup\u00e9rerY()"}
+        ]
+    }
+}
