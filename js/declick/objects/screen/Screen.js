@@ -1,4 +1,4 @@
-define(['jquery', 'TObject'], function ($, TObject) {
+define(['jquery', 'TObject', 'TRuntime'], function ($, TObject, TRuntime) {
     /**
      * Defines Screen, inherited from TObject.
      * Screen is an object created automatically with the launch of Screen.
@@ -30,6 +30,14 @@ define(['jquery', 'TObject'], function ($, TObject) {
      */
     Screen.prototype._getWidth = function () {
         return this.w.innerWidth || this.e.clientWidth || this.g.clientWidth;
+    };
+
+    /**
+     * Clear all graphical objects.
+     * @param {String} value
+     */
+    Screen.prototype._clear = function () {
+        TRuntime.clearGraphics();
     };
 
     var screenInstance = new Screen();
