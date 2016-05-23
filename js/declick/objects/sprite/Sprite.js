@@ -76,7 +76,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         },
         removeAsset: function() {
             this.p.asset = null;
-            this.p.initialized = false;
+            this.initialized(false);
         },
         draw: function(ctx) {
             var p = this.p;

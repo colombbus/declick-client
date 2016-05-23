@@ -15,7 +15,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.resources = new ResourceManager();
         this.sheet = null;
         this.built = false;
-        this.entranceLocation = [0,0];
+        this.entranceLocation = false;
         this.exitLocations = false;
         this.counters = [0];
         TRuntime.addGraphicalObject(this, false);
