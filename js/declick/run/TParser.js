@@ -6,9 +6,9 @@ define(['acorn'], function(acorn) {
     function TParser() {
         var options = {locations: true, forbidReserved: "everywhere"};
 
-        var globalReserved = ['window', 'document', 'eval'];
+        //var globalReserved = ['window', 'document', 'eval'];
 
-        acorn.addReservedWords(globalReserved);
+        //acorn.addReservedWords(globalReserved);
 
         /**
          * Add reserved identifiers.
@@ -30,7 +30,7 @@ define(['acorn'], function(acorn) {
         this.parse = function(input) {
             var result = acorn.parse(input, options);
             // return statements
-            return result.body;
+            return result;//.body;
         };
     }
 

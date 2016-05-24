@@ -42,7 +42,8 @@ require.config({
         "platform-pr": "../libs/pem-task/platform-pr",
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
-        "Grader": "env/Grader"        
+        "Grader": "env/Grader",
+        "js-interpreter":"../libs/js-interpreter/interpreter"
     },
     map: {
         "fileupload": {

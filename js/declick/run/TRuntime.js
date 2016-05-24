@@ -41,6 +41,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                         // Load translated error messages
                         TEnvironment.log("* Loading translated error messages");
                         TError.loadMessages(function() {
+                            interpreter.initialize();
                             TEnvironment.log("**** TRUNTIME INITIALIZED ****");
                             if (typeof callback !== "undefined") {
                                 callback.call(self);
@@ -135,7 +136,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                             aConstructor.prototype.objectPath = val['path'];
                             TI18n.internationalize(aConstructor, parents, language, function() {
                                 TEnvironment.log("Declaring translated object '" + translatedName + "'");
-                                runtimeFrame[translatedName] = aClass;
+                                //runtimeFrame[translatedName] = aClass;
+                                interpreter.addClass(aClass, translatedName);
                                 translatedNames.push(translatedName);
                                 classesToLoad--;
                                 if (classesToLoad === 0 && typeof callback !== 'undefined') {
