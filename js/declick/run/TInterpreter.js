@@ -11,18 +11,23 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         
         this.initialize = function() {
             var initFunc = function(interpreter, scope) {
-                var getNativeFunction = function(name) {
-                    var wrapper = function() {
-                        var obj = interpreter.createObject(null);
-                        obj.declick_object_ = new classes[name]();
-                        var wrapper2 = function(a) {
-                            obj.declick_object_._moveForward(a);
+                var getObject = function(name) {
+                    var parent = interpreter.createObject(interpreter.FUNCTION);
+                    // TODO: automatize this
+                    if (typeof classes[name].prototype!== 'undefined' && typeof classes[name].prototype.avancer !== 'undefined') {
+                        var wrapper = function() {
+                            classes[name].prototype.avancer.apply(this.declickObj,arguments);
                         };
-                        interpreter.setProperty(obj, "avancer", interpreter.createNativeFunction(wrapper2));
+                        interpreter.setProperty(parent.properties.prototype, 'avancer', interpreter.createNativeFunction(wrapper));
+                    }
+                    var wrapper = function() {
+                        var obj = interpreter.createObject(parent);
+                        // TODO: handle instances and constructor parameters
+                        obj.declickObj = new classes[name];
                         return obj;
-                        //return interpreter.createObject(classes[name]);
                     };
-                    return interpreter.createNativeFunction(wrapper);
+                    var obj = interpreter.createNativeFunction(wrapper);
+                    return obj;
                 };
                 var wrapper = function(text) {
                     text = text ? text.toString() : '';
@@ -30,7 +35,8 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 };
                 interpreter.setProperty(scope, 'alert',interpreter.createNativeFunction(wrapper));
                 for (var name in classes) {
-                    interpreter.setProperty(scope, name, getNativeFunction(name));
+                    var object = getObject(name);
+                    interpreter.setProperty(scope, name, object, true);
                 }
             };
             interpreter =  new Interpreter("", initFunc);
