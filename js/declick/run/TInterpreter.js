@@ -1,13 +1,10 @@
 define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils, acorn, Interpreter) {
     function TInterpreter() {
         var runtimeFrame, log, errorHandler;
-        var debug;
         var classes = {};
-        
         
         var interpreter;
         var running = false;
-        var suspended = false;
         
         this.initialize = function() {
             var initFunc = function(interpreter, scope) {
@@ -16,18 +13,25 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     // TODO: automatize this
                     if (typeof classes[name].prototype!== 'undefined' && typeof classes[name].prototype.avancer !== 'undefined') {
                         var wrapper = function() {
-                            classes[name].prototype._moveForward.apply(this.declickObj,arguments);
+                            classes[name].prototype._moveForward.apply(this.data,arguments);
                         };
                         interpreter.setProperty(parent.properties.prototype, 'avancer', interpreter.createNativeFunction(wrapper));
                         wrapper = function() {
-                            classes[name].prototype._moveBackward.apply(this.declickObj,arguments);
+                            classes[name].prototype._moveBackward.apply(this.data,arguments);
                         };
                         interpreter.setProperty(parent.properties.prototype, 'reculer', interpreter.createNativeFunction(wrapper));
                     }
                     var wrapper = function() {
                         var obj = interpreter.createObject(parent);
-                        // TODO: handle instances and constructor parameters
-                        obj.declickObj = new classes[name];
+                        // TODO: handle instances
+                        var declickObj = Object.create(classes[name].prototype);
+                        // transform data from interpreter into actual data
+                        var args = [];
+                        for (var i=0; i<arguments.length;i++) {
+                            args.push(arguments[i].data);
+                        }
+                        classes[name].apply(declickObj, args);
+                        obj.data = declickObj;
                         return obj;
                     };
                     var obj = interpreter.createNativeFunction(wrapper);
@@ -58,7 +62,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             errorHandler = handler;
         };
         
-                /* Lifecycle management */
+        /* Lifecycle management */
 
         var clear = function() {
             stop();
