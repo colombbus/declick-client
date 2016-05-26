@@ -1,6 +1,6 @@
 define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils, acorn, Interpreter) {
     function TInterpreter() {
-        var runtimeFrame, log, errorHandler;
+        var log, errorHandler;
         var classes = {};
         var instances = {};
         
@@ -18,16 +18,16 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         for (var i=0; i<arguments.length;i++) {
                             args.push(arguments[i].data);
                         }
-                        instances[className][methodName].apply(this.data, args);
+                        //TODO: handle cases where method return objects
+                        return interpreter.createPrimitive(instances[className][methodName].apply(this.data, args));
                     };
                 };
                 
                 var getInstance = function(name) {
                     var object = interpreter.createObject(interpreter.FUNCTION);
                     object.data = instances[name];
-                    var constructor = instances[name].constructor;
-                    if (typeof constructor.prototype !== 'undefined' && typeof constructor.prototype.translatedMethods !== 'undefined') {
-                        var translated = constructor.prototype.translatedMethods;
+                    if (typeof instances[name].translatedMethods !== 'undefined') {
+                        var translated = instances[name].translatedMethods;
                         for (var methodName in translated) {
                             interpreter.setProperty(object, translated[methodName], interpreter.createNativeFunction(getInstanceMethodWrapper(name, methodName)));
                         }
@@ -48,7 +48,8 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         for (var i=0; i<arguments.length;i++) {
                             args.push(arguments[i].data);
                         }
-                        classes[className].prototype[methodName].apply(this.data, args);
+                        //TODO: handle cases where method return objects
+                        return interpreter.createPrimitive(classes[className].prototype[methodName].apply(this.data, args));
                     };
                 };
                 
@@ -83,10 +84,6 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             interpreter =  new Interpreter("", initFunc);
         };
         
-        this.setRuntimeFrame = function(frame) {
-            runtimeFrame = frame;
-        };
-
         this.setLog = function(element) {
             log = element;
         };
@@ -222,6 +219,40 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             instances[name] = func;
         };
         
+        this.getClass = function(name) {
+            if (classes[name]) {
+                return classes[name];
+            } else {
+                return null;
+            }
+        };
+
+        this.getObject = function(name) {
+            try {
+                var obj = interpreter.getValueFromScope(name);
+                if (obj && obj.data) {
+                    return obj.data;
+                }
+                return null;
+            } catch (err) {
+                return null;
+            }
+        };
+        
+        this.getObjectName = function(reference) {
+            var scope = interpreter.getScope();
+            while (scope) {
+                for (var name in scope.properties) {
+                    var obj = scope.properties[name];
+                    if (!scope.fixed[name] && obj.data) {
+                        if (obj.data === reference) {
+                            return name;
+                        }
+                    }
+                }
+                scope = scope.parentScope;
+            }
+        };
     }
 
 
