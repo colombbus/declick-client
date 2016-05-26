@@ -12,34 +12,6 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
         var self;
 
         /**
-         * Translate a method.
-         * @param {String} aClass
-         * @param {String} name
-         * @param {String} translated
-         */
-        var addTranslatedMethod = function(aClass, name, translated) {
-            aClass.prototype[translated] = aClass.prototype[name];
-            //TODO: find a working way to prevent classes from being modified
-            // Object.freeze(initialClass.prototype); // TOO STRICT
-            Object.defineProperty(aClass, translated, {
-                enumerable: false,
-                configurable: false,
-                writable: false}); // DOES NOT WORK
-        };
-
-        /**
-         * Hide the translation of a method.
-         * @param {String} aClass
-         * @param {String} translated
-         */
-        var hideTranslatedMethod = function(aClass, translated) {
-            // redefine method to hide the original one
-            aClass.prototype[translated] = function() {
-                throw new Error("unknown function");
-            };
-        };
-
-        /**
          * If the function is called for the first time for "aClass", load
          * tranlation file.
          * Translate each method which isn't into "hideMethods".
@@ -49,18 +21,14 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
          * @param {String[]} hideMethods
          * @param {Function} callback
          */
-        var addTranslatedMethods = function(aClass, file, language, hideMethods, callback) {
+        var addTranslatedMethods = function(file, language, hideMethods, callback) {
             var translatedMethods = {};
             if (typeof processedFiles[file] !== "undefined") {
                 hideMethods = hideMethods.concat(hiddenMethods[file]);
                 // translation already loaded: we use it
                 $.each(processedFiles[file], function(name, value) {
                     if (hideMethods.indexOf(name) === -1) {
-                        addTranslatedMethod(aClass, name, value.translated);
-                        translatedMethods[value.translated] = value.displayed;
-//                        classMethods[aClass.prototype.className][value.translated] = value.displayed;
-                    } else {
-                        hideTranslatedMethod(aClass, value.translated);
+                        translatedMethods[name] = value;
                     }
                 });
                 if (typeof (callback !== 'undefined')) {
@@ -80,22 +48,13 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
                     if (typeof data[language] !== "undefined") {
                         $.each(data[language]['methods'], function(key, val) {
                             if (hideMethods.indexOf(val.name) === -1) {
-                                if (typeof aClass.prototype[val.translated] === 'undefined') {
-                                    // only translate if not already translated
-                                    addTranslatedMethod(aClass, val.name, val.translated);
-                                    if (val.displayed !== false) {
-                                        translatedMethods[val.translated] = val.displayed;
-                                    }                            
-                                    var value = {translated: val.translated, displayed: val.displayed};
-    //                                    classMethods[aClass.prototype.className][val.translated] = val.displayed;
-                                    processedFiles[file][val.name] = value;
-                                }
-                            } else {
-                                hideTranslatedMethod(aClass, val.translated);
+                                var value = {translated: val.translated, displayed: val.displayed};
+                                processedFiles[file][val.name] = value;
+                                translatedMethods[val.name] = value;
                             }
                         });
                     } else {
-                        TEnvironment.error("Error loading translated methods (" + file + "): " + status);
+                        TEnvironment.error("Error loading translated methods (" + file + "): ");
                     }
                     if (typeof callback !== 'undefined') {
                         callback.call(self, translatedMethods, hideMethods);
@@ -166,7 +125,7 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
             var translationFile = prototype.getResource("i18n.json");
             var messageFile = prototype.getResource("messages.json");
             // 1st load translated methods
-            addTranslatedMethods(aClass, translationFile, language, hidden, function(newTranslated, hidden) {
+            addTranslatedMethods(translationFile, language, hidden, function(newTranslated, hidden) {
                 $.extend(translated, newTranslated);
                 addTranslatedMessages(aClass, messageFile, language, function() {
                     if (parents) {
@@ -207,8 +166,16 @@ define(['jquery', 'TResource', 'TEnvironment'], function($, TResource, TEnvironm
         this.internationalize = function(initialClass, parents, language, callback) {
             self = this;
             i18nClass(initialClass, initialClass.prototype, parents, language, {}, [], function(translated) {
-                // declare translated methods object prototype
-                initialClass.prototype.translatedMethods = translated;
+                // declare translated methods in object prototype
+                var translatedMethods = {};
+                var translatedMethodsDisplay = {};
+                for (var name in translated) {
+                    var value = translated[name];
+                    translatedMethods[name] = value.translated;
+                    translatedMethodsDisplay[value.translated] = value.displayed;
+                }
+                initialClass.prototype.translatedMethods = translatedMethods;
+                initialClass.prototype.translatedMethodsDisplay = translatedMethodsDisplay;
                 var className = initialClass.prototype.className;
                 translatedClasses.push(className);
                 if (typeof waiting[className] !== 'undefined') {

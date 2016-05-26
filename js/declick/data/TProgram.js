@@ -108,7 +108,7 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
          */
         function parse() {
             if (code.trim().length > 0) {
-                statements = TParser.parse(code);
+                statements = TParser.parse(code, name);
             } else {
                 statements = [];
             }

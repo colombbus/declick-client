@@ -37,7 +37,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 TResource.get(classesUrl,[], function(data) {
                     loadClasses(data, TEnvironment.getLanguage(), function(translatedNames) {
                         // Ask parser to protect translated names
-                        TParser.protectIdentifiers(translatedNames.concat(baseNames));
+                        //TParser.protectIdentifiers(translatedNames.concat(baseNames));
                         // Load translated error messages
                         TEnvironment.log("* Loading translated error messages");
                         TError.loadMessages(function() {
@@ -107,10 +107,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 }
                 if (addObject) {
                     var lib = "objects/" + val['path'] + "/" + key;
-                    //classPath[key] = val['path'];
                     if (typeof val['translations'][language] !== 'undefined') {
                         TEnvironment.log("adding " + lib);
-                        //classLib.push(lib);
                         var translatedName = val['translations'][language];
                         var parents, instance;
                         if (typeof val['parents'] === 'undefined') {
@@ -124,7 +122,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                             instance = val['instance'];
                         }
 
-                        // Declare class in runtime frame
                         require([lib], function(aClass) {
                             // set Object path
                             var aConstructor = aClass;
@@ -136,8 +133,11 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                             aConstructor.prototype.objectPath = val['path'];
                             TI18n.internationalize(aConstructor, parents, language, function() {
                                 TEnvironment.log("Declaring translated object '" + translatedName + "'");
-                                //runtimeFrame[translatedName] = aClass;
-                                interpreter.addClass(aClass, translatedName);
+                                if (instance) {
+                                    interpreter.addInstance(aClass, translatedName);
+                                } else {
+                                    interpreter.addClass(aClass, translatedName);
+                                }
                                 translatedNames.push(translatedName);
                                 classesToLoad--;
                                 if (classesToLoad === 0 && typeof callback !== 'undefined') {
@@ -147,6 +147,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                         });
                     }
                 } else {
+                    window.console.log("SKIPPING "+key);
                     classesToLoad--;
                     if (classesToLoad === 0 && typeof callback !== 'undefined') {
                         callback.call(self, translatedNames);
@@ -232,11 +233,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
         };
 
-        this.executeStatements = function(statements, programName) {
-            if (typeof programName === 'undefined') {
-                programName = null;
-            }
-            interpreter.addStatements(statements, programName);
+        this.executeStatements = function(statements) {
+            interpreter.addStatements(statements);
         };
 
         this.executeStatementsNow = function(statements, parameter, log) {
@@ -257,7 +255,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
             try {
                 var statements = object.getStatements();
-                this.executeStatements(statements, programName);
+                this.executeStatements(statements);
             } catch (e) {
                 handleError(e, programName);
             }
