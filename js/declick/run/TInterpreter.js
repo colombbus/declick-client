@@ -16,9 +16,13 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     // TODO: automatize this
                     if (typeof classes[name].prototype!== 'undefined' && typeof classes[name].prototype.avancer !== 'undefined') {
                         var wrapper = function() {
-                            classes[name].prototype.avancer.apply(this.declickObj,arguments);
+                            classes[name].prototype._moveForward.apply(this.declickObj,arguments);
                         };
                         interpreter.setProperty(parent.properties.prototype, 'avancer', interpreter.createNativeFunction(wrapper));
+                        wrapper = function() {
+                            classes[name].prototype._moveBackward.apply(this.declickObj,arguments);
+                        };
+                        interpreter.setProperty(parent.properties.prototype, 'reculer', interpreter.createNativeFunction(wrapper));
                     }
                     var wrapper = function() {
                         var obj = interpreter.createObject(parent);
@@ -65,12 +69,12 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         };
 
         this.suspend = function() {
-            suspended = true;
+            interpreter.paused_ = true;
         };
 
         this.resume = function() {
-            if (suspended) {
-                suspended = false;
+            if (interpreter.paused_) {
+                interpreter.paused_ = false;
                 run();
             }
         };
@@ -81,7 +85,6 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
         var stop = function() {
             running = false;
-            suspended = false;
             var ast = acorn.parse("");
             var scope = interpreter.createScope(ast, null);
             interpreter.stateStack = [{
@@ -90,11 +93,12 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
               thisExpression: scope,
               done: false
             }];            
+            interpreter.paused_ = false;
         };
         
         var nextStep = function() {
             if (interpreter.step()) {
-                if (!suspended) {
+                if (!interpreter.paused_) {
                     window.setTimeout(nextStep, 0);
                 }
             } else {
@@ -104,9 +108,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         
         var run = function() {
             running = true;
-            if (!suspended) {
-                nextStep();
-            }
+            nextStep();
         };
 
         this.start = function() {
