@@ -205,7 +205,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         };
 
         this.addPriorityStatements = function(statements, parameter, log) {
-            this.addStatements(statements);
+            interpreter.insertCode(statements, parameter);
             if (!running) {
                 this.start();
             }
@@ -252,6 +252,24 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 }
                 scope = scope.parentScope;
             }
+            return null;
+        };
+        
+        this.deleteObject = function(reference) {
+            var scope = interpreter.getScope();
+            while (scope) {
+                for (var name in scope.properties) {
+                    var obj = scope.properties[name];
+                    if (!scope.fixed[name] && obj.data) {
+                        if (obj.data === reference) {
+                            interpreter.deleteProperty(scope, name);
+                            return true;
+                        }
+                    }
+                }
+                scope = scope.parentScope;
+            }
+            return false;
         };
     }
 
@@ -337,7 +355,63 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         throw realError;
       }
     };
+    
+    // add support for Repeat statement
+    Interpreter.prototype['stepRepeatStatement'] = function() {
+        var state = this.stateStack[0];
+        state.isLoop = true;
+        var node = state.node;
+        if (state.countHandled) {
+            if (node.body) {
+                if (state.infinite) {
+                    this.stateStack.unshift({node: node.body});
+                } else {
+                    state.count--;
+                    if (state.count>=0) {
+                        this.stateStack.unshift({node: node.body});
+                    } else {
+                        this.stateStack.shift();
+                    }
+                }
+            }
+        } else {
+            if (node.count) {
+                // count specified
+                if (state.countReady) {
+                    state.infinite = false;
+                    state.count = state.value;
+                    state.countHandled = true;
+                } else {
+                    state.countReady = true;
+                    this.stateStack.unshift({node: node.count});            
+                }
+            } else {
+                state.infinite = true;
+                state.countHandled = true;
+            }
+        }
+    };
+    
+    // add ability to insert code
+    Interpreter.prototype.insertCode = function(code, parameter) {
+        // Find index at which insertion has to be made
+        var index=0;
+        while (index<this.stateStack.length && this.stateStack[index].priority) {
+            index++;
+        }
 
+        // Append the new statements
+        for (var i = code.length-1; i>=0; i--) {
+            var node = code[i];
+            if (node.type === "ExpressionStatement") {
+                // Add parameter
+                node.expression.parameter = parameter;
+            }
+            this.stateStack.splice(index, 0, {node: node, priority:true, done:false});
+        }
+    };
+
+    
     return TInterpreter;
 });
 

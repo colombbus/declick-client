@@ -285,12 +285,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             var index = tObjects.indexOf(object);
             if (index > -1) {
                 tObjects.splice(index, 1);
-                $.each(runtimeFrame, function(key, value) {
-                    if (value === object) {
-                        delete runtimeFrame[key];
-                        return false;
-                    }
-                });
+                interpreter.deleteObject(object);
             }
         };
 
@@ -309,12 +304,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             if (index > -1) {
                 graphics.removeObject(object.getGObject());
                 tGraphicalObjects.splice(index, 1);
-                $.each(runtimeFrame, function(key, value) {
-                    if (value === object) {
-                        delete runtimeFrame[key];
-                        return false;
-                    }
-                });
+                interpreter.deleteObject(object);
             }
         };
 
