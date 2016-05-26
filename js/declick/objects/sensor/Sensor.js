@@ -16,7 +16,6 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     Sensor.prototype.gClass = graphics.addClass("TSprite", "TSensor", {
         init: function (props, defaultProps) {
             this._super(TUtils.extend({
-                initialized: true,
                 hidden: true,
                 color: "#FF0000",
                 width: 1,
@@ -24,6 +23,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 fillColor: "#800000"
             }, props), defaultProps);
             this.watchCollisions(true);
+            this.initialized(true);
         },
         setSize: function (w, h) {
             this.perform(function (w, h) {
