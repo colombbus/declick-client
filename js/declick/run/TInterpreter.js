@@ -6,6 +6,12 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         var interpreter;
         var running = false;
         
+        // Modify Interpreter to handle function declaration
+        Interpreter.prototype['stepFunctionDeclaration'] = function() {
+            var state = this.stateStack.shift();
+            this.setValue(this.createPrimitive(state.node.id.name), this.createFunction(state.node));
+        };
+        
         this.initialize = function() {
             var initFunc = function(interpreter, scope) {
                 var getObject = function(name) {
