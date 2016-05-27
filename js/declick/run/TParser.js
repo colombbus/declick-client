@@ -18,7 +18,10 @@ define(['acorn'], function(acorn) {
         this.parse = function(input, programName) {
             if (programName) {
                 options["sourceFile"] = programName;
+            } else {
+                options["sourceFile"] = null;
             }
+            
             var result = acorn.parse(input, options);
             // return statements
             return result;
