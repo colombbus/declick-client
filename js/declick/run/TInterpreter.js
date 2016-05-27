@@ -2,7 +2,8 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
     function TInterpreter() {
         var log, errorHandler;
         var classes = {};
-        var instances = {};
+        var instances  = {};
+        var stored  = {};
         
         var interpreter;
         var running = false;
@@ -35,7 +36,14 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     return object;
                 };
                 for (var name in instances) {
-                    var object = getInstance(name);
+                    var object;
+                    if (stored[name]) {
+                        // instance already created and stored
+                        object = stored[name];
+                    } else {
+                        object = getInstance(name);
+                        stored[name] = object;
+                    }
                     interpreter.setProperty(scope, name, object, true);
                 }
                 
@@ -77,7 +85,14 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     return obj;
                 };
                 for (var name in classes) {
-                    var object = getObject(name);
+                    var object;
+                    if (stored[name]) {
+                        // instance already created and stored
+                        object = stored[name];
+                    } else {
+                        object = getObject(name);
+                        stored[name] = object;
+                    }
                     interpreter.setProperty(scope, name, object, true);
                 }
             };
@@ -127,6 +142,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             running = false;
             var emptyAST = acorn.parse("");
             if (!scope) {
+                window.console.log("Stop without scope");
                 scope = interpreter.createScope(emptyAST, null);
             }
             interpreter.stateStack = [{
@@ -244,10 +260,8 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             while (scope) {
                 for (var name in scope.properties) {
                     var obj = scope.properties[name];
-                    if (!scope.fixed[name] && obj.data) {
-                        if (obj.data === reference) {
-                            return name;
-                        }
+                    if (obj.data && obj.data === reference) {
+                        return name;
                     }
                 }
                 scope = scope.parentScope;
@@ -265,6 +279,28 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                             interpreter.deleteProperty(scope, name);
                             return true;
                         }
+                    }
+                }
+                scope = scope.parentScope;
+            }
+            return false;
+        };
+        
+        this.exposeProperty = function(reference, property, propertyName) {
+            var scope = interpreter.getScope();
+            while (scope) {
+                for (var name in scope.properties) {
+                    var obj = scope.properties[name];
+                    if (obj.data === reference) {
+                        var wrapper = function() {
+                            // TODO: handle case where returned value is an object
+                            return interpreter.createPrimitive(this.data[property]);
+                        };
+                        var prop = interpreter.createObject(null);
+                        prop.dynamic = wrapper;
+                        //window.console.log(typeof property);
+                        interpreter.setProperty(obj, propertyName, prop);
+                        return true;
                     }
                 }
                 scope = scope.parentScope;
@@ -410,6 +446,45 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             this.stateStack.splice(index, 0, {node: node, priority:true, done:false});
         }
     };
+    
+    // add ability to handle dynamic properties
+    Interpreter.prototype.getProperty = function(obj, name) {
+        name = name.toString();
+        if (obj == this.UNDEFINED || obj == this.NULL) {
+          this.throwException(this.TYPE_ERROR,
+                              "Cannot read property '" + name + "' of " + obj);
+        }
+        // Special cases for magic length property.
+        if (this.isa(obj, this.STRING)) {
+          if (name == 'length') {
+            return this.createPrimitive(obj.data.length);
+          }
+          var n = this.arrayIndex(name);
+          if (!isNaN(n) && n < obj.data.length) {
+            return this.createPrimitive(obj.data[n]);
+          }
+        } else if (this.isa(obj, this.ARRAY) && name == 'length') {
+          return this.createPrimitive(obj.length);
+        }
+        while (true) {
+          if (obj.properties && name in obj.properties) {
+              var prop = obj.properties[name];
+              if (prop.dynamic ) {
+                return prop.dynamic.apply(obj);
+              }
+              return prop;
+          }
+          if (obj.parent && obj.parent.properties &&
+              obj.parent.properties.prototype) {
+            obj = obj.parent.properties.prototype;
+          } else {
+            // No parent, reached the top.
+            break;
+          }
+        }
+        return this.UNDEFINED;
+      };
+
 
     
     return TInterpreter;

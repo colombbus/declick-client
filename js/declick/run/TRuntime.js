@@ -375,6 +375,10 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         this.getGraphics = function() {
             return graphics;
         };
+        
+        this.exposeProperty = function(reference, property, name) {
+            interpreter.exposeProperty(reference, property, name);
+        };
 
     }
 
