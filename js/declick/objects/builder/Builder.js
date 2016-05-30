@@ -179,6 +179,10 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze', 'objects
         return item;
     };
     
+    Builder.prototype._getMaze = function() {
+        return this.maze;
+    };
+    
     Builder.prototype.deleteObject = function() {
         this.maze.deleteObject();
         this.maze = undefined;

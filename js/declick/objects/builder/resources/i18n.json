@@ -5,14 +5,15 @@
             {"name":"_build","translated":"poser","displayed":"poser(1)"},
             {"name":"_buildGround","translated":"poserSol","displayed":"poserSol()"},
             {"name":"_buildDoor","translated":"poserPorte","displayed":"poserPorte()"},
-            {"name":"_buildEntrance","translated":"poserEntrée","displayed":"poserEntrée()"},
+            {"name":"_buildEntrance","translated":"poserEntr\u00e9e","displayed":"poserEntr\u00e9e()"},
             {"name":"_buildExit","translated":"poserSortie","displayed":"poserSortie()"},
             {"name":"_buildWall","translated":"poserMur","displayed":"poserMur()"},
             {"name":"_dropItem","translated":"poserItem","displayed":"poserItem()"},
-            {"name":"_addTile","translated":"ajouterElément","displayed":"ajouterElément(\"image\")"},
+            {"name":"_addTile","translated":"ajouterEl\u00e9ment","displayed":"ajouterEl\u00e9ment(\"image\")"},
             {"name":"_addRow","translated":"poserLigne","displayed":"poserLigne(0,0)"},
             {"name":"_setFlash","translated":"sePresser","displayed":"sePresser()"},
-            {"name":"_setTileCollidable","translated":"définirBloc","displayed":"définirBloc(1, true)"}
+            {"name":"_getMaze","translated":"r\u00e9cup\u00e9rerLabyrinthe","displayed":"r\u00e9cup\u00e9rerLabyrinthe()"},
+            {"name":"_setTileCollidable","translated":"d\u00e9finirBloc","displayed":"d\u00e9finirBloc(1, true)"}
             ]
     }
 }
