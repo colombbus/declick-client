@@ -1,9 +1,12 @@
 define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils, acorn, Interpreter) {
     function TInterpreter() {
+        var MAX_STEP = 100;        
+        
         var log, errorHandler;
         var classes = {};
         var instances  = {};
         var stored  = {};
+        var stepCount =0;
         
         var interpreter;
         var running = false;
@@ -142,7 +145,6 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             running = false;
             var emptyAST = acorn.parse("");
             if (!scope) {
-                window.console.log("Stop without scope");
                 scope = interpreter.createScope(emptyAST, null);
             }
             interpreter.stateStack = [{
@@ -154,11 +156,18 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             interpreter.paused_ = false;
         };
         
+        
         var nextStep = function() {
             try {
                 if (interpreter.step()) {
+                    stepCount++;
                     if (!interpreter.paused_) {
-                        window.setTimeout(nextStep, 0);
+                        if (stepCount>=MAX_STEP) {
+                            stepCount = 0;
+                            window.setTimeout(nextStep, 0);
+                        } else {
+                            nextStep();
+                        }
                     }
                 } else {
                     running = false;
@@ -202,6 +211,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
         this.start = function() {
             if (!running) {
+                stepCount = 0;
                 run();
             }
         };
