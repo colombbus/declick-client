@@ -317,8 +317,14 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * If the row is too long, it is truncated.
      * @param {Number[]} row
      */
-    Platform.prototype._addRow = function(row) {
-        row = TUtils.getArray(row);
+    Platform.prototype._addRow = function(line) {
+        var row;
+        if (arguments.length === 1 && TUtils.checkArray(arguments[0])) {
+            row = arguments[0];
+        } else {
+            row = arguments;
+        }
+        
     	if (this.nbCols === 0 && this.nbRows === 0) {
             this.nbCols = row.length;
     	}
