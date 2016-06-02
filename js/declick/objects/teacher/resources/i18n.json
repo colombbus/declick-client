@@ -7,7 +7,8 @@
             {"name":"setProgramMode","translated":"setProgramMode","displayed":"setProgramMode()"},
             {"name":"verifyRegexp","translated":"verifyRegexp","displayed":"verifyRegexp()"},
             {"name":"statementsLength","translated":"statementsLength","displayed":"statementsLength()"},
-            {"name":"dumpStatements","translated":"dumpStatements","displayed":"dumpStatements()"}
+            {"name":"dumpStatements","translated":"dumpStatements","displayed":"dumpStatements()"},
+            {"name":"wait","translated":"wait","displayed":"wait()"}
         ]
     }
 }
