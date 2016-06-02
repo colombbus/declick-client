@@ -143,8 +143,8 @@ define(['jquery', 'TUtils', 'objects/robot/Robot', 'objects/maze/Maze', 'objects
         this._moveDownward();
     };
     
-    Builder.prototype.getTileCount = function(number) {
-        return this.maze.getTileCount(number);
+    Builder.prototype._getTileCount = function(number) {
+        return this.maze._getTileCount(number);
     };
 
     /*

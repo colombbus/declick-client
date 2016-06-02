@@ -618,7 +618,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.buildStructure();
     };    
     
-    Platform.prototype.getTileCount = function(tileNumber) {
+    Platform.prototype._getTileCount = function(tileNumber) {
         if (typeof this.counters[tileNumber] !== 'undefined') {
             return this.counters[tileNumber];
         }
