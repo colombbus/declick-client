@@ -1,6 +1,8 @@
 {
     "fr": {
         "methods":[
+            {"name":"done","translated":"done","displayed":"done()"},
+            {"name":"hasStatement","translated":"hasStatement","displayed":"hasStatement()"}
         ]
     }
 }
