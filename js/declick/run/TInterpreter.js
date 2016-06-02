@@ -110,6 +110,10 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         }
                         classes[name].apply(declickObj, args);
                         obj.data = declickObj;
+                        var wrapper2 = function() {
+                            return obj.data;
+                        }
+                        interpreter.setProperty(obj, "dObject", interpreter.createNativeFunction(wrapper2));
                         return obj;
                     };
                     var obj = interpreter.createNativeFunction(wrapper);
