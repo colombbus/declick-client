@@ -20,14 +20,24 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         result.push(getNativeData(data.properties[i]));
                     }
                     return result;
-                } else if (data.type && data.type=== "function") {
-                    return data;
-                } else if (data.data) {
-                    return data.data;
+                } else if (data.type) {
+                    if (data.type=== "function") {
+                        return data;
+                    } else if (data.data) {
+                        // primitive data or declick objects
+                        return data.data;
+                    } else if (data.type === "object") {
+                        var result = {};
+                        for (var member in data.properties) {
+                            result[member] = getNativeData(data.properties[member]);
+                        }
+                        return result;
+                    } else {
+                        return data;
+                    }
                 } else {
                     return data;
                 }
-
             };
             
             var initFunc = function(interpreter, scope) {
