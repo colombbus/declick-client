@@ -329,7 +329,7 @@ define(['TEnvironment', 'jquery'], function(TEnvironment, $) {
          * @returns {Boolean}
          */
         this.checkFunction = function(value) {
-            return (typeof value !== 'undefined' && (typeof value === 'function' || value instanceof Function));
+            return (typeof value !== 'undefined' && typeof value === 'object' && typeof value.type !=='undefined' && value.type === "function");
         };
         
         /**
