@@ -1,6 +1,5 @@
 define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterpreter', 'TUtils', 'TI18n', 'TResource'], function($, TError, TGraphics, TParser, TEnvironment, TInterpreter, TUtils, TI18n, TResource) {
     function TRuntime() {
-        var runtimeFrame;
         var interpreter = new TInterpreter();
         var runtimeCallback;
         var graphics;
@@ -16,10 +15,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         var baseClasses3D = ["TObject3D"];
 
         this.load = function(callback) {
-            // create runtime frame
-            initRuntimeFrame();
-            // link interpreter to runtimeFrame
-            interpreter.setRuntimeFrame(runtimeFrame);
             // link interpreter to errorHandler
             interpreter.setErrorHandler(handleError);
             
@@ -30,17 +25,16 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             TEnvironment.log("loading base classes");
             // set repeat keyword
             TParser.setRepeatKeyword(TEnvironment.getMessage("repeat-keyword"));
-            loadBaseClasses(TEnvironment.getLanguage(), function(baseNames) {
+            loadBaseClasses(TEnvironment.getLanguage(), function() {
                 TEnvironment.log("* Retrieving list of translated objects");
                 // find objects and translate them
                 var classesUrl = TEnvironment.getObjectListUrl();
                 TResource.get(classesUrl,[], function(data) {
-                    loadClasses(data, TEnvironment.getLanguage(), function(translatedNames) {
-                        // Ask parser to protect translated names
-                        TParser.protectIdentifiers(translatedNames.concat(baseNames));
+                    loadClasses(data, TEnvironment.getLanguage(), function() {
                         // Load translated error messages
                         TEnvironment.log("* Loading translated error messages");
                         TError.loadMessages(function() {
+                            interpreter.initialize();
                             TEnvironment.log("**** TRUNTIME INITIALIZED ****");
                             if (typeof callback !== "undefined") {
                                 callback.call(self);
@@ -50,18 +44,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 });
             });
         };
-        
-        var initRuntimeFrame = function() {
-            if (typeof runtimeFrame === 'undefined') {
-                var iframe = document.createElement("iframe");
-                iframe.className = "runtime-frame";
-                document.body.appendChild(iframe);
-                runtimeFrame = iframe.contentWindow || iframe;
-            }
-        };
 
         var loadBaseClasses = function(language, callback) {
-            var protectedNames = [];
             var classes;
             if (TEnvironment.is3DSupported()) {
                 classes = baseClasses.concat(baseClasses3D);
@@ -71,13 +55,12 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             var classesToLoad = classes.length;
             for (var i=0;i<classes.length; i++) {
                 var objectName = classes[i];
-                protectedNames.push(objectName);
                 TEnvironment.log("adding base object " + objectName);
                 require([objectName], function(aClass) {
                     TI18n.internationalize(aClass, false, language, function() {
                         classesToLoad--;
                         if (classesToLoad === 0 && typeof callback !== 'undefined') {
-                            callback.call(self, protectedNames);
+                            callback.call(self);
                         }
                     });
                 });
@@ -87,7 +70,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         var loadClasses = function(classes, language, callback) {
             var is3DSupported = TEnvironment.is3DSupported();
             var classesToLoad = Object.keys(classes).length;
-            var translatedNames = [];
             $.each(classes, function(key, val) {
                 var addObject = true;
                 if (typeof val['conditions'] !== 'undefined') {
@@ -106,10 +88,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 }
                 if (addObject) {
                     var lib = "objects/" + val['path'] + "/" + key;
-                    //classPath[key] = val['path'];
                     if (typeof val['translations'][language] !== 'undefined') {
                         TEnvironment.log("adding " + lib);
-                        //classLib.push(lib);
                         var translatedName = val['translations'][language];
                         var parents, instance;
                         if (typeof val['parents'] === 'undefined') {
@@ -123,7 +103,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                             instance = val['instance'];
                         }
 
-                        // Declare class in runtime frame
                         require([lib], function(aClass) {
                             // set Object path
                             var aConstructor = aClass;
@@ -135,11 +114,14 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                             aConstructor.prototype.objectPath = val['path'];
                             TI18n.internationalize(aConstructor, parents, language, function() {
                                 TEnvironment.log("Declaring translated object '" + translatedName + "'");
-                                runtimeFrame[translatedName] = aClass;
-                                translatedNames.push(translatedName);
+                                if (instance) {
+                                    interpreter.addInstance(aClass, translatedName);
+                                } else {
+                                    interpreter.addClass(aClass, translatedName);
+                                }
                                 classesToLoad--;
                                 if (classesToLoad === 0 && typeof callback !== 'undefined') {
-                                    callback.call(self, translatedNames);
+                                    callback.call(self);
                                 }
                             });
                         });
@@ -147,16 +129,12 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 } else {
                     classesToLoad--;
                     if (classesToLoad === 0 && typeof callback !== 'undefined') {
-                        callback.call(self, translatedNames);
+                        callback.call(self);
                     }                    
                 }
             });
         };
         
-        this.getRuntimeFrame = function() {
-            return runtimeFrame;
-        };
-
         this.setCallback = function(callback) {
             runtimeCallback = callback;
         };
@@ -166,48 +144,39 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         };
 
         this.getTObjectName = function(reference) {
-            if (typeof reference.objectName !== 'undefined') {
+            if (reference.objectName) {
                 return reference.objectName;
             }
-            var name;
-            $.each(runtimeFrame, function(key, value) {
-                if (value === reference) {
-                    name = key;
-                    return false;
-                }
-            });
-            reference.objectName = name;
-            return name;
+            var name = interpreter.getObjectName(reference);
+            if (name) {
+                reference.objectName = name;
+                return name;
+            }
+            return false;
         };
 
         this.getTObjectClassName = function(objectName) {
-            if (typeof runtimeFrame[objectName] === 'undefined') {
-                return false;
+            var theObject = interpreter.getObject(objectName);
+            if (theObject && theObject.className) {
+                return theObject.className;
             }
-            if (typeof runtimeFrame[objectName].className === 'undefined') {
-                return false;
-            }
-            return runtimeFrame[objectName].className;
+            return false;
         };
         
         this.getClassTranslatedMethods = function(className) {
-            if (typeof runtimeFrame[className] === 'undefined') {
-                return false;
+            var theClass = interpreter.getClass(className);
+            if (theClass && typeof theClass.prototype.translatedMethodsDisplay !== 'undefined') {
+                return theClass.prototype.translatedMethodsDisplay;
             }
-            if (typeof runtimeFrame[className].prototype.translatedMethods === 'undefined') {
-                return false;
-            }
-            return runtimeFrame[className].prototype.translatedMethods;
+            return false;
         };
 
         this.getTObjectTranslatedMethods = function(objectName) {
-            if (typeof runtimeFrame[objectName] === 'undefined') {
-                return false;
+            var theObject = interpreter.getObject(objectName);
+            if (theObject && typeof theObject.translatedMethodsDisplay !== 'undefined') {
+                return theObject.translatedMethodsDisplay;
             }
-            if (typeof runtimeFrame[objectName].translatedMethods === 'undefined') {
-                return false;
-            }
-            return runtimeFrame[objectName].translatedMethods;
+            return false;
         };
 
         // COMMANDS EXECUTION
@@ -230,11 +199,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
         };
 
-        this.executeStatements = function(statements, programName) {
-            if (typeof programName === 'undefined') {
-                programName = null;
-            }
-            interpreter.addStatements(statements, programName);
+        this.executeStatements = function(statements) {
+            interpreter.addStatements(statements);
         };
 
         this.executeStatementsNow = function(statements, parameter, log) {
@@ -255,7 +221,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
             try {
                 var statements = object.getStatements();
-                this.executeStatements(statements, programName);
+                this.executeStatements(statements);
             } catch (e) {
                 handleError(e, programName);
             }
@@ -319,12 +285,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             var index = tObjects.indexOf(object);
             if (index > -1) {
                 tObjects.splice(index, 1);
-                $.each(runtimeFrame, function(key, value) {
-                    if (value === object) {
-                        delete runtimeFrame[key];
-                        return false;
-                    }
-                });
+                interpreter.deleteObject(object);
             }
         };
 
@@ -343,12 +304,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             if (index > -1) {
                 graphics.removeObject(object.getGObject());
                 tGraphicalObjects.splice(index, 1);
-                $.each(runtimeFrame, function(key, value) {
-                    if (value === object) {
-                        delete runtimeFrame[key];
-                        return false;
-                    }
-                });
+                interpreter.deleteObject(object);
             }
         };
 
@@ -418,6 +374,14 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
 
         this.getGraphics = function() {
             return graphics;
+        };
+        
+        this.exposeProperty = function(reference, property, name) {
+            interpreter.exposeProperty(reference, property, name);
+        };
+        
+        this.createCallStatement = function(functionStatement) {
+            return interpreter.createCallStatement(functionStatement);
         };
 
     }

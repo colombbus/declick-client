@@ -1,31 +1,135 @@
-define(['TError', 'TUtils'], function(TError, TUtils) {
+define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils, acorn, Interpreter) {
     function TInterpreter() {
-        var MAX_LOOP = 50;
+        var MAX_STEP = 100;        
         
-        var runtimeFrame;
-        var errorHandler;
-        var definedFunctions = {};
+        var log, errorHandler;
+        var classes = {};
+        var instances  = {};
+        var stored  = {};
+        var stepCount =0;
+        
+        var interpreter;
         var running = false;
-        var suspended = false;
-        var loopSuspended = false;
-        var localVariables = [];
-        var currentVariables = [];
-        var blockLevel = 0;
-        var cached = [[]];
-        var log;
-        var stackPointer = [0];
-        var executionLevel = 0;
-        var callers = [];
+        
+        this.initialize = function() {
+            var getNativeData = function(data) {
+                if (data.length) {
+                    // we are in an array
+                    var result = [];
+                    for (var i =0; i < data.length; i++) {
+                        result.push(getNativeData(data.properties[i]));
+                    }
+                    return result;
+                } else if (data.type) {
+                    if (data.type=== "function") {
+                        return data;
+                    } else if (data.data) {
+                        // primitive data or declick objects
+                        return data.data;
+                    } else if (data.type === "object") {
+                        var result = {};
+                        for (var member in data.properties) {
+                            result[member] = getNativeData(data.properties[member]);
+                        }
+                        return result;
+                    } else {
+                        return data;
+                    }
+                } else {
+                    return data;
+                }
+            };
+            
+            var initFunc = function(interpreter, scope) {
 
-        // main statements stack
-        var stack = [[]];
-
-        /* Initialization */
-
-        this.setRuntimeFrame = function(frame) {
-            runtimeFrame = frame;
+                // #1 Declare translated Instances
+                var getInstanceMethodWrapper = function(className, methodName) {
+                    return function() {
+                        // transform data from interpreter into actual data
+                        var args = [];
+                        for (var i=0; i<arguments.length;i++) {
+                            args.push(getNativeData(arguments[i]));
+                        }
+                        //TODO: handle cases where method return objects
+                        return interpreter.createPrimitive(instances[className][methodName].apply(this.data, args));
+                    };
+                };
+                
+                var getInstance = function(name) {
+                    var object = interpreter.createObject(interpreter.FUNCTION);
+                    object.data = instances[name];
+                    if (typeof instances[name].translatedMethods !== 'undefined') {
+                        var translated = instances[name].translatedMethods;
+                        for (var methodName in translated) {
+                            interpreter.setProperty(object, translated[methodName], interpreter.createNativeFunction(getInstanceMethodWrapper(name, methodName)));
+                        }
+                    }
+                    return object;
+                };
+                for (var name in instances) {
+                    var object;
+                    if (stored[name]) {
+                        // instance already created and stored
+                        object = stored[name];
+                    } else {
+                        object = getInstance(name);
+                        stored[name] = object;
+                    }
+                    interpreter.setProperty(scope, name, object, true);
+                }
+                
+                // #2 Declare translated Classes
+                // generate wrapper for translated methods
+                var getClassMethodWrapper = function(className, methodName) {
+                    return function() {
+                        // transform data from interpreter into actual data
+                        var args = [];
+                        for (var i=0; i<arguments.length;i++) {
+                            args.push(getNativeData(arguments[i]));
+                        }
+                        //TODO: handle cases where method return objects
+                        return interpreter.createPrimitive(classes[className].prototype[methodName].apply(this.data, args));
+                    };
+                };
+                
+                var getObject = function(name) {
+                    var parent = interpreter.createObject(interpreter.FUNCTION);
+                    if (typeof classes[name].prototype !== 'undefined' && typeof classes[name].prototype.translatedMethods !== 'undefined') {
+                        var translated = classes[name].prototype.translatedMethods;
+                        for (var methodName in translated) {
+                            interpreter.setProperty(parent.properties.prototype, translated[methodName], interpreter.createNativeFunction(getClassMethodWrapper(name, methodName)));
+                        }
+                    }
+                    var wrapper = function() {
+                        var obj = interpreter.createObject(parent);
+                        var declickObj = Object.create(classes[name].prototype);
+                        // transform data from interpreter into actual data
+                        var args = [];
+                        for (var i=0; i<arguments.length;i++) {
+                            args.push(getNativeData(arguments[i]));
+                        }
+                        classes[name].apply(declickObj, args);
+                        obj.data = declickObj;
+                        return obj;
+                    };
+                    var obj = interpreter.createNativeFunction(wrapper);
+                    return obj;
+                };
+                for (var name in classes) {
+                    var object;
+                    if (stored[name]) {
+                        // instance already created and stored
+                        object = stored[name];
+                    } else {
+                        object = getObject(name);
+                        stored[name] = object;
+                    }
+                    interpreter.setProperty(scope, name, object, true);
+                }
+            };
+            interpreter =  new Interpreter("", initFunc);
         };
-
+        
         this.setLog = function(element) {
             log = element;
         };
@@ -33,16 +137,10 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         this.setErrorHandler = function(handler) {
             errorHandler = handler;
         };
-
+        
         /* Lifecycle management */
 
         var clear = function() {
-            // clear functions
-            for (var prop in definedFunctions) {
-                defaultEval(prop+"= undefined");
-            }
-            definedFunctions = {};
-            localVariables = [];
             stop();
         };
 
@@ -51,12 +149,12 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
         };
 
         this.suspend = function() {
-            suspended = true;
+            interpreter.paused_ = true;
         };
 
         this.resume = function() {
-            if (suspended) {
-                suspended = false;
+            if (interpreter.paused_) {
+                interpreter.paused_ = false;
                 run();
             }
         };
@@ -65,847 +163,382 @@ define(['TError', 'TUtils'], function(TError, TUtils) {
             stop();
         };
 
-        var stop = function() {
-            stack = [[]];
-            cached = [[]];
-            blockLevel = 0;
-            running = false;
-            suspended = false;
-            stackPointer = [0];
-            executionLevel = 0;
-            currentVariables = [];
-            callers = [];
-            loopSuspended = false;
-        };
-        
-        this.interrupt = function() {
-            var loop = false;
-            var pointer = 0;
-            var stackLength = stack[executionLevel].length;
-            while (!loop && pointer < stackLength) {
-                var statement = stack[executionLevel][pointer];
-                if (statement.type === "ControlOperation") {
-                    switch (statement.operation) {
-                        case "leaveBlock" : 
-                            leaveBlock();
-                            break;
-                        case "leaveFunction":
-                            lowerExecutionLevel(null);
-                            pointer = 0;
-                            stackLength = stack[executionLevel].length;
-                            break;
-                    }
-                } else {
-                    loop = (typeof statement.controls !== 'undefined'&& typeof statement.controls.loop !== 'undefined');
-                }
-                pointer++;
-            }
-            if (loop) {
-                // set loop as interrupted
-                statement.controls.interrupt = true;
-                // remove statements before loop
-                if (pointer>0) {
-                    stack[executionLevel].splice(0,pointer-1);
-                }
-                // either interrupt is called from the stack,
-                // in which case interrupt statement is now replaced
-                // by the loop, which will be removed,
-                // either it is called from declick,
-                // in which case loop statement 
-                // will complete
-            } else {
-                //  no loop encountered: we just stop
-                stop();
-            }
-        };
-
-        this.start = function() {
-            if (!running) {
-                localVariables = [];
-                currentVariables = [];
-                blockLevel = 0;
-                stackPointer = [0];
-                executionLevel = 0;
-                callers = [];
-                run();
-            }
-        };
-
-
-        this.addStatement = function(statement, programName) {
-            if (typeof programName === 'undefined') {
-                programName = null;
-            }
-            statement.programName = programName;
-            stack[0].push(statement);
-            if (!running) {
-                this.start();
-            }
-        };
-
-        this.addStatements = function(statements, programName) {
-            if (typeof programName === 'undefined') {
-                programName = null;
-            }
-            for (var i = 0; i < statements.length; i++) {
-                statements[i].programName = programName;
-                stack[0].push(statements[i]);
-            }
-            if (!running) {
-                this.start();
-            }
-        };
-
-        this.addPriorityStatements = function(statements, parameter, log) {
-            // Find index at which insertion has to be made
-            var index=0;
-            while (index<stack[executionLevel].length && typeof stack[executionLevel][index].priority !== 'undefined') {
-                index++;
-            }
-            var statement;
-            for (var i = statements.length - 1; i >= 0; i--) {
-                statement = statements[i];
-                // Set statement as priority one
-                statement.priority = true;
-                // Set log information
-                statement.log = log;
-                if (statement.type === "ExpressionStatement") {
-                    // Add parameter
-                    statement.expression.parameter = parameter;
-                }
-                // Insert statement
-                stack[executionLevel].splice(index, 0, statement);
-            }
-            // Update stackPointer if required
-            if (stackPointer[executionLevel]>=index) {
-                stackPointer[executionLevel]+=statements.length;
-            }
-            if (!running) {
-                this.start();
-            }
-        };
-
-        var insertStatement = function(statement, log) {
-            statement.inserted = true;
-            statement.log = log;
-            stack[executionLevel].unshift(statement);
-            stackPointer[executionLevel]++;
-        };
-
-        var insertStatements = function(statements, log) {
-            for (var i = statements.length - 1; i >= 0; i--) {
-                insertStatement(statements[i], log);
-            }
-        };
-
         var logCommand = function(command) {
             if (typeof log !== 'undefined') {
                 log.addCommand(command);
             }
         };
 
-        var suspendedException = function() {
+        var stop = function(scope) {
+            running = false;
+            var emptyAST = acorn.parse("");
+            if (!scope) {
+                scope = interpreter.createScope(emptyAST, null);
+            }
+            interpreter.stateStack = [{
+              node: emptyAST,
+              scope: scope,
+              thisExpression: scope,
+              done: false
+            }];            
+            interpreter.paused_ = false;
         };
-
-        var levelRaisedException = function() {
-        };
-
-        var run = function() {
-            var statement;
+        
+        
+        var nextStep = function() {
             try {
-                running = true;
-                while (!suspended && ! loopSuspended && stack[executionLevel].length > 0) {
-                    var currentLevel = executionLevel;
-                    stackPointer[executionLevel] = 0;
-                    statement = stack[executionLevel][0];
-                    var consume = evalStatement(statement);
-                    if (currentLevel === executionLevel) {
-                        // We haven't changed execution level
-                        if (consume === true) {
-                            // stack may have changed (e.g. interrupt)
-                            statement = stack[executionLevel][0];
-                            stack[executionLevel].splice(stackPointer[executionLevel], 1);
-                            if ((typeof statement.inserted === 'undefined' && typeof statement.priority === 'undefined') || statement.log) {
-                                logCommand(statement.raw);
-                            }
-                            if (typeof statement.controls !== 'undefined') {
-                                delete statement.controls;
-                            }
-                        } else if (consume !== false) {
-                            // consume is indeed a new statement that replaces previous one
-                            stack[executionLevel][stackPointer[executionLevel]] = consume;
+                if (interpreter.step()) {
+                    stepCount++;
+                    if (!interpreter.paused_) {
+                        if (stepCount>=MAX_STEP) {
+                            stepCount = 0;
+                            window.setTimeout(nextStep, 0);
+                        } else {
+                            nextStep();
                         }
                     }
+                } else {
+                    running = false;
                 }
-                running = false;
+                //logCommand(interpreter.stateStack);
             } catch (err) {
-                clear();
-                if (err instanceof TError) {
-                    err.setCode(statement.raw);
-                    if (typeof statement.programName === 'undefined' || statement.programName === null) {
-                        // no program associated: remove lines if any
-                        err.setLines([]);
-                    } else {
-                        // set program name
-                        err.setProgramName(statement.programName);
-                    }
-                }
-                if (typeof errorHandler !== 'undefined') {
-                    errorHandler(err);
-                } else {
-                    throw err;
-                }
-            }
-        };
-
-        /* Variable management */
-
-        var getVariable = function(identifier) {
-            if (typeof (runtimeFrame[identifier]) !== 'undefined') {
-                return runtimeFrame[identifier];
-            }
-        };
-
-        var saveVariable = function(identifier) {
-            if (typeof (runtimeFrame[identifier]) !== 'undefined') {
-                if (typeof localVariables[blockLevel] === 'undefined') {
-                    localVariables[blockLevel] = {};
-                }
-                localVariables[blockLevel][identifier] = runtimeFrame[identifier];
-            }
-        };
-
-        var restoreVariable = function(identifier) {
-            if (typeof localVariables[blockLevel + 1] !== 'undefined') {
-                if (typeof localVariables[blockLevel + 1][identifier] !== 'undefined') {
-                    runtimeFrame[identifier] = localVariables[blockLevel + 1][identifier];
-                    delete localVariables[blockLevel + 1][identifier];
-                } else {
-                    delete runtimeFrame[identifier];
-                }
-            } else {
-                delete runtimeFrame[identifier];
-            }
-        };
-
-        /* Block management */
-
-        var enterBlock = function() {
-            blockLevel++;
-            currentVariables = [];
-        };
-
-        var leaveBlock = function() {
-            // local variable management: erase any locally created variables
-            blockLevel--;
-            for (var j = 0; j < currentVariables.length; j++) {
-                restoreVariable(currentVariables[j]);
-            }
-            currentVariables = [];
-        };
-
-        /* Execution level management */
-
-        var raiseExecutionLevel = function(caller) {
-            if (typeof caller !== 'undefined') {
-                callers.push(caller);
-            }
-            executionLevel++;
-            stack[executionLevel] = [];
-            cached[executionLevel] = [];
-        };
-
-        var lowerExecutionLevel = function(value) {
-            if (executionLevel > 0) {
-                stack[executionLevel] = [];
-                cached[executionLevel] = [];
-                executionLevel--;
-                if (callers.length > executionLevel) {
-                    var expression = callers.pop();
-                    expression.result = value;
-                    cached[executionLevel].push(expression);
-                }
-            }
-        };
-
-        /* Main Eval function */
-
-        var defaultEval = function(literal) {
-            return runtimeFrame.eval(literal);
-        };
-
-        /* Statements management */
-
-        var defaultEvalStatement = function(statement) {
-            defaultEval(statement.raw);
-            return true;
-        };
-
-        var evalBlockStatement = function(statement) {
-            enterBlock();
-            insertStatement({type: "ControlOperation", operation: "leaveBlock"});
-            insertStatements(statement.body);
-            return true;
-        };
-
-        var evalExpressionStatement = function(statement) {
-            evalExpression(statement.expression, true);
-            return true;
-        };
-
-        var evalIfStatement = function(statement) {
-            var result = evalExpression(statement.test, true);
-            if (result) {
-                insertStatement(statement.consequent);
-            } else if (statement.alternate !== null) {
-                insertStatement(statement.alternate);
-            }
-            return true;
-        };
-
-        var evalLabeledStatement = function(statement) {
-            throw "LabeledStatement Not Implemented yet";
-        };
-
-        var evalBreakStatement = function(statement) {
-            throw "BreakStatement Not Implemented yet";
-        };
-
-        var evalContinueStatement = function(statement) {
-            throw "ContinueStatement Not Implemented yet";
-        };
-
-        var evalWithStatement = function(statement) {
-            throw "With statement is not supported";
-        };
-
-        var evalSwitchStatement = function(statement) {
-            if (typeof statement.controls === 'undefined') {
-                statement.controls = {index: 0, discriminant: evalExpression(statement.discriminant, true)};
-            }
-            var result = false;
-            var switchCase;
-            while (statement.controls.index < statement.cases.length && !result) {
-                switchCase = statement.cases[statement.controls.index];
-                if (switchCase.test === null) {
-                    result = true;
-                } else {
-                    result = (statement.controls.discriminant === evalExpression(switchCase.test, true));
-                }
-                statement.controls.index++;
-            }
-            if (result) {
-                insertStatements(switchCase.consequent);
-                return false;
-            } else {
-                return true;
-            }
-        };
-
-        var evalReturnStatement = function(statement) {
-            if (executionLevel > 0) {
-                var value = evalExpression(statement.argument);
-                lowerExecutionLevel(value);
-                return true;
-            } else {
-                // on function call: we just stop evaluation
-                stop();
-                return true;
-            }
-        };
-
-        var evalThrowStatement = function(statement) {
-            throw "ThrowStatement Not Implemented yet";
-        };
-
-        var evalTryStatement = function(statement) {
-            throw "TryStatement Not Implemented yet";
-        };
-
-        var evalWhileStatement = function(statement) {
-            var result = evalExpression(statement.test, true);
-            if (result) {
-                insertStatement(statement.body);
-                // statement not consumed
-                return false;
-            } else {
-                // statement consumed
-                return true;
-            }
-        };
-
-        var evalDoWhileStatement = function(statement) {
-            if (typeof statement.controls === 'undefined') {
-                statement.controls = {init: false};
-            }
-            if (!statement.controls.init) {
-                // first body execution has not occured yet
-                insertStatement(statement.body);
-                statement.controls.init = true;
-                return false;
-            } else {
-                var result = evalExpression(statement.test, true);
-                if (result) {
-                    insertStatement(statement.body);
-                    // statement not consumed
-                    return false;
-                } else {
-                    // statement consumed
-                    return true;
-                }
-            }
-        };
-
-        var evalForStatement = function(statement) {
-            if (typeof statement.controls === 'undefined') {
-                statement.controls = {init: false};
-            }
-            if (!statement.controls.init) {
-                // init has not been performed yet
-                if (statement.init.type === "VariableDeclaration") {
-                    insertStatement(statement.init);
-                } else {
-                    insertStatement({type: "ExpressionStatement", expression: statement.init});
-                }
-                statement.controls.init = true;
-                return false;
-            } else {
-                var result = evalExpression(statement.test, true);
-                if (result) {
-                    insertStatement(statement.update);
-                    insertStatement(statement.body);
-                    // statement not consumed
-                    return false;
-                } else {
-                    // statement consumed
-                    return true;
-                }
-            }
-        };
-
-        var evalForInStatement = function(statement) {
-            throw "For In Not Implemented yet";
-        };
-
-        var evalDebuggerStatement = function(statement) {
-            defaultEvalStatement(statement);
-        };
-
-        var evalRepeatStatement = function(statement) {
-            if (typeof statement.controls === 'undefined') {
-                statement.controls = {};
-                if (statement.count !== null) {
-                    var count = evalExpression(statement.count, true);
-                    if (isNaN(count)) {
-                        //TODO: throw real TError
-                        throw "count is not an integer";
-                    }
-                    statement.controls.count = count;
-                } else {
-                    statement.controls.count = null;
-                }
-                statement.controls.loop = 0;
-            } else if (typeof statement.controls.interrupt !== "undefined") {
-                // Loop interrupted
-                return true;
-            }
-            statement.controls.loop++;
-            // loop management
-            if (statement.controls.loop > MAX_LOOP) {
-                // suspend execution in order to allow interruption
-                statement.controls.loop = 0;
-                loopSuspended = true;
-                setTimeout(function() {
-                    if (loopSuspended) {
-                        loopSuspended = false;
-                        run();
-                    }
-                }, 0);
-            }
-            if (statement.controls.count !== null) {
-                if (statement.controls.count > 0) {
-                    statement.controls.count--;
-                    insertStatement(statement.body);
-                    return false;
-                } else { 
-                    return true;
-                }
-            } else {
-                insertStatement(statement.body);
-                return false;
-            }
-        };
-
-        var evalVariableDeclaration = function(declaration) {
-            for (var i = 0; i < declaration.declarations.length; i++) {
-                var declarator = declaration.declarations[i];
-                var identifier = evalExpression(declarator.id);
-                // local variables management: save preceeding value if any
-                saveVariable(identifier);
-                currentVariables.push(identifier);
-                if (declarator.init !== null) {
-                    var value;
-                    if (typeof declarator.computed !=='undefined' && declarator.computed) {
-                        value = declarator.init;
-                    } else {
-                        value = evalExpression(declarator.init);
-                    }
-                    defaultEval("var " + identifier + "=" + value);
-                } else {
-                    defaultEval("var " + identifier);
-                }
-            }
-            return true;
-        };
-
-        var evalFunctionDeclaration = function(declaration) {
-            var identifier = evalExpression(declaration.id);
-            definedFunctions[identifier] = {'body': declaration.body, 'params': declaration.params};
-            // still declare function, so that it can be recognized later on
-            // e.g. if used in an identifier expression
-            var params = declaration.params;
-            var paramsString;
-            if (params.length > 0) {
-                paramsString = "(" + params[0].name;
-                for (var i = 1; i < params.length; i++) {
-                    paramsString += "," + params[i].name;
-                }
-                paramsString += ")";
-            } else {
-                paramsString = '()';
-            }
-            defaultEval("function " + identifier + paramsString + declaration.body.raw);
-            return true;
-        };
-
-        var evalStatement = function(statement) {
-            try {
-                var result;
-                var currentLevel = executionLevel;
-                switch (statement.type) {
-                    case "BlockStatement":
-                        result = evalBlockStatement(statement);
-                        break;
-                    case "ExpressionStatement":
-                        result = evalExpressionStatement(statement);
-                        break;
-                    case "IfStatement":
-                        result = evalIfStatement(statement);
-                        break;
-                    case "LabeledStatement":
-                        result = evalLabeledStatement(statement);
-                        break;
-                    case "BreakStatement":
-                        result = evalBreakStatement(statement);
-                        break;
-                    case "ContinueStatement":
-                        result = evalContinueStatement(statement);
-                        break;
-                    case "WithStatement":
-                        result = evalWithStatement(statement);
-                        break;
-                    case "SwitchStatement":
-                        result = evalSwitchStatement(statement);
-                        break;
-                    case "ReturnStatement":
-                        result = evalReturnStatement(statement);
-                        break;
-                    case "ThrowStatement":
-                        result = evalThrowStatement(statement);
-                        break;
-                    case "TryStatement":
-                        result = evalTryStatement(statement);
-                        break;
-                    case "WhileStatement":
-                        result = evalWhileStatement(statement);
-                        break;
-                    case "DoWhileStatement":
-                        result = evalDoWhileStatement(statement);
-                        break;
-                    case "ForStatement":
-                        result = evalForStatement(statement);
-                        break;
-                    case "ForInStatement":
-                        result = evalForInStatement(statement);
-                        break;
-                    case "DebuggerStatement":
-                        result = evalDebuggerStatement(statement);
-                        break;
-                    case "RepeatStatement":
-                        result = evalRepeatStatement(statement);
-                        break;
-                    case "ParametersDeclaration":
-                    case "VariableDeclaration":
-                        result = evalVariableDeclaration(statement);
-                        break;
-                    case "FunctionDeclaration":
-                        result = evalFunctionDeclaration(statement);
-                        break;
-                    case "ControlOperation":
-                        switch (statement.operation) {
-                            case "leaveBlock":
-                                leaveBlock();
-                                break;
-                            case "leaveFunction":
-                                lowerExecutionLevel(null);
-                                break;
-                        }
-                        result = true;
-                        break;
-                    default:
-                        result = defaultEvalStatement(statement);
-                        break;
-                }
-                if (executionLevel === currentLevel) {
-                    // we haven't changed execution level
-                    // statement is over: remove cached values
-                    while (cached[executionLevel].length > 0) {
-                        var expression = cached[executionLevel].pop();
-                        delete expression.result;
-                    }
-                }
-                return result;
-            } catch (err) {
-                if (err instanceof levelRaisedException) {
-                    // level was raised: we keep statement in stack
-                    return false;
-                } else if (err instanceof suspendedException) {
-                    // running was stopped during statement execution: we keep statement in stack
-                    return false;
-                } else {
-                    if (!(err instanceof TError)) {
-                        var error = new TError(err);
-                        error.setLines([statement.loc.start.line, statement.loc.end.line]);
-                        error.detectError();
-                        throw error;
-                    } else {
-                        throw err;
-                    }
-                }
-            }
-        };
-
-        /* Expressions management */
-
-        var defaultEvalExpression = function(expression) {
-            return expression.raw;
-        };
-
-        var callFunction = function(block, params, args, expression) {
-            var values = [];
-            var i = 0;
-            for (i = 0; i < args.length; i++) {
-                if (i < params.length) {
-                    values.push({'type': 'VariableDeclarator', 'id': params[i], 'init': args[i]});
-                }
-            }
-            if (typeof expression.parameter !== 'undefined') {
-                if (i < params.length) {
-                    values.push({'type': 'VariableDeclarator', 'id': params[i], 'init': expression.parameter, 'computed':true});
-                }
-            }
-            if (block.body.length > 0 && block.body[0].type === 'ParametersDeclaration') {
-                // reuse existing parameters declaration
-                block.body[0]['declarations'] = values;
-            } else {
-                var parameters = {'type': 'ParametersDeclaration', 'declarations': values, 'kind': 'var'};
-                block.body.unshift(parameters);
-            }
-            // start a new executionLevel
-            raiseExecutionLevel(expression);
-            insertStatement({type: "ControlOperation", operation: "leaveFunction"});
-            insertStatement(block);
-
-            // interrupt current execution so that upper execution level is handled
-            throw new levelRaisedException();
-        };
-
-        var evalFunctionExpression = function(expression, callback) {
-            throw "Function Expression Not Implemented yet";
-        };
-
-        var evalSequenceExpression = function(expression) {
-            var sequence = "";
-            for (var i = 0; i < expression.expressions.length; i++) {
-                sequence += evalExpression(expression.expressions[i]);
-            }
-            return sequence;
-        };
-
-        var evalUnaryExpression = function(expression) {
-            if (expression.prefix) {
-                return expression.operator + evalExpression(expression.argument);
-            } else {
-                return evalExpression(expression.argument) + expression.operator;
-            }
-        };
-
-        var evalBinaryExpression = function(expression) {
-            return evalExpression(expression.left) + expression.operator + evalExpression(expression.right);
-        };
-
-        var evalAssignementExpression = function(expression) {
-            return evalExpression(expression.left) + expression.operator + evalExpression(expression.right);
-        };
-
-        var evalUpdateExpression = function(expression) {
-            if (expression.prefix) {
-                return expression.operator + evalExpression(expression.argument);
-            } else {
-                return evalExpression(expression.argument) + expression.operator;
-            }
-        };
-
-        var evalLogicalExpression = function(expression) {
-            return evalExpression(expression.left) + expression.operator + evalExpression(expression.right);
-        };
-
-        var evalConditionalExpression = function(expression) {
-            var value = evalExpression(expression.test, true);
-            if (value) {
-                return evalExpression(expression.consequent);
-            } else {
-                return evalExpression(expression.alternate);
-            }
-        };
-
-        var evalCallExpression = function(expression) {
-            var callLiteral = evalExpression(expression.callee);
-            if (expression.callee.type === 'Identifier' && typeof definedFunctions[callLiteral] !== 'undefined') {
-                // we need to call the function with given parameters
-                return callFunction(definedFunctions[callLiteral]['body'], definedFunctions[callLiteral]['params'], expression.arguments, expression);
-                // TODO: handle case of functionexpression called
-            } else {
-                var argsString = "(";
-                for (var i = 0; i < expression.arguments.length; i++) {
-                    if (i > 0) {
-                        argsString += ",";
-                    }
-                    argsString += evalExpression(expression.arguments[i]);
-                }
-                argsString += ")";
-                return callLiteral + argsString;
-            }
-        };
-
-        var evalNewExpression = function(expression) {
-            var className = evalExpression(expression.callee);
-            var argsString = "(";
-            for (var i = 0; i < expression.arguments.length; i++) {
-                if (i > 0) {
-                    argsString += ",";
-                }
-                argsString += evalExpression(expression.arguments[i]);
-            }
-            argsString += ")";
-            return "new " + className + argsString;
-        };
-
-        var evalMemberExpression = function(expression) {
-            var objectName = evalExpression(expression.object);
-            var propertyName = evalExpression(expression.property);
-            if (expression.computed) {
-                return objectName + "[" + propertyName + "]";
-            } else {
-                return objectName + "." + propertyName;
-            }
-        };
-
-        var evalIdentifier = function(expression) {
-            return expression.name;
-        };
-
-        var evalLiteral = function(expression) {
-            var value;
-            if (typeof expression.value === "string") {
-                value = "\"" + TUtils.addslashes(expression.value) + "\"";
-            } else {
-                value = expression.value;
-            }
-            return value;
-        };
-
-        var evalExpression = function(expression, eval) {
-            if (suspended) {
-                // execution has been suspended during statement : we stop
-                throw new suspendedException();
-            }
-            if (typeof expression.result !== 'undefined') {
-                // expression was already evaluated: return result
-                return expression.result;
-            }
-
-            if (typeof eval === "undefined") {
-                eval = false;
-            }
-            try {
-                var result;
-                switch (expression.type) {
-                    case "FunctionExpression":
-                        result = evalFunctionExpression(expression);
-                        break;
-                    case "SequenceExpression":
-                        result = evalSequenceExpression(expression);
-                        break;
-                    case "UnaryExpression":
-                        result = evalUnaryExpression(expression);
-                        break;
-                    case "BinaryExpression":
-                        result = evalBinaryExpression(expression);
-                        break;
-                    case "AssignmentExpression":
-                        result = evalAssignementExpression(expression);
-                        break;
-                    case "UpdateExpression":
-                        result = evalUpdateExpression(expression);
-                        break;
-                    case "LogicalExpression":
-                        result = evalLogicalExpression(expression);
-                        break;
-                    case "ConditionalExpression":
-                        result = evalConditionalExpression(expression);
-                        break;
-                    case "CallExpression":
-                        result = evalCallExpression(expression);
-                        break;
-                    case "NewExpression":
-                        result = evalNewExpression(expression);
-                        break;
-                    case "MemberExpression":
-                        result = evalMemberExpression(expression);
-                        break;
-                    case "Identifier":
-                        result = evalIdentifier(expression);
-                        break;
-                    case "Literal":
-                        result = evalLiteral(expression);
-                        break;
-                    default:
-                        result = defaultEvalExpression(expression);
-                        break;
-                }
-                // store result in case execution of current statement is interrupted
-                if (eval) {
-                    result = defaultEval(result);
-                }
-                expression.result = result;
-                cached[executionLevel].push(expression);
-                return result;
-            } catch (err) {
-                if (!(err instanceof TError || err instanceof levelRaisedException)) {
+                if (!(err instanceof TError)) {
                     var error = new TError(err);
-                    error.setLines([expression.loc.start.line, expression.loc.end.line]);
+                    if (interpreter.stateStack.length>0) {
+                        var state = interpreter.stateStack[0];
+                        if (state.node.loc) {
+                            error.setLines([state.node.loc.start.line, state.node.loc.end.line]);
+                        }
+                    }
                     error.detectError();
-                    throw error;
                 } else {
-                    throw err;
+                    error = err;
+                }
+                if (interpreter.stateStack.length>0) {
+                    var state = interpreter.stateStack[0];
+                    if (!state.node.loc.source) {
+                        // no program associated: remove lines if any
+                        error.setLines([]);
+                    } else {
+                        error.setProgramName(state.node.loc.source);
+                    }
+                }
+                var baseState = interpreter.stateStack.pop();
+                stop(baseState.scope);
+
+                if (typeof errorHandler !== 'undefined') {
+                    errorHandler(error);
+                } else {
+                    throw error;
                 }
             }
         };
+        
+        var run = function() {
+            running = true;
+            nextStep();
+        };
 
+        this.start = function() {
+            if (!running) {
+                stepCount = 0;
+                run();
+            }
+        };
+
+        this.addStatement = function(statement) {
+            interpreter.appendCode(statement);
+            if (!running) {
+                this.start();
+            }
+        };
+
+        this.addStatements = function(statements) {
+            interpreter.appendCode(statements);
+            if (!running) {
+                this.start();
+            }
+        };
+
+        this.addPriorityStatements = function(statements, parameter, log) {
+            interpreter.insertCode(statements, parameter);
+            if (!running) {
+                this.start();
+            }
+        };
+
+        this.addClass = function(func, name) {
+            classes[name] = func;
+        };
+
+        this.addInstance = function(func, name) {
+            instances[name] = func;
+        };
+        
+        this.getClass = function(name) {
+            if (classes[name]) {
+                return classes[name];
+            } else {
+                return null;
+            }
+        };
+
+        this.getObject = function(name) {
+            try {
+                var obj = interpreter.getValueFromScope(name);
+                if (obj && obj.data) {
+                    return obj.data;
+                }
+                return null;
+            } catch (err) {
+                return null;
+            }
+        };
+        
+        this.getObjectName = function(reference) {
+            var scope = interpreter.getScope();
+            while (scope) {
+                for (var name in scope.properties) {
+                    var obj = scope.properties[name];
+                    if (obj.data && obj.data === reference) {
+                        return name;
+                    }
+                }
+                scope = scope.parentScope;
+            }
+            return null;
+        };
+        
+        this.deleteObject = function(reference) {
+            var scope = interpreter.getScope();
+            while (scope) {
+                for (var name in scope.properties) {
+                    var obj = scope.properties[name];
+                    if (!scope.fixed[name] && obj.data) {
+                        if (obj.data === reference) {
+                            interpreter.deleteProperty(scope, name);
+                            return true;
+                        }
+                    }
+                }
+                scope = scope.parentScope;
+            }
+            return false;
+        };
+        
+        this.exposeProperty = function(reference, property, propertyName) {
+            var scope = interpreter.getScope();
+            while (scope) {
+                for (var name in scope.properties) {
+                    var obj = scope.properties[name];
+                    if (obj.data === reference) {
+                        var wrapper = function() {
+                            // TODO: handle case where returned value is an object
+                            return interpreter.createPrimitive(this.data[property]);
+                        };
+                        var prop = interpreter.createObject(null);
+                        prop.dynamic = wrapper;
+                        //window.console.log(typeof property);
+                        interpreter.setProperty(obj, propertyName, prop);
+                        return true;
+                    }
+                }
+                scope = scope.parentScope;
+            }
+            return false;
+        };
+        
+        this.createCallStatement = function(functionStatement) {
+            var state = [{type: "ExpressionStatement", expression: {type: "InnerCallExpression",arguments: [], func_: functionStatement, loc: functionStatement.node.loc}}];
+            return state;
+        };
     }
 
 
+    // Modify Interpreter to handle function declaration
+    Interpreter.prototype['stepFunctionDeclaration'] = function() {
+        var state = this.stateStack.shift();
+        this.setValue(this.createPrimitive(state.node.id.name), this.createFunction(state.node));
+    };
+
+    // Modify Interpreter to throw exception when trying to redefining fixed property
+    Interpreter.prototype.setValueToScope = function(name, value) {
+        var scope = this.getScope();
+        var strict = scope.strict;
+        var nameStr = name.toString();
+        while (scope) {
+          if ((nameStr in scope.properties) || (!strict && !scope.parentScope)) {
+            if (!scope.fixed[nameStr]) {
+              scope.properties[nameStr] = value;
+            } else {
+                this.throwException(this.REFERENCE_ERROR, nameStr + ' is alderady defined');                    
+            }
+            return;
+          }
+          scope = scope.parentScope;
+        }
+        this.throwException(this.REFERENCE_ERROR, nameStr + ' is not defined');
+    };
+
+    // Modify Interpreter to not delete statements when looking for a try
+    Interpreter.prototype.throwException = function(errorClass, opt_message) {
+      if (this.stateStack[0].interpreter) {
+        // This is the wrong interpreter, we are spinning on an eval.
+        try {
+          this.stateStack[0].interpreter.throwException(errorClass, opt_message);
+          return;
+        } catch (e) {
+          // The eval threw an error and did not catch it.
+          // Continue to see if this level can catch it.
+        }
+      }
+      if (opt_message === undefined) {
+        var error = errorClass;
+      } else {
+        var error = this.createObject(errorClass);
+        this.setProperty(error, 'message',
+            this.createPrimitive(opt_message), false, true);
+      }
+      // Search for a try statement.
+      var i = 0;
+      var state;
+      var length = this.stateStack.length;
+      do {
+        state = this.stateStack[i];
+        i++;
+      } while (i<length && state.node.type !== 'TryStatement');
+      if (state.node.type === 'TryStatement') {
+            for (var j=0; j<i; j++) {
+                this.stateStack.shift();
+            }
+            // Error is being trapped.
+            this.stateStack.unshift({
+              node: state.node.handler,
+              throwValue: error
+            });
+      } else {
+        // Throw a real error.
+        var realError;
+        if (this.isa(error, this.ERROR)) {
+          var errorTable = {
+            'EvalError': EvalError,
+            'RangeError': RangeError,
+            'ReferenceError': ReferenceError,
+            'SyntaxError': SyntaxError,
+            'TypeError': TypeError,
+            'URIError': URIError
+          };
+          var type = errorTable[this.getProperty(error, 'name')] || Error;
+          realError = type(this.getProperty(error, 'message'));
+        } else {
+          realError = error.toString();
+        }
+        throw realError;
+      }
+    };
+    
+    // add support for Repeat statement
+    Interpreter.prototype['stepRepeatStatement'] = function() {
+        var state = this.stateStack[0];
+        state.isLoop = true;
+        var node = state.node;
+        if (state.countHandled) {
+            if (node.body) {
+                if (state.infinite) {
+                    this.stateStack.unshift({node: node.body});
+                } else {
+                    state.count--;
+                    if (state.count>=0) {
+                        this.stateStack.unshift({node: node.body});
+                    } else {
+                        this.stateStack.shift();
+                    }
+                }
+            }
+        } else {
+            if (node.count) {
+                // count specified
+                if (state.countReady) {
+                    state.infinite = false;
+                    state.count = state.value;
+                    state.countHandled = true;
+                } else {
+                    state.countReady = true;
+                    this.stateStack.unshift({node: node.count});            
+                }
+            } else {
+                state.infinite = true;
+                state.countHandled = true;
+            }
+        }
+    };
+    
+    // add support for inner call
+    Interpreter.prototype['stepInnerCallExpression'] = function() {
+        var state = this.stateStack.shift();
+        this.stateStack.unshift({node: {type:"CallExpression", arguments:state.node.arguments}, arguments:[], n_:0, doneCallee_: true, func_: state.node.func_, funcThis_: this.stateStack[this.stateStack.length - 1].thisExpression});
+    };
+
+    
+    // add ability to insert code
+    Interpreter.prototype.insertCode = function(code, parameter) {
+        // Find index at which insertion has to be made
+        var index=0;
+        while (index<this.stateStack.length && this.stateStack[index].priority) {
+            index++;
+        }
+
+        // Append the new statements
+        for (var i = code.length-1; i>=0; i--) {
+            var node = code[i];
+            if (node.type === "ExpressionStatement") {
+                // Add parameter
+                node.expression.parameter = parameter;
+            }
+            this.stateStack.splice(index, 0, {node: node, priority:true, done:false});
+        }
+    };
+    
+    // add ability to handle dynamic properties
+    Interpreter.prototype.getProperty = function(obj, name) {
+        name = name.toString();
+        if (obj == this.UNDEFINED || obj == this.NULL) {
+          this.throwException(this.TYPE_ERROR,
+                              "Cannot read property '" + name + "' of " + obj);
+        }
+        // Special cases for magic length property.
+        if (this.isa(obj, this.STRING)) {
+          if (name == 'length') {
+            return this.createPrimitive(obj.data.length);
+          }
+          var n = this.arrayIndex(name);
+          if (!isNaN(n) && n < obj.data.length) {
+            return this.createPrimitive(obj.data[n]);
+          }
+        } else if (this.isa(obj, this.ARRAY) && name == 'length') {
+          return this.createPrimitive(obj.length);
+        }
+        while (true) {
+          if (obj.properties && name in obj.properties) {
+              var prop = obj.properties[name];
+              if (prop.dynamic ) {
+                return prop.dynamic.apply(obj);
+              }
+              return prop;
+          }
+          if (obj.parent && obj.parent.properties &&
+              obj.parent.properties.prototype) {
+            obj = obj.parent.properties.prototype;
+          } else {
+            // No parent, reached the top.
+            break;
+          }
+        }
+        return this.UNDEFINED;
+      };
+
+
+    
     return TInterpreter;
 });
 

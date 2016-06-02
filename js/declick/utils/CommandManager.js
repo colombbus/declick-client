@@ -1,4 +1,4 @@
-define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
+define(['TRuntime', 'TUtils', 'TParser', 'TInterpreter'], function(TRuntime, TUtils, TParser, TInterpreter) {
     /**
      * 
      * @exports CommandManager
@@ -16,11 +16,9 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
     CommandManager.prototype.addCommand = function(command, field) {
         if (TUtils.checkString(command)) {
             // command is a string: we parse it
-            command = TParser.parse(command);
+            command = TParser.parse(command).body;
         } else if (TUtils.checkFunction(command)) {
-            var functionName = TUtils.getFunctionName(command);
-            command = [{type: "ExpressionStatement", expression: {type: "CallExpression", callee: {type: "Identifier", name: functionName}, arguments: []}, raw: functionName}];
-            // TODO: handle parameters
+            command = TRuntime.createCallStatement(command);
         }
         if (typeof field === 'undefined') {
             // simple command provided

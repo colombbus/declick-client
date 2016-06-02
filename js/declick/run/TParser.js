@@ -5,18 +5,6 @@ define(['acorn'], function(acorn) {
      */
     function TParser() {
         var options = {locations: true, forbidReserved: "everywhere"};
-
-        var globalReserved = ['window', 'document', 'eval'];
-
-        acorn.addReservedWords(globalReserved);
-
-        /**
-         * Add reserved identifiers.
-         * @param {String[]} names
-         */
-        this.protectIdentifiers = function(names) {
-            acorn.addReservedIdentifiers(names);
-        };
         
         this.setRepeatKeyword = function(name) {
             acorn.setRepeatKeyword(name);
@@ -27,10 +15,16 @@ define(['acorn'], function(acorn) {
          * @param {String} code
          * @returns {String[]}
          */
-        this.parse = function(input) {
+        this.parse = function(input, programName) {
+            if (programName) {
+                options["sourceFile"] = programName;
+            } else {
+                options["sourceFile"] = null;
+            }
+            
             var result = acorn.parse(input, options);
             // return statements
-            return result.body;
+            return result;
         };
     }
 

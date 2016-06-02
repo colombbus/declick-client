@@ -23,7 +23,8 @@ require.config({
         "SynchronousManager": "utils/SynchronousManager",
         "TError": "utils/TError",
         "TUtils": "utils/TUtils",
-        "TResource": "data/TResource"
+        "TResource": "data/TResource",
+        "js-interpreter":"../libs/js-interpreter/interpreter"
     }
 });
 

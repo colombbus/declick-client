@@ -418,13 +418,6 @@
 
   var isReservedWord5 = makePredicate("class enum extends super const export import");
 
-  // TWEAK FOR DECLICK: added ability to add reserved words
-  // 
-  exports.addReservedWords = function(words) {
-      var wordsString = words.join(" ");
-      isReservedWord5 = makePredicate("class enum extends super const export import "+wordsString);
-  };
-
   // The additional reserved words in strict mode.
 
   var isStrictReservedWord = makePredicate("implements interface let package private protected public static yield");
@@ -432,14 +425,6 @@
   // The forbidden variable names in strict mode.
 
   var isStrictBadIdWord = makePredicate("eval arguments");
-
-  // TWEAK FOR DECLICK: added ability to add reserved identifiers
-  // 
-  exports.addReservedIdentifiers = function(words) {
-      var wordsString = words.join(" ");
-      isStrictBadIdWord = makePredicate("eval arguments "+wordsString);
-  };
-
 
   // And the keywords.
 
@@ -452,7 +437,7 @@
       delete keywordTypes["repeat"];
       keywordTypes[repeatWord] = _repeat;
       isKeyword = makePredicate("break case catch continue debugger default do else finally for function if return switch throw try var while with null true false instanceof typeof void delete new in this "+repeatWord);
-  }
+  };
 
 
   // ## Character categories
