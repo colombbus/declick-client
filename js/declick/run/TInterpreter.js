@@ -4,6 +4,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         
         var log, errorHandler;
         var classes = {};
+        var translatedClasses = {};
         var instances  = {};
         var stored  = {};
         var stepCount =0;
@@ -13,31 +14,58 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         
         this.initialize = function() {
             var getNativeData = function(data) {
-                if (data.length) {
-                    // we are in an array
-                    var result = [];
-                    for (var i =0; i < data.length; i++) {
-                        result.push(getNativeData(data.properties[i]));
-                    }
-                    return result;
-                } else if (data.type) {
+                if (data.type) {
                     if (data.type=== "function") {
                         return data;
                     } else if (data.data) {
                         // primitive data or declick objects
                         return data.data;
                     } else if (data.type === "object") {
-                        var result = {};
-                        for (var member in data.properties) {
-                            result[member] = getNativeData(data.properties[member]);
+                        if (data.length) {
+                            // we are in an array
+                            var result = [];
+                            for (var i =0; i < data.length; i++) {
+                                result.push(getNativeData(data.properties[i]));
+                            }
+                            return result;
+                        } else {
+                            var result = {};
+                            for (var member in data.properties) {
+                                result[member] = getNativeData(data.properties[member]);
+                            }
+                            return result;
                         }
-                        return result;
-                    } else {
-                        return data;
+                    }
+                }
+                return data;
+            };
+
+            var getInterpreterData = function(data) {
+                if (data instanceof Array) {
+                    // Array
+                    var result = interpreter.createObject(interpreter.ARRAY);
+                    for (var i = 0; i<data.length;i++) {
+                        interpreter.setProperty(result, i, getInterpreterData(data[i]));
+                    }
+                    return result;
+                } else if (typeof data === 'object') {
+                    // Object
+                    if (data.className) {
+                        // declick object: wrap it
+                        if (translatedClasses[data.className]) {
+                            var scope = interpreter.getScope();
+                            var func = interpreter.getProperty(scope, translatedClasses[data.className]);
+                            var func_this = interpreter.createObject(func);
+                            var result = func.nativeFunc.apply(func_this);
+                            result.data = data;
+                            return result;
+                        }
                     }
                 } else {
-                    return data;
+                    // Primitive types
+                    return interpreter.createPrimitive(data);
                 }
+                return data;
             };
             
             var initFunc = function(interpreter, scope) {
@@ -50,8 +78,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         for (var i=0; i<arguments.length;i++) {
                             args.push(getNativeData(arguments[i]));
                         }
-                        //TODO: handle cases where method return objects
-                        return interpreter.createPrimitive(instances[className][methodName].apply(this.data, args));
+                        return getInterpreterData(instances[className][methodName].apply(this.data, args));
                     };
                 };
                 
@@ -87,8 +114,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         for (var i=0; i<arguments.length;i++) {
                             args.push(getNativeData(arguments[i]));
                         }
-                        //TODO: handle cases where method return objects
-                        return interpreter.createPrimitive(classes[className].prototype[methodName].apply(this.data, args));
+                        return getInterpreterData(classes[className].prototype[methodName].apply(this.data, args));
                     };
                 };
                 
@@ -112,7 +138,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         obj.data = declickObj;
                         var wrapper2 = function() {
                             return obj.data;
-                        }
+                        };
                         interpreter.setProperty(obj, "dObject", interpreter.createNativeFunction(wrapper2));
                         return obj;
                     };
@@ -273,6 +299,9 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
         this.addClass = function(func, name) {
             classes[name] = func;
+            if (func.prototype.className) {
+                translatedClasses[func.prototype.className] = name;
+            }
         };
 
         this.addInstance = function(func, name) {
@@ -337,8 +366,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     var obj = scope.properties[name];
                     if (obj.data === reference) {
                         var wrapper = function() {
-                            // TODO: handle case where returned value is an object
-                            return interpreter.createPrimitive(this.data[property]);
+                            return getInterpreterData(this.data[property]);
                         };
                         var prop = interpreter.createObject(null);
                         prop.dynamic = wrapper;
