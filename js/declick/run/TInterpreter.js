@@ -13,6 +13,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         var running = false;
         
         this.initialize = function() {
+
             var getNativeData = function(data) {
                 if (data.type) {
                     if (data.type=== "function") {
@@ -53,10 +54,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     if (data.className) {
                         // declick object: wrap it
                         if (translatedClasses[data.className]) {
-                            var scope = interpreter.getScope();
-                            var func = interpreter.getProperty(scope, translatedClasses[data.className]);
-                            var func_this = interpreter.createObject(func);
-                            var result = func.nativeFunc.apply(func_this);
+                            var result = interpreter.createObject(getClass(translatedClasses[data.className]));
                             result.data = data;
                             return result;
                         }
@@ -67,6 +65,30 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 }
                 return data;
             };
+            
+            var getClassMethodWrapper = function(className, methodName) {
+                return function() {
+                    // transform data from interpreter into actual data
+                    var args = [];
+                    for (var i=0; i<arguments.length;i++) {
+                        args.push(getNativeData(arguments[i]));
+                    }
+                    return getInterpreterData(classes[className].prototype[methodName].apply(this.data, args));
+                };
+            };
+            
+            //TODO: store classes
+            var getClass = function(name) {
+                var parent = interpreter.createObject(interpreter.FUNCTION);
+                if (typeof classes[name].prototype !== 'undefined' && typeof classes[name].prototype.translatedMethods !== 'undefined') {
+                    var translated = classes[name].prototype.translatedMethods;
+                    for (var methodName in translated) {
+                        interpreter.setProperty(parent.properties.prototype, translated[methodName], interpreter.createNativeFunction(getClassMethodWrapper(name, methodName)));
+                    }
+                }
+                return parent;
+            };
+            
             
             var initFunc = function(interpreter, scope) {
 
@@ -107,27 +129,10 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 
                 // #2 Declare translated Classes
                 // generate wrapper for translated methods
-                var getClassMethodWrapper = function(className, methodName) {
-                    return function() {
-                        // transform data from interpreter into actual data
-                        var args = [];
-                        for (var i=0; i<arguments.length;i++) {
-                            args.push(getNativeData(arguments[i]));
-                        }
-                        return getInterpreterData(classes[className].prototype[methodName].apply(this.data, args));
-                    };
-                };
                 
                 var getObject = function(name) {
-                    var parent = interpreter.createObject(interpreter.FUNCTION);
-                    if (typeof classes[name].prototype !== 'undefined' && typeof classes[name].prototype.translatedMethods !== 'undefined') {
-                        var translated = classes[name].prototype.translatedMethods;
-                        for (var methodName in translated) {
-                            interpreter.setProperty(parent.properties.prototype, translated[methodName], interpreter.createNativeFunction(getClassMethodWrapper(name, methodName)));
-                        }
-                    }
                     var wrapper = function() {
-                        var obj = interpreter.createObject(parent);
+                        var obj = interpreter.createObject(getClass(name));
                         var declickObj = Object.create(classes[name].prototype);
                         // transform data from interpreter into actual data
                         var args = [];
@@ -136,10 +141,6 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         }
                         classes[name].apply(declickObj, args);
                         obj.data = declickObj;
-                        var wrapper2 = function() {
-                            return obj.data;
-                        };
-                        interpreter.setProperty(obj, "dObject", interpreter.createNativeFunction(wrapper2));
                         return obj;
                     };
                     var obj = interpreter.createNativeFunction(wrapper);
