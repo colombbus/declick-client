@@ -11,60 +11,62 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         
         var interpreter;
         var running = false;
+
+        var getNativeData = function(data) {
+            if (data.type) {
+                if (data.type=== "function") {
+                    return data;
+                } else if (data.data) {
+                    // primitive data or declick objects
+                    return data.data;
+                } else if (data.type === "object") {
+                    if (data.length) {
+                        // we are in an array
+                        var result = [];
+                        for (var i =0; i < data.length; i++) {
+                            result.push(getNativeData(data.properties[i]));
+                        }
+                        return result;
+                    } else {
+                        var result = {};
+                        for (var member in data.properties) {
+                            result[member] = getNativeData(data.properties[member]);
+                        }
+                        return result;
+                    }
+                }
+            }
+            return data;
+        };
+
+        var getInterpreterData = function(data) {
+            if (data instanceof Array) {
+                // Array
+                var result = interpreter.createObject(interpreter.ARRAY);
+                for (var i = 0; i<data.length;i++) {
+                    interpreter.setProperty(result, i, getInterpreterData(data[i]));
+                }
+                return result;
+            } else if (typeof data === 'object') {
+                // Object
+                if (data.className) {
+                    // declick object: wrap it
+                    if (translatedClasses[data.className]) {
+                        var result = interpreter.createObject(getClass(translatedClasses[data.className]));
+                        result.data = data;
+                        return result;
+                    }
+                }
+            } else {
+                // Primitive types
+                return interpreter.createPrimitive(data);
+            }
+            return data;
+        };
+
         
         this.initialize = function() {
 
-            var getNativeData = function(data) {
-                if (data.type) {
-                    if (data.type=== "function") {
-                        return data;
-                    } else if (data.data) {
-                        // primitive data or declick objects
-                        return data.data;
-                    } else if (data.type === "object") {
-                        if (data.length) {
-                            // we are in an array
-                            var result = [];
-                            for (var i =0; i < data.length; i++) {
-                                result.push(getNativeData(data.properties[i]));
-                            }
-                            return result;
-                        } else {
-                            var result = {};
-                            for (var member in data.properties) {
-                                result[member] = getNativeData(data.properties[member]);
-                            }
-                            return result;
-                        }
-                    }
-                }
-                return data;
-            };
-
-            var getInterpreterData = function(data) {
-                if (data instanceof Array) {
-                    // Array
-                    var result = interpreter.createObject(interpreter.ARRAY);
-                    for (var i = 0; i<data.length;i++) {
-                        interpreter.setProperty(result, i, getInterpreterData(data[i]));
-                    }
-                    return result;
-                } else if (typeof data === 'object') {
-                    // Object
-                    if (data.className) {
-                        // declick object: wrap it
-                        if (translatedClasses[data.className]) {
-                            var result = interpreter.createObject(getClass(translatedClasses[data.className]));
-                            result.data = data;
-                            return result;
-                        }
-                    }
-                } else {
-                    // Primitive types
-                    return interpreter.createPrimitive(data);
-                }
-                return data;
-            };
             
             var getClassMethodWrapper = function(className, methodName) {
                 return function() {
