@@ -12,6 +12,24 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         var running = false;
         
         this.initialize = function() {
+            var getNativeData = function(data) {
+                if (data.length) {
+                    // we are in an array
+                    var result = [];
+                    for (var i =0; i < data.length; i++) {
+                        result.push(getNativeData(data.properties[i]));
+                    }
+                    return result;
+                } else if (data.type && data.type=== "function") {
+                    return data;
+                } else if (data.data) {
+                    return data.data;
+                } else {
+                    return data;
+                }
+
+            };
+            
             var initFunc = function(interpreter, scope) {
 
                 // #1 Declare translated Instances
@@ -20,7 +38,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         // transform data from interpreter into actual data
                         var args = [];
                         for (var i=0; i<arguments.length;i++) {
-                            args.push(arguments[i].data);
+                            args.push(getNativeData(arguments[i]));
                         }
                         //TODO: handle cases where method return objects
                         return interpreter.createPrimitive(instances[className][methodName].apply(this.data, args));
@@ -57,11 +75,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         // transform data from interpreter into actual data
                         var args = [];
                         for (var i=0; i<arguments.length;i++) {
-                            if (arguments[i].type === "function") {
-                                args.push(arguments[i]);
-                            } else {
-                                args.push(arguments[i].data);
-                            }
+                            args.push(getNativeData(arguments[i]));
                         }
                         //TODO: handle cases where method return objects
                         return interpreter.createPrimitive(classes[className].prototype[methodName].apply(this.data, args));
@@ -82,7 +96,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         // transform data from interpreter into actual data
                         var args = [];
                         for (var i=0; i<arguments.length;i++) {
-                            args.push(arguments[i].data);
+                            args.push(getNativeData(arguments[i]));
                         }
                         classes[name].apply(declickObj, args);
                         obj.data = declickObj;
