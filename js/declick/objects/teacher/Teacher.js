@@ -65,9 +65,11 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
             // special case of length
             if (key === "length") {
                 if (typeof statement.length === "undefined") {
+                    window.console.log("length undefined");
                     return false;
                 }
                 if (value.length !== statement.length) {
+                    window.console.log("length different");
                     return false;
                 }
                 return true;
