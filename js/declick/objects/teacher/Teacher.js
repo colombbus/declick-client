@@ -35,7 +35,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @param {String[]} value
      */
     Teacher.prototype.setStatements = function(value) {
-        statements = value.body;
+        statements = value;
     };
 
     /**
