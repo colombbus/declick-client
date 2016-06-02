@@ -379,6 +379,10 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         this.exposeProperty = function(reference, property, name) {
             interpreter.exposeProperty(reference, property, name);
         };
+        
+        this.createCallStatement = function(functionStatement) {
+            return interpreter.createCallStatement(functionStatement);
+        };
 
     }
 

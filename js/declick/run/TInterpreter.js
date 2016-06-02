@@ -57,7 +57,11 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         // transform data from interpreter into actual data
                         var args = [];
                         for (var i=0; i<arguments.length;i++) {
-                            args.push(arguments[i].data);
+                            if (arguments[i].type === "function") {
+                                args.push(arguments[i]);
+                            } else {
+                                args.push(arguments[i].data);
+                            }
                         }
                         //TODO: handle cases where method return objects
                         return interpreter.createPrimitive(classes[className].prototype[methodName].apply(this.data, args));
@@ -178,7 +182,9 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     var error = new TError(err);
                     if (interpreter.stateStack.length>0) {
                         var state = interpreter.stateStack[0];
-                        error.setLines([state.node.loc.start.line, state.node.loc.end.line]);
+                        if (state.node.loc) {
+                            error.setLines([state.node.loc.start.line, state.node.loc.end.line]);
+                        }
                     }
                     error.detectError();
                 } else {
@@ -317,6 +323,11 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             }
             return false;
         };
+        
+        this.createCallStatement = function(functionStatement) {
+            var state = [{type: "ExpressionStatement", expression: {type: "InnerCallExpression",arguments: [], func_: functionStatement, loc: functionStatement.node.loc}}];
+            return state;
+        };
     }
 
 
@@ -437,6 +448,13 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             }
         }
     };
+    
+    // add support for inner call
+    Interpreter.prototype['stepInnerCallExpression'] = function() {
+        var state = this.stateStack.shift();
+        this.stateStack.unshift({node: {type:"CallExpression", arguments:state.node.arguments}, arguments:[], n_:0, doneCallee_: true, func_: state.node.func_, funcThis_: this.stateStack[this.stateStack.length - 1].thisExpression});
+    };
+
     
     // add ability to insert code
     Interpreter.prototype.insertCode = function(code, parameter) {
