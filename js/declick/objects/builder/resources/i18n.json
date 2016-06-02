@@ -13,7 +13,8 @@
             {"name":"_addRow","translated":"poserLigne","displayed":"poserLigne(0,0)"},
             {"name":"_setFlash","translated":"sePresser","displayed":"sePresser()"},
             {"name":"_getMaze","translated":"r\u00e9cup\u00e9rerLabyrinthe","displayed":"r\u00e9cup\u00e9rerLabyrinthe()"},
-            {"name":"_setTileCollidable","translated":"d\u00e9finirBloc","displayed":"d\u00e9finirBloc(1, true)"}
+            {"name":"_setTileCollidable","translated":"d\u00e9finirBloc","displayed":"d\u00e9finirBloc(1, true)"},
+            {"name":"_getTileCount","translated":"compterBriques","displayed":"compterBriques(1)"}
             ]
     }
 }
