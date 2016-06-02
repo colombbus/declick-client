@@ -5,7 +5,8 @@
             {"name":"hasStatement","translated":"hasStatement","displayed":"hasStatement()"},
             {"name":"setTextMode","translated":"setTextMode","displayed":"setTextMode()"},
             {"name":"setProgramMode","translated":"setProgramMode","displayed":"setProgramMode()"},
-            {"name":"verifyRegexp","translated":"verifyRegexp","displayed":"verifyRegexp()"}
+            {"name":"verifyRegexp","translated":"verifyRegexp","displayed":"verifyRegexp()"},
+            {"name":"statementsLength","translated":"statementsLength","displayed":"statementsLength()"}
         ]
     }
 }
