@@ -20,7 +20,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     // primitive data or declick objects
                     return data.data;
                 } else if (data.type === "object") {
-                    if (data.length) {
+                    if (typeof data.length !== "undefined") {
                         // we are in an array
                         var result = [];
                         for (var i =0; i < data.length; i++) {
