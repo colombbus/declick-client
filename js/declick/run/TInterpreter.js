@@ -16,7 +16,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             if (data.type) {
                 if (data.type=== "function") {
                     return data;
-                } else if (data.data) {
+                } else if (typeof data.data !== "undefined") {
                     // primitive data or declick objects
                     return data.data;
                 } else if (data.type === "object") {
