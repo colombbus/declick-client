@@ -62,17 +62,6 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      */
     function check(statement, value) {
         for (var key in value) {
-            // special case of length
-            if (key === "length") {
-                if (typeof statement.length === "undefined") {
-                    return false;
-                }
-                // TODO: find why !== does not work
-                if (value.length != statement.length) {
-                    return false;
-                }
-                return true;
-            }
             if (typeof statement[key] === "undefined") {
                 return false;
             }
