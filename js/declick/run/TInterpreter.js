@@ -64,33 +64,30 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             return data;
         };
 
+        var getClassMethodWrapper = function(className, methodName) {
+            return function() {
+                // transform data from interpreter into actual data
+                var args = [];
+                for (var i=0; i<arguments.length;i++) {
+                    args.push(getNativeData(arguments[i]));
+                }
+                return getInterpreterData(classes[className].prototype[methodName].apply(this.data, args));
+            };
+        };
+
+        //TODO: store classes
+        var getClass = function(name) {
+            var parent = interpreter.createObject(interpreter.FUNCTION);
+            if (typeof classes[name].prototype !== 'undefined' && typeof classes[name].prototype.translatedMethods !== 'undefined') {
+                var translated = classes[name].prototype.translatedMethods;
+                for (var methodName in translated) {
+                    interpreter.setProperty(parent.properties.prototype, translated[methodName], interpreter.createNativeFunction(getClassMethodWrapper(name, methodName)));
+                }
+            }
+            return parent;
+        };
         
         this.initialize = function() {
-
-            
-            var getClassMethodWrapper = function(className, methodName) {
-                return function() {
-                    // transform data from interpreter into actual data
-                    var args = [];
-                    for (var i=0; i<arguments.length;i++) {
-                        args.push(getNativeData(arguments[i]));
-                    }
-                    return getInterpreterData(classes[className].prototype[methodName].apply(this.data, args));
-                };
-            };
-            
-            //TODO: store classes
-            var getClass = function(name) {
-                var parent = interpreter.createObject(interpreter.FUNCTION);
-                if (typeof classes[name].prototype !== 'undefined' && typeof classes[name].prototype.translatedMethods !== 'undefined') {
-                    var translated = classes[name].prototype.translatedMethods;
-                    for (var methodName in translated) {
-                        interpreter.setProperty(parent.properties.prototype, translated[methodName], interpreter.createNativeFunction(getClassMethodWrapper(name, methodName)));
-                    }
-                }
-                return parent;
-            };
-            
             
             var initFunc = function(interpreter, scope) {
 
