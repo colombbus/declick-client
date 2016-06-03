@@ -142,7 +142,12 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                         if (e!== false) {
                             callback.call(this, e);
                         } else {
-                            callback.call(this, data['statements']);
+                            if (data['statements'].type && data['statements'].type === "Program") {
+                                callback.call(this, data['statements']);
+                            } else {
+                                // Fix for statements not correctly formated
+                                callback.call(this, {type:"Program", body:data['statements']});
+                            }
                         }
                     },
                     error: function(data, status, error) {
