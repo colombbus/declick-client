@@ -384,6 +384,11 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             var state = [{type: "ExpressionStatement", expression: {type: "InnerCallExpression",arguments: [], func_: functionStatement, loc: functionStatement.node.loc}}];
             return state;
         };
+        
+        this.interrupt = function() {
+            interpreter.stateStack.shift();
+            this.addPriorityStatements([{type: "BreakStatement"}]);
+        }
     }
 
 
@@ -569,6 +574,32 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         return this.UNDEFINED;
       };
 
+    // change break management not to remove root program node
+    Interpreter.prototype['stepBreakStatement'] = function() {
+        var state = this.stateStack.shift();
+        var node = state.node;
+        var label = null;
+        if (node.label) {
+            label = node.label.name;
+        }
+        state = this.stateStack.shift();
+        while (state &&
+            state.node.type != 'CallExpression' &&
+            state.node.type != 'NewExpression' && 
+            state.node.type != 'Program') {
+            if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
+                return;
+            }
+            state = this.stateStack.shift();
+        }
+        if (state.node.type == 'Program'){
+            // re-insert root node
+            this.stateStack.push(state);
+        } else {
+            // Syntax error, do not allow this error to be trapped.
+            throw SyntaxError('Illegal break statement');
+        }
+    };
 
     
     return TInterpreter;
