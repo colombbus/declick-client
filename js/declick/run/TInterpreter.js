@@ -246,7 +246,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 }
                 if (interpreter.stateStack.length>0) {
                     var state = interpreter.stateStack[0];
-                    if (!state.node.loc.source) {
+                    if (!state.node.loc || !state.node.loc.source) {
                         // no program associated: remove lines if any
                         error.setLines([]);
                     } else {
