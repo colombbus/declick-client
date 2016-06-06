@@ -107,11 +107,7 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
          * Parse the code to get its statements.
          */
         function parse() {
-            if (code.trim().length > 0) {
-                statements = TParser.parse(code);
-            } else {
-                statements = [];
-            }
+            statements = TParser.parse(code, name);
             codeChanged = false;
         }
 

@@ -181,6 +181,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     TRuntime.executeStatements(statements);
                     canvas.giveFocus();
                     exercise.end();
+                    statements = statements.body;
                 }
                 //TODO: only if no error
                 Teacher.setStatements(statements);

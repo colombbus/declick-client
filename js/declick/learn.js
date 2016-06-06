@@ -35,7 +35,8 @@ require.config({
         "Grader": "env/Grader",
         "TExercise": "data/TExercise",
         "TResource": "data/TResource",
-        "jschannel": "../libs/jschannel/jschannel"
+        "jschannel": "../libs/jschannel/jschannel",
+        "js-interpreter":"../libs/js-interpreter/interpreter"
     },
     map: {
         "fileupload": {

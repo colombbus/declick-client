@@ -24,12 +24,7 @@ define(['jquery', 'TResource'], function ($, TResource) {
          * @param {Function} callback
          */
         this.load = function (callback) {
-            if (typeof localStorage.version !== 'undefined') {
-                window.console.log("*** Loading Declick Environment v." + localStorage.version + " ***");
-            }
-            else {
-                window.console.log("*** Loading Declick Environment ***");
-            }
+            window.console.log("*** Loading Declick Environment ***");
             window.console.log("* Loading config");
             var configFile = this.getResource("config.json");
             var self = this;
@@ -43,6 +38,7 @@ define(['jquery', 'TResource'], function ($, TResource) {
                         document.domain = self.config['document-domain'];
                     }
                     TResource.setCacheEnabled(self.isCacheEnabled(), self.config['cache-version']);
+                    window.console.log("* Cache revision: " + self.config['cache-version']);
                     TResource.setLog(self.config['log']);
                     TResource.setError(self.config['error']);
                     self.log("* Retrieving translated messages");

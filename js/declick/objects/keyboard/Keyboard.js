@@ -90,7 +90,7 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
         if (this.active) {
             var keycode = e.keyCode;
             this.keys[keycode] = true;
-            this[this.getMessage(TUtils.getkeyName(keycode))] = true;
+            this[TUtils.getkeyName(keycode)] = true;
             if (this.waiting) {
                 this.waiting = false;
                 this.synchronousManager.end();
@@ -106,7 +106,7 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
         if (this.active) {
             var keycode = e.keyCode;
             this.keys[keycode] = false;
-            this[this.getMessage(TUtils.getkeyName(keycode))] = false;
+            this[TUtils.getkeyName(keycode)] = false;
         }
     };
 
@@ -150,7 +150,8 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
         if (typeof this.constructor.messages !== 'undefined') {
             var names = TUtils.getKeyNames();
             for (var i = 0;i<names.length;i++) {
-                this[this.getMessage(names[i])] = false;
+                TRuntime.exposeProperty(this, names[i],this.getMessage(names[i]));
+                this[names[i]] = false;
             }
             this.keyNamesInitialized = true;
         }
