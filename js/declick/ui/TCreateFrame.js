@@ -1,5 +1,5 @@
 define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'TUI', 'ui/TConsole', 'ui/TToolbar', 'ui/TLog', 'ui/TMessage', 'TRuntime', 'TEnvironment'], function(TComponent, $, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TMessage, TRuntime, TEnvironment) {
-    function TFrame(callback) {
+    function TCreateFrame(callback) {
         var initialized = false;
         var canvas, editor, sidebar, toolbar, console, log, message;
         var $frame, $main, $top, $separator, $bottom, $loading;
@@ -160,9 +160,9 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
 
     }
 
-    TFrame.prototype = Object.create(TComponent.prototype);
-    TFrame.prototype.constructor = TFrame;
+    TCreateFrame.prototype = Object.create(TComponent.prototype);
+    TCreateFrame.prototype.constructor = TCreateFrame;
 
 
-    return TFrame;
+    return TCreateFrame;
 });

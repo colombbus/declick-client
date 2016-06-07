@@ -96,7 +96,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             }
         };
 
-        this.displayed = function() {
+        this.displayed = function(trackHashChange) {
             canvas.displayed();
             editor.displayed();
             Teacher.setFrame(this);
@@ -107,10 +107,12 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             // declare itself as log 
             TRuntime.setLog(this);
             
-            var self = this;
-            window.addEventListener("hashchange", function() {
-                self.load();
-            }, false);
+            if (trackHashChange) {
+                var self = this;
+                window.addEventListener("hashchange", function() {
+                    self.load();
+                }, false);
+            }
         };
         
         this.init = function() {

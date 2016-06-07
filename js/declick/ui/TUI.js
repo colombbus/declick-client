@@ -622,6 +622,14 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 sidebar.update();
             });
         };
+        
+        this.create = function() {
+            
+        };
+        
+        this.learn = function(id) {
+            
+        };
 
     };
 
