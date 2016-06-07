@@ -1,4 +1,4 @@
-define(['ui/TUI'], function(TUI) {
+define(['TUI'], function(TUI) {
     var TRouter = function() {
         
         var getPart = function(hash, part) {

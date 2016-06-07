@@ -1,0 +1,20 @@
+body, html {
+    height:100%;
+    min-height:100%;
+    margin:0;
+    padding:0;
+    font-family:'Arial', sans-serif;
+}
+
+#tmain {
+    height:100%;
+}
+
+#tlearnframe, #tframe {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    display:none;
+}

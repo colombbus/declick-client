@@ -43,7 +43,9 @@ require.config({
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
         "Grader": "env/Grader",
+        "TExercise": "data/TExercise",
         "TRouter": "env/TRouter",
+        "jschannel": "../libs/jschannel/jschannel",
         "js-interpreter":"../libs/js-interpreter/interpreter"
     },
     map: {
@@ -84,7 +86,7 @@ require.config({
 // Start the main app logic.
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TCreateFrame', 'TProject', 'Task', 'Grader', 'TRouter'], function($, TEnvironment, TRuntime, TCreateFrame, TProject, TRouter) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TMainFrame', 'TProject', 'Task', 'Grader', 'TRouter'], function($, TEnvironment, TRuntime, TMainFrame, TProject, Task, Grader, TRouter) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
@@ -96,65 +98,17 @@ function load() {
                 TEnvironment.log("***************************");
                 TEnvironment.log("* Building User Interface *");
                 TEnvironment.log("***************************");
-                var createFrame = new TCreateFrame(function(component) {
+                var mainFrame = new TMainFrame(function(component) {
                     $("body").append(component);
-                    var learnFrame = new TLearnFrame(function(component) {
-                        $("body").append(component);
-                        TEnvironment.log("*******************");
-                        TEnvironment.log("* Initiating link *");
-                        TEnvironment.log("*******************");
-                        // Create task and grader
-                        window.task = new Task(this);
-                        window.grader = new Grader();
-                        
-                    //window.platform.initWithTask(window.task);
-                    // get exercise id
-                    var exerciseId;
-                    if (typeof init_exerciseId !== 'undefined') {
-                        // get id from server
-                        exerciseId = init_exerciseId;
-                    } else {
-                        // get id from hash
-                        var hash = document.location.hash;
-                        exerciseId = parseInt(hash.substring(1));
-                    }
-                    TEnvironment.log("********************");
-                    TEnvironment.log("* Loading exercise *");
-                    TEnvironment.log("********************");
-                    var self = this;
+                    // Create task and grader
+                    window.task = new Task(this);
+                    window.grader = new Grader();
                     $(document).ready(function() {
-                        self.displayed(true);
+                        mainFrame.displayed();
                         TRuntime.init();
-                        // trigger resize in order for canvas to update its size (and remove the 5px bottom margin)
-                        $(window).resize();
-                        self.load();
-                    });
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    TEnvironment.log("*******************");
-                    TEnvironment.log("* Initiating link *");
-                    TEnvironment.log("*******************");
-                    var currentProject = new TProject();
-                    currentProject.init(function() {
-                        TEnvironment.setProject(currentProject);
-                        $(document).ready(function() {
-                            frame.displayed();
-                            TRuntime.init();
-                            if (typeof window.parent !== 'undefined') {
-                                window.parent.postMessage('init', '*');
-                            }
-                            
-                            var router = new TRouter();
-                            window.addEventListener("hashchange", function() {
-                                router.route();
-                            }, false);
-                            router.route();
-                        });
+                        if (typeof window.parent !== 'undefined') {
+                            window.parent.postMessage('init', '*');
+                        }
                     });
                 });
             });
