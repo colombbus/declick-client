@@ -23,18 +23,18 @@ define(['ui/TComponent', 'jquery', 'TRuntime'], function(TComponent, $, TRuntime
 
         TComponent.call(this, "TLearnCanvas.html", function(component) {
             $main = component;
-            $canvas = component.find("#tcanvas");
-            $canvasLoading = component.find("#tcanvas-loading");
-            $canvasLoadingValue = component.find("#tcanvas-loading-value");
+            $canvas = component.find("#tlearncanvas");
+            $canvasLoading = component.find("#tlearncanvas-loading");
+            $canvasLoadingValue = component.find("#tlearncanvas-loading-value");
 
             if (typeof callback !== 'undefined') {
                 callback.call(this, component);
             }
         });
 
-        this.displayed = function() {
+        this.onDOMReady = function() {
             var graphics = TRuntime.getGraphics();
-            graphics.setCanvas("tcanvas");
+            graphics.initCanvas("tlearncanvas");
             // resize canvas and its container when window is resized
             $(window).resize(function(e) {
                 var width = $main.width();

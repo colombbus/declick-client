@@ -46,7 +46,7 @@ body {
     position:relative;
     height:100%;
 }
-
+    
 .split-pane-divider {
     background: #ffffff url("../images/handle.png") no-repeat scroll 50% 1px;
     height: 10px;
@@ -137,7 +137,7 @@ body {
     overflow:hidden;
 }
 
-#tcanvas_container {
+#tlearncanvas_container {
     width:100%;
     height:100%;
     position:relative;
@@ -145,19 +145,19 @@ body {
     box-sizing:border-box;
 }
 
-#tcanvas-outer {
+#tlearncanvas-outer {
     height:100%;
     box-sizing: border-box;
     border:solid 1px #DCDCDE;
     background-color:#ffffff;
 }
 
-#tcanvas {
+#tlearncanvas {
     position:relative;
     overflow:hidden;
 }
 
-#tcanvas3d {
+#tlearncanvas3d {
     background-color:transparent;
     width:100%;
     height:100%;
@@ -167,11 +167,7 @@ body {
     left:0px;
 }
 
-.runtime-frame {
-    display:none;
-}
-
-#tcanvas-loading {
+#tlearncanvas-loading {
     position:absolute;
     top:0;
     left:0;
@@ -182,7 +178,7 @@ body {
     background-position:50% 50%;
 }
 
-#tcanvas-loading-value {
+#tlearncanvas-loading-value {
     position:absolute;
     top:60%;
     width:100%;
@@ -265,7 +261,7 @@ body {
 #tlearneditor-text .ace_content {
 }
 
-.ttoolbar-button
+.tlearn-button
 {
    font-size:11pt;
     margin-left:50px;
@@ -278,57 +274,51 @@ body {
 }
 
 
-.ttoolbar-button-execute {
-}
-
-
-.ttoolbar-button-execute {
+.tlearn-button-play {
     height:35px;
     width:35px;
     background-image:url('../images/run.png');
 }
 
-.ttoolbar-button-execute:hover {
+.tlearn-button-play:hover {
     background-image:url('../images/run_on.png');
 
 }
-.ttoolbar-button-check {
+.tlearn-button-check {
     height:35px;
     width:35px;
     background-image:url('../images/check.png');
 }
 
-.ttoolbar-button-check:hover {
+.tlearn-button-check:hover {
     background-image:url('../images/check_on.png');
 
 }
 
-.ttoolbar-button-clear,
-.ttoolbar-button-erase {
+.tlearn-button-clear,
+.tlearn-button-erase {
     height:35px;
     width:35px;
     background-image:url('../images/reset.png');
 }
 
-.ttoolbar-button-clear:hover,
-.ttoolbar-button-erase:hover{
+.tlearn-button-clear:hover,
+.tlearn-button-erase:hover{
     background-image:url('../images/reset_on.png');
 }
 
 
-.ttoolbar-button-clear:hover,
-.ttoolbar-button-check:hover,
-.ttoolbar-button-erase:hover {
+.tlearn-button-clear:hover,
+.tlearn-button-check:hover,
+.tlearn-button-erase:hover {
     color:#F6A71F;
 }
 
-.ttoolbar-button-execute:active,
-.ttoolbar-button-clear:active {
+.tlearn-button-execute:active,
+.tlearn-button-clear:active {
     color:#E47637;
 }
 
-.ttoolbar-button-clear {
-}
 
 #tlearnframe-credits {
     position:absolute;
@@ -513,7 +503,7 @@ body {
     text-align:right;
 }
 
-.ttoolbar-button-close {
+.tlearn-button-close {
     height:23px;
     width:23px;
     margin-top:10px;
@@ -522,13 +512,12 @@ body {
     float:right;
 }
 
-.ttoolbar-button-close:hover {
+.tlearn-button-close:hover {
     background-image:url('../images/close_success_on.png');
 
 }
 
-
-.ttoolbar-button-next {
+.tlearn-button-next {
     height:120px;
     width:150px;
     background-image:url('../images/next_step.png');
@@ -543,7 +532,7 @@ body {
     text-align:center;
 }
 
-.ttoolbar-button-next:hover {
+.tlearn-button-next:hover {
     background-image:url('../images/next_step_on.png');
 
 }

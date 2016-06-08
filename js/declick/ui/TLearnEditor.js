@@ -27,7 +27,7 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
         /**
          * Initialize LearnEditor.
          */
-        this.displayed = function() {
+        this.onDOMReady = function() {
             aceEditor = ace.edit($editorText.attr("id"));
             aceEditor.getSession().setMode("ace/mode/javascript");
             // Disable JSHint

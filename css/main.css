@@ -16,5 +16,32 @@ body, html {
     left:0;
     right:0;
     bottom:0;
-    display:none;
 }
+
+#tmainframe-loading {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:white;
+    z-index:100;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+}
+
+#tmainframe-loading img {
+    height:50px;
+    width:auto;
+}
+
+#tmainframe-loading p {
+    font-family: "Rubik",sans-serif;
+    font-size:14pt;
+    color:#333;
+    margin:0;
+    font-weight:bold;
+}
+

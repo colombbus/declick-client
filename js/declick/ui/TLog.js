@@ -25,7 +25,7 @@ define(['ui/TComponent', 'jquery', 'TUI', 'ui/TDesignLog', 'TEnvironment'], func
             });
         });
 
-        this.displayed = function() {
+        this.onDOMReady = function() {
             $designLog.hide();
         };
 

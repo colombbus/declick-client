@@ -67,7 +67,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             }
         };
 
-        this.displayed = function() {
+        this.onDOMReady = function() {
             // Set UI
             TUI.setFrame(frame);
             TUI.setCanvas(canvas);
@@ -81,12 +81,12 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             // Plug Runtime with Log
             TRuntime.setLog(log);
             
-            canvas.displayed();
-            editor.displayed();
-            sidebar.displayed();
-            console.displayed();
-            toolbar.displayed();
-            log.displayed();
+            canvas.onDOMReady();
+            editor.onDOMReady();
+            sidebar.onDOMReady();
+            console.onDOMReady();
+            toolbar.onDOMReady();
+            log.onDOMReady();
             $main.on("splitpane:resized", function() {
                 editor.resize();
             });

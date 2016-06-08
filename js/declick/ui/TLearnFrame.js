@@ -27,34 +27,34 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $textMessageClose.click(function(e) {
                 $textMessage.fadeOut(500);
             });
-            var $buttonClear = component.find(".ttoolbar-button-clear");
+            var $buttonClear = component.find(".tlearn-button-clear");
             $buttonClear.attr("title", "Réinitialiser");
             $buttonClear.click(function(e) {
                 clear();
             });
-            var $buttonExecute = component.find(".ttoolbar-button-execute");
+            var $buttonExecute = component.find(".tlearn-button-play");
             $buttonExecute.attr("title", TEnvironment.getMessage('button-execute'));
             $buttonExecute.click(function(e) {
                 execute();
             });
-            var $buttonErase = component.find(".ttoolbar-button-erase");
+            var $buttonErase = component.find(".tlearn-button-erase");
             $buttonErase.attr("title", TEnvironment.getMessage('button-erase'));
             $buttonErase.click(function(e) {
                 clear();
             });
-            var $buttonCheck = component.find(".ttoolbar-button-check");
+            var $buttonCheck = component.find(".tlearn-button-check");
             $buttonCheck.attr("title", TEnvironment.getMessage('button-check'));
             $buttonCheck.click(function(e) {
                 execute();
             });
             
-            var $buttonNext = component.find(".ttoolbar-button-next");
+            var $buttonNext = component.find(".tlearn-button-next");
             $buttonNext.prepend(TEnvironment.getMessage('button-next-step'));
             $buttonNext.click(function(e) {
                 platform.validate("next");
             });
 
-            var $buttonClose = component.find(".ttoolbar-button-close");
+            var $buttonClose = component.find(".tlearn-button-close");
             $buttonClose.click(function(e) {
                 hideSuccess();
             });
@@ -96,9 +96,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             }
         };
 
-        this.displayed = function(trackHashChange) {
-            canvas.displayed();
-            editor.displayed();
+        this.onDOMReady = function(trackHashChange) {
+            canvas.onDOMReady();
+            editor.onDOMReady();
             Teacher.setFrame(this);
             $right.on("splitpane:resized", function() {
                 editor.resize();
@@ -110,7 +110,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             if (trackHashChange) {
                 var self = this;
                 window.addEventListener("hashchange", function() {
-                    self.load();
+                    var hash = document.location.hash;
+                    var exerciseId = parseInt(hash.substring(1));
+                    self.load(exerciseId);
                 }, false);
             }
         };
@@ -126,9 +128,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             initialized = true;
         };
         
-        this.load = function(callback) {
-            var hash = document.location.hash;
-            var exerciseId = parseInt(hash.substring(1));
+        this.load = function(exerciseId, callback) {
             if (isNaN(exerciseId)) {
                 TEnvironment.error("Could not find exercise id");
                 if (!initialized) {
@@ -474,6 +474,10 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
 
         this.addCommand = function(command) {
             // do nothing
+        };
+        
+        this.clear = function() {
+            clear();
         };
 
 

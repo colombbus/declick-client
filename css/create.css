@@ -1114,35 +1114,6 @@ textarea.tsidebar-rename {
     clear:both;
 }
 
-.ttoolbar-button-execute
-{
-   font-size:11pt;
-    min-width:100px;
-    margin-left:10px;
-    margin-right:10px;
-    margin-top:5px;
-    margin-bottom:5px;
-    padding-top:3px;
-    padding-bottom:3px;
-    padding-left:8px;
-    padding-right:8px;
-    color:#5E5E5E;
-    cursor:pointer;
-    border:none;
-    background-color:transparent;
-    
-   font-family:Comfortaa, "Helvetica Neue",Helvetica,Arial,sans-serif;     
-}
-
-
-.ttoolbar-button-execute:hover {
-    color:#F6A71F;
-}
-
-.ttoolbar-button-execute:active {
-    color:#E47637;
-}
-
 /* TMessage */
 #tmessage {
     display:none;

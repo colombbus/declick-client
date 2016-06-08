@@ -1,5 +1,6 @@
 define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, TEnvironment, TError, Quintus) {
     var TUI = function() {
+        var mainFrame;
         var frame;
         var canvas;
         var editor;
@@ -16,6 +17,11 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
 
         this.setFrame = function(element) {
             frame = element;
+            return;
+        };
+
+        this.setMainFrame = function(element) {
+            mainFrame = element;
             return;
         };
 
@@ -624,11 +630,15 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
         
         this.create = function() {
-            
+            if (mainFrame) {
+                mainFrame.create();
+            }
         };
         
         this.learn = function(id) {
-            
+            if (mainFrame) {
+                mainFrame.learn(id);
+            }
         };
 
     };

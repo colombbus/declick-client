@@ -40,7 +40,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
         var popupTimeout;
         var triggerPopup = false;
 
-        this.displayed = function() {
+        this.onDOMReady = function() {
             aceEditor = ace.edit($consoleText.attr("id"));
             aceEditor.getSession().setMode("ace/mode/javascript");
             // Disable JSHint

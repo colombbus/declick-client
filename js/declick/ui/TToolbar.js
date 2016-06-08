@@ -58,7 +58,7 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             }
         });
 
-        this.displayed = function() {
+        this.onDOMReady = function() {
         };
 
         this.enableConsole = function() {

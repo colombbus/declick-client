@@ -86,7 +86,7 @@ require.config({
 // Start the main app logic.
 
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TMainFrame', 'TProject', 'Task', 'Grader', 'TRouter'], function($, TEnvironment, TRuntime, TMainFrame, TProject, Task, Grader, TRouter) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TMainFrame', 'TProject', 'Task', 'Grader'], function($, TEnvironment, TRuntime, TMainFrame, TProject, Task, Grader) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
@@ -104,7 +104,7 @@ function load() {
                     window.task = new Task(this);
                     window.grader = new Grader();
                     $(document).ready(function() {
-                        mainFrame.displayed();
+                        mainFrame.onDOMReady();
                         TRuntime.init();
                         if (typeof window.parent !== 'undefined') {
                             window.parent.postMessage('init', '*');

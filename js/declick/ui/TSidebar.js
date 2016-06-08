@@ -34,7 +34,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'jquery', 'ui/TSidebar
         /**
          * Display Sidebar.
          */
-        this.displayed = function() {
+        this.onDOMReady = function() {
             this.displayPrograms();
             programs.init();
             resources.init();

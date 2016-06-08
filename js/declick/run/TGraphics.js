@@ -275,10 +275,23 @@ define(['jquery', 'quintus'], function($, Quintus) {
             Q.stage().remove(object);
         };
 
-        this.setCanvas = function(id) {
+        this.initCanvas = function(id) {
             Q.setup(id, {maximize: true}).touch(Q.SPRITE_ALL);
             Q.stageScene(null);
         };
+
+        this.setCanvas = function(id) {
+            Q.el = document.getElementById(id);
+            Q.wrapper = document.getElementById(id+'_container');
+            Q.ctx = Q.el.getContext && Q.el.getContext("2d");
+            var w = parseInt(Q.el.width,10);
+            var h = parseInt(Q.el.height,10);
+            Q.width = w;
+            Q.height = h;
+            Q.cssWidth = w;
+            Q.cssHeight = h;
+        };
+
 
         this.resize = function(width, height) {
             Q.el.style.height = height + "px";

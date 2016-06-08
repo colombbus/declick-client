@@ -40,7 +40,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
         /**
          * Initialize Editor.
          */
-        this.displayed = function() {
+        this.onDOMReady = function() {
             aceEditor = ace.edit($editor.attr("id"));
             aceEditor.setShowPrintMargin(false);
             //aceEditor.renderer.setShowGutter(false);
