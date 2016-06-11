@@ -290,8 +290,16 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             }
         };
 
+        this.insertStatements = function(statements) {
+            interpreter.insertCode(statements,false);
+            if (!running) {
+                this.start();
+            }
+        };
+
+
         this.addPriorityStatements = function(statements, parameter, log) {
-            interpreter.insertCode(statements, parameter);
+            interpreter.insertCode(statements, true, parameter);
             if (!running) {
                 this.start();
             }
@@ -518,21 +526,28 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
     
     // add ability to insert code
-    Interpreter.prototype.insertCode = function(code, parameter) {
-        // Find index at which insertion has to be made
-        var index=0;
-        while (index<this.stateStack.length && this.stateStack[index].priority) {
-            index++;
+    Interpreter.prototype.insertCode = function(code, priority, parameter) {
+        if (priority) {
+            // Find index at which insertion has to be made
+            var index=this.stateStack.length-1;
+            while (index>=0 && !this.stateStack[index].priority) {
+                index--;
+            }
+            if (index<0) {
+                index = 0;
+            }
+        } else {
+            index = 0;
         }
-
+        
         // Append the new statements
         for (var i = code.length-1; i>=0; i--) {
             var node = code[i];
-            if (node.type === "ExpressionStatement") {
+            if (priority && node.type === "ExpressionStatement") {
                 // Add parameter
                 node.expression.parameter = parameter;
             }
-            this.stateStack.splice(index, 0, {node: node, priority:true, done:false});
+            this.stateStack.splice(index, 0, {node: node, priority:priority, done:false});
         }
     };
     
