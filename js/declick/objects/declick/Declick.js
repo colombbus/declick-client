@@ -1,4 +1,4 @@
-define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink','SynchronousManager'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TLink, SynchronousManager) {
+define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink','SynchronousManager', 'TError'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TLink, SynchronousManager, TError) {
     /**
      * Defines Declick, inherited from TObject.
      * Declick is an object created automatically with the launch of Declick.
@@ -55,8 +55,16 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
      */
     Declick.prototype._loadScript = function(name) {
         name = TUtils.getString(name);
+        this.synchronousManager.begin();
+        var sm = this.synchronousManager;
         TLink.getProgramStatements(name, function(statements) {
-            TRuntime.executeStatements(statements, name);        
+            if (statements instanceof TError) {
+                sm.end();
+                // TODO: handle error transmission
+                throw statements;
+            }
+            TRuntime.insertStatements(statements.body, name);        
+            sm.end();
         });
     };
 
