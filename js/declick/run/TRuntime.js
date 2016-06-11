@@ -203,6 +203,11 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             interpreter.addStatements(statements);
         };
 
+        this.insertStatements = function(statements, programName) {
+            // TODO: handle programName
+            interpreter.insertStatements(statements);
+        };
+
         this.executeStatementsNow = function(statements, parameter, log) {
             if (typeof parameter !== 'undefined') {
                 // TODO: find a better way than using a string representation
