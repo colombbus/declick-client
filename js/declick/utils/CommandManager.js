@@ -5,6 +5,8 @@ define(['TRuntime', 'TUtils', 'TParser', 'TInterpreter'], function(TRuntime, TUt
      */
     var CommandManager = function() {
         this.commands = new Array();
+        this.enabled = {};
+        this.enabled._default = true;
         this.logging = true;
     };
 
@@ -66,10 +68,20 @@ define(['TRuntime', 'TUtils', 'TParser', 'TInterpreter'], function(TRuntime, TUt
                 field = parameters['field'];
             }
         }
-        if (typeof field === 'undefined') {
-            TRuntime.executeNow(this.commands, parameter, this.logging);
-        } else if (typeof this.commands[field] !== 'undefined') {
-            TRuntime.executeNow(this.commands[field], parameter, this.logging);
+        if (typeof field === 'undefined' ) {
+            if (this.enabled._default) {
+                this.enabled._default = false;
+                var self = this;
+                TRuntime.executeNow(this.commands, parameter, this.logging, function() {
+                    self.enabled._default = true;
+                });
+            }
+        } else if (typeof this.commands[field] !== 'undefined' && this.enabled[field]) {
+            this.enabled[field] = false;
+            var self = this;
+            TRuntime.executeNow(this.commands[field], parameter, this.logging, function() {
+                self.enabled[field] = true;
+            });
         }
     };
 

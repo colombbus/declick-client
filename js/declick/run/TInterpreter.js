@@ -301,9 +301,13 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         };
 
 
-        this.addPriorityStatements = function(statements, parameter, log) {
+        this.addPriorityStatements = function(statements, parameter, log, callback) {
             if (priorityStatementsAllowed) {
-                interpreter.insertCode(statements, true, parameter);
+                if (typeof callback !== 'undefined') {
+                    interpreter.insertCode(statements, true, parameter, this.createCallbackStatement(callback));
+                } else {
+                    interpreter.insertCode(statements, true, parameter);
+                }
                 if (!running) {
                     this.start();
                 }
@@ -396,6 +400,11 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         this.createCallStatement = function(functionStatement) {
             var state = [{type: "ExpressionStatement", expression: {type: "InnerCallExpression",arguments: [], func_: functionStatement, loc: functionStatement.node.loc}}];
             return state;
+        };
+
+        this.createCallbackStatement = function(callback) {
+            var statement = {type: "CallbackStatement", callback: callback};
+            return statement;
         };
         
         this.interrupt = function() {
@@ -539,7 +548,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
     
     // add ability to insert code
-    Interpreter.prototype.insertCode = function(code, priority, parameter) {
+    Interpreter.prototype.insertCode = function(code, priority, parameter, callbackStatement) {
         // Find index at which insertion has to be made
         var index=this.stateStack.length-1;
         while (index>=0 && !this.stateStack[index].priority) {
@@ -548,6 +557,9 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         index++;
         
         // Append the new statements
+        if (typeof callbackStatement !== 'undefined') {
+            this.stateStack.splice(index, 0, {node: callbackStatement, priority:priority, done:false});
+        }
         for (var i = code.length-1; i>=0; i--) {
             var node = code[i];
             if (priority && node.type === "ExpressionStatement") {
@@ -652,6 +664,15 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         } else {
             // Syntax error, do not allow this error to be trapped.
             throw SyntaxError('Illegal break statement');
+        }
+    };
+
+    // handle interrupt statements
+    Interpreter.prototype['stepCallbackStatement'] = function() {
+        var state = this.stateStack.shift();
+        var node = state.node;
+        if (node.callback) {
+            node.callback.apply(this);
         }
     };
 
