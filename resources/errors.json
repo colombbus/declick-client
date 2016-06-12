@@ -4,6 +4,7 @@
         "Internal Server Error":"Erreur interne du serveur",
         "backend-error-project_not_set":"Aucun projet en cours",
         "backend-error-edition_forbidden":"Vous ne pouvez pas modifier ce projet",
+        "backend-error-program_not_found":"Programme introuvable",
         "runtime-error-undefined":"« {0} » n'est pas défini",
         "runtime-error-not-a-function":"La fonction « {0} » n'existe pas",
         "runtime-error-undefined-not-a-function":"Cette action n'existe pas",
