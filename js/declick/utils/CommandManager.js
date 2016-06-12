@@ -31,6 +31,7 @@ define(['TRuntime', 'TUtils', 'TParser', 'TInterpreter'], function(TRuntime, TUt
             // command with associated field
             if (typeof this.commands[field] === 'undefined') {
                 this.commands[field] = new Array();
+                this.enabled[field] = true;
             }
             for (var i = 0; i < command.length; i++) {
                 this.commands[field].push(command[i]);
