@@ -56,6 +56,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     Declick.prototype._loadScript = function(name) {
         name = TUtils.getString(name);
         this.synchronousManager.begin();
+        TRuntime.lockPriorityStatements();
         var sm = this.synchronousManager;
         TLink.getProgramStatements(name, function(statements) {
             if (statements instanceof TError) {

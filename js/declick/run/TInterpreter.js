@@ -396,7 +396,13 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         this.interrupt = function() {
             interpreter.stateStack.shift();
             this.addPriorityStatements([{type: "InterruptStatement"}]);
-        }
+        };
+        
+        this.lockPriorityStatements = function() {
+            // set current statement priority to true to prevent any priority statements from 
+            // coming in front of this one
+            interpreter.stateStack[0].priority = true;
+        };
     }
 
 
