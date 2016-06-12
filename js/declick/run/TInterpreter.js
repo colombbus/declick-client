@@ -400,7 +400,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         
         this.interrupt = function() {
             interpreter.stateStack.shift();
-            this.addPriorityStatements([{type: "InterruptStatement"}]);
+            interpreter.stateStack.unshift({node:{type: "InterruptStatement"}, priority:true, done:false});
         };
         
         this.allowPriorityStatements = function() {
@@ -631,13 +631,20 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         if (node.label) {
             label = node.label.name;
         }
-        state = this.stateStack.shift();
+        // Find index at which search has to start
+        var index=this.stateStack.length-1;
+        while (index>=0 && !this.stateStack[index].priority) {
+            index--;
+        }
+        index++;
+        
+        state = this.stateStack.splice(index, 1)[0];
         while (state &&
             state.node.type != 'Program') {
             if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
                 return;
             }
-            state = this.stateStack.shift();
+            state = this.stateStack.splice(index, 1)[0];
         }
         if (state.node.type == 'Program'){
             // re-insert root node
