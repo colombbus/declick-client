@@ -90,8 +90,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             if (clear) {
                 return true;
             }
-            return false;
-			/*
+            //return false;
             if (separateXL !== 0) {
                 if (separateXR !== 0) {
                     // cannot move horizontally
@@ -115,7 +114,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             }
 
 
-            return false;
+            //return false;
 
             // calculate normal
             var normalX = col.separate[0];
@@ -133,7 +132,6 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             col.normalY = normalY;
 
             return false;
-			*/
         }
     });
 
