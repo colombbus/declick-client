@@ -533,9 +533,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             while (index>=0 && !this.stateStack[index].priority) {
                 index--;
             }
-            if (index<0) {
-                index = 0;
-            }
+            index++;
         } else {
             index = 0;
         }
