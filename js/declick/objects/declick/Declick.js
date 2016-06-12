@@ -62,8 +62,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
             if (statements instanceof TError) {
                 sm.end();
                 TRuntime.allowPriorityStatements();
-                // TODO: handle error transmission
-                throw statements;
+                TRuntime.handleError(statements)
             }
             TRuntime.insertStatements(statements.body, name);        
             sm.end();

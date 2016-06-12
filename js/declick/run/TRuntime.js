@@ -198,6 +198,10 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 TEnvironment.error(error);
             }
         };
+        
+        this.handleError = function(err) {
+            handleError(err);
+        };
 
         this.executeStatements = function(statements) {
             interpreter.addStatements(statements);
