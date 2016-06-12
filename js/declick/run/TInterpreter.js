@@ -11,7 +11,6 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         
         var interpreter;
         var running = false;
-        var priorityStatementsAllowed = true;
 
         var getNativeData = function(data) {
             if (data.type) {
@@ -213,7 +212,6 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
               done: false
             }];            
             interpreter.paused_ = false;
-            priorityStatementsAllowed = true;
         };
         
         
@@ -301,11 +299,9 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
 
         this.addPriorityStatements = function(statements, parameter, log) {
-            if (priorityStatementsAllowed) {
-                interpreter.insertCode(statements, true, parameter);
-                if (!running) {
-                    this.start();
-                }
+            interpreter.insertCode(statements, true, parameter);
+            if (!running) {
+                this.start();
             }
         };
 
@@ -402,15 +398,6 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             this.addPriorityStatements([{type: "InterruptStatement"}]);
         };
         
-        this.refusePriorityStatements = function() {
-            // Do not allow priority statements 
-            priorityStatementsAllowed = false;
-        };
-
-        this.allowPriorityStatements = function() {
-            // Allow priority statements
-            priorityStatementsAllowed = true;
-        };
     }
 
 
@@ -541,16 +528,12 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
     
     // add ability to insert code
     Interpreter.prototype.insertCode = function(code, priority, parameter) {
-        if (priority) {
-            // Find index at which insertion has to be made
-            var index=this.stateStack.length-1;
-            while (index>=0 && !this.stateStack[index].priority) {
-                index--;
-            }
-            index++;
-        } else {
-            index = 0;
+        // Find index at which insertion has to be made
+        var index=this.stateStack.length-1;
+        while (index>=0 && !this.stateStack[index].priority) {
+            index--;
         }
+        index++;
         
         // Append the new statements
         for (var i = code.length-1; i>=0; i--) {

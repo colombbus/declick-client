@@ -208,14 +208,6 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             interpreter.insertStatements(statements);
         };
 
-        this.refusePriorityStatements = function() {
-            interpreter.refusePriorityStatements();
-        };
-
-        this.allowPriorityStatements = function() {
-            interpreter.allowPriorityStatements();
-        };
-
         this.executeStatementsNow = function(statements, parameter, log) {
             if (typeof parameter !== 'undefined') {
                 // TODO: find a better way than using a string representation
