@@ -232,6 +232,14 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
         };
         
+        this.allowPriorityStatements = function() {
+            interpreter.allowPriorityStatements();
+        };
+        
+        this.refusePriorityStatements = function() {
+            interpreter.refusePriorityStatements();
+        };
+
         // LOG MANAGEMENT
 
         this.setLog = function(element) {
