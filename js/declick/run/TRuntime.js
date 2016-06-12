@@ -208,9 +208,12 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             interpreter.insertStatements(statements);
         };
 
-        this.lockPriorityStatements = function() {
-            // TODO: do this right
-            interpreter.lockPriorityStatements();
+        this.refusePriorityStatements = function() {
+            interpreter.refusePriorityStatements();
+        };
+
+        this.allowPriorityStatements = function() {
+            interpreter.allowPriorityStatements();
         };
 
         this.executeStatementsNow = function(statements, parameter, log) {

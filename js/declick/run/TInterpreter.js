@@ -11,6 +11,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         
         var interpreter;
         var running = false;
+        var priorityStatementsAllowed = true;
 
         var getNativeData = function(data) {
             if (data.type) {
@@ -212,6 +213,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
               done: false
             }];            
             interpreter.paused_ = false;
+            priorityStatementsAllowed = true;
         };
         
         
@@ -299,9 +301,11 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
 
         this.addPriorityStatements = function(statements, parameter, log) {
-            interpreter.insertCode(statements, true, parameter);
-            if (!running) {
-                this.start();
+            if (priorityStatementsAllowed) {
+                interpreter.insertCode(statements, true, parameter);
+                if (!running) {
+                    this.start();
+                }
             }
         };
 
@@ -398,10 +402,14 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             this.addPriorityStatements([{type: "InterruptStatement"}]);
         };
         
-        this.lockPriorityStatements = function() {
-            // set current statement priority to true to prevent any priority statements from 
-            // coming in front of this one
-            interpreter.stateStack[0].priority = true;
+        this.refusePriorityStatements = function() {
+            // Do not allow priority statements 
+            priorityStatementsAllowed = false;
+        };
+
+        this.allowPriorityStatements = function() {
+            // Allow priority statements
+            priorityStatementsAllowed = true;
         };
     }
 
