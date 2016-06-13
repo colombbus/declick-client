@@ -212,16 +212,16 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             interpreter.insertStatements(statements);
         };
 
-        this.executeStatementsNow = function(statements, parameter, log, callback) {
-            if (typeof parameter !== 'undefined') {
+        this.executeStatementsNow = function(statements, parameters, log, callback) {
+            /*if (typeof parameter !== 'undefined') {
                 // TODO: find a better way than using a string representation
                 parameter = JSON.stringify(parameter);
-            }
-            interpreter.addPriorityStatements(statements, parameter, log, callback);
+            }*/
+            interpreter.addPriorityStatements(statements, parameters, log, callback);
         };
 
-        this.executeNow = function(commands, parameter, logCommands, callback) {
-            this.executeStatementsNow(commands, parameter, logCommands, callback);
+        this.executeNow = function(commands, parameters, logCommands, callback) {
+            this.executeStatementsNow(commands, parameters, logCommands, callback);
         };
 
         this.executeFrom = function(object, programName) {

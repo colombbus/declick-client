@@ -6,6 +6,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'CommandManager'], function (TObject, T
      */
     function TGraphicalObject() {
         this.gObject = new this.gClass();
+        this.gObject.setTObject(this);
         this._setLocation(0, 0);
         TRuntime.addGraphicalObject(this);
     }
@@ -44,6 +45,7 @@ define(['TObject', 'TUtils', 'TRuntime', 'CommandManager'], function (TObject, T
             this.operations = new Array();
             this.clickCommands = new CommandManager();
             this.initialized(false);
+            this.tOject = null;
         },
         designDrag: function (touch) {
             if (this.p.designMode) {
@@ -182,8 +184,13 @@ define(['TObject', 'TUtils', 'TRuntime', 'CommandManager'], function (TObject, T
                 this.children[i].off("touch", this, "touch");
                 this.children[i].off("touchEnd", this, "touchEnd");
             }
+        },
+        setTObject: function(ref) {
+            this.tObject = ref;
+        },
+        getTObject: function() {
+            return this.tObject;
         }
-        
     });
 
     TGraphicalObject.prototype.messages = null;

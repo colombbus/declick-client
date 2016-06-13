@@ -301,12 +301,17 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         };
 
 
-        this.addPriorityStatements = function(statements, parameter, log, callback) {
+        this.addPriorityStatements = function(statements, parameters, log, callback) {
             if (priorityStatementsAllowed) {
+                if (typeof parameters !== 'undefined') {
+                    for (var i =0; i<parameters.length; i++) {
+                        parameters[i] = getInterpreterData(parameters[i]);
+                    }
+                }
                 if (typeof callback !== 'undefined') {
-                    interpreter.insertCode(statements, true, parameter, this.createCallbackStatement(callback));
+                    interpreter.insertCode(statements, true, parameters, this.createCallbackStatement(callback));
                 } else {
-                    interpreter.insertCode(statements, true, parameter);
+                    interpreter.insertCode(statements, true, parameters);
                 }
                 if (!running) {
                     this.start();
@@ -398,7 +403,8 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         };
         
         this.createCallStatement = function(functionStatement) {
-            var state = [{type: "ExpressionStatement", expression: {type: "InnerCallExpression",arguments: [], func_: functionStatement, loc: functionStatement.node.loc}}];
+            //var state = [{type: "ExpressionStatement", expression: {type: "InnerCallExpression",arguments: [], func_: functionStatement, loc: functionStatement.node.loc}}];
+            var state = [{type: "InnerCallExpression",arguments: [], func_: functionStatement, loc: functionStatement.node.loc}];
             return state;
         };
 
@@ -543,12 +549,18 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
     // add support for inner call
     Interpreter.prototype['stepInnerCallExpression'] = function() {
         var state = this.stateStack.shift();
-        this.stateStack.unshift({node: {type:"CallExpression", arguments:state.node.arguments}, arguments:[], n_:0, doneCallee_: true, func_: state.node.func_, funcThis_: this.stateStack[this.stateStack.length - 1].thisExpression});
+        var arguments = [];
+        var n =0;
+        if (state.parameters) {
+            arguments = state.parameters;
+            n = arguments.length;
+        }
+        this.stateStack.unshift({node: {type:"CallExpression", arguments:arguments}, arguments:arguments, n_:n, doneCallee_: true, func_: state.node.func_, funcThis_: this.stateStack[this.stateStack.length - 1].thisExpression});
     };
 
     
     // add ability to insert code
-    Interpreter.prototype.insertCode = function(code, priority, parameter, callbackStatement) {
+    Interpreter.prototype.insertCode = function(code, priority, parameters, callbackStatement) {
         // Find index at which insertion has to be made
         var index=this.stateStack.length-1;
         while (index>=0 && !this.stateStack[index].priority) {
@@ -562,11 +574,12 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         }
         for (var i = code.length-1; i>=0; i--) {
             var node = code[i];
-            if (priority && node.type === "ExpressionStatement") {
+            if (priority && node.type === "InnerCallExpression" && typeof parameters!== "undefined") {
                 // Add parameter
-                node.expression.parameter = parameter;
+                this.stateStack.splice(index, 0, {node: node, priority:priority, done:false, parameters:parameters});
+            } else  {
+                this.stateStack.splice(index, 0, {node: node, priority:priority, done:false});
             }
-            this.stateStack.splice(index, 0, {node: node, priority:priority, done:false});
         }
     };
     

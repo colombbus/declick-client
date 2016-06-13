@@ -58,29 +58,27 @@ define(['TRuntime', 'TUtils', 'TParser', 'TInterpreter'], function(TRuntime, TUt
      */
     CommandManager.prototype.executeCommands = function(parameters) {
         // TODO: handle parameters
-        var i, parameter, field;
+        var i, cmdParameters, field;
         if (typeof parameters !== 'undefined') {
-            if (typeof parameters['parameter'] !== 'undefined') {
-                parameter = parameters['parameter'];
-            } else {
-                parameter = parameters;
-            }
             if (typeof parameters['field'] !== 'undefined') {
                 field = parameters['field'];
+            }
+            if (typeof parameters['parameters'] !== 'undefined') {
+                cmdParameters = parameters['parameters'];
             }
         }
         if (typeof field === 'undefined' ) {
             if (this.enabled._default) {
                 this.enabled._default = false;
                 var self = this;
-                TRuntime.executeNow(this.commands, parameter, this.logging, function() {
+                TRuntime.executeNow(this.commands, cmdParameters, this.logging, function() {
                     self.enabled._default = true;
                 });
             }
         } else if (typeof this.commands[field] !== 'undefined' && this.enabled[field]) {
             this.enabled[field] = false;
             var self = this;
-            TRuntime.executeNow(this.commands[field], parameter, this.logging, function() {
+            TRuntime.executeNow(this.commands[field], cmdParameters, this.logging, function() {
                 self.enabled[field] = true;
             });
         }
