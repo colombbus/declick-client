@@ -152,11 +152,11 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                     var category = object.getCategory();
                     // 1st check collision commands with this object
                     if (typeof this.spriteCollisionCommands !== 'undefined' && this.spriteCollisionCommands.hasCommands(id)) {
-                        this.spriteCollisionCommands.executeCommands({'field': id, 'parameter':object.getTObject()});
+                        this.spriteCollisionCommands.executeCommands({'field': id, 'parameters':[this.getTObject(), object.getTObject()]});
                     }
                     // 2nd check collision commands with object's category
                     if (typeof this.categoryCollisionCommands !== 'undefined' && this.categoryCollisionCommands.hasCommands(category)) {
-                        this.categoryCollisionCommands.executeCommands({'field': category, 'parameter':object.getTObject()});
+                        this.categoryCollisionCommands.executeCommands({'field': category, 'parameters':[this.getTObject(), object.getTObject()]});
                     }
                     // 3rd check general collision commands
                     if (typeof this.collisionCommands !== 'undefined' && this.collisionCommands.hasCommands()) {
