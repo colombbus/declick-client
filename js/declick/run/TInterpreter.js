@@ -294,7 +294,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         };
 
         this.insertStatements = function(statements) {
-            interpreter.insertCode(statements,false);
+            interpreter.insertBlock(statements,false);
             if (!running) {
                 this.start();
             }
@@ -403,7 +403,6 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         };
         
         this.createCallStatement = function(functionStatement) {
-            //var state = [{type: "ExpressionStatement", expression: {type: "InnerCallExpression",arguments: [], func_: functionStatement, loc: functionStatement.node.loc}}];
             var state = [{type: "InnerCallExpression",arguments: [], func_: functionStatement, loc: functionStatement.node.loc}];
             return state;
         };
@@ -558,6 +557,20 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         this.stateStack.unshift({node: {type:"CallExpression", arguments:arguments}, arguments:arguments, n_:n, doneCallee_: true, func_: state.node.func_, funcThis_: this.stateStack[this.stateStack.length - 1].thisExpression});
     };
 
+    
+    Interpreter.prototype.insertBlock = function(block, priority) {
+        // Find index at which insertion has to be made
+        var index=this.stateStack.length-1;
+        while (index>=0 && !this.stateStack[index].priority) {
+            index--;
+        }
+        index++;
+        
+        // Append the new statements
+        block.type = "BlockStatement";
+        this.stateStack.splice(index, 0, {node: block, priority:priority, done:false});
+    };
+    
     
     // add ability to insert code
     Interpreter.prototype.insertCode = function(code, priority, parameters, callbackStatement) {
