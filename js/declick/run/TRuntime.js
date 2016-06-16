@@ -207,8 +207,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             interpreter.addStatements(statements);
         };
 
-        this.insertStatements = function(statements, programName) {
-            // TODO: handle programName
+        this.insertStatements = function(statements) {
             interpreter.insertStatements(statements);
         };
 
