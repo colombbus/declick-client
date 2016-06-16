@@ -42,17 +42,7 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
                         callback.call(this, error);
                     } else {
                         newProgram = false;
-                        if (codeChanged) {
-                            // Try to parse program
-                            try {
-                                parse();
-                                codeChanged = false;
-                            } catch (e) {
-                                statements = [];
-                                TEnvironment.error("Error parsing program '" + name + "'");
-                            }
-                        }
-                        TLink.saveProgram(name, code, statements, function(error) {
+                        TLink.saveProgram(name, code, function(error) {
                             if (typeof error !== 'undefined') {
                                 // error: forward it
                                 callback.call(this, error);
@@ -64,17 +54,7 @@ define(['TParser', 'TLink', 'TEnvironment', 'TUtils', 'TError'], function(TParse
                     }
                 });
             } else {
-                if (codeChanged) {
-                    // Try to parse program
-                    try {
-                        parse();
-                        codeChanged = false;
-                    } catch (e) {
-                        statements = [];
-                        TEnvironment.error("Error parsing program '" + name + "'");
-                    }
-                }
-                TLink.saveProgram(name, code, statements, function(error) {
+                TLink.saveProgram(name, code, function(error) {
                     if (typeof error !== 'undefined') {
                         // error: forward it
                         callback.call(this, error);
