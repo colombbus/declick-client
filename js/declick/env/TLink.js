@@ -112,49 +112,21 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
          * @param {Function} callback
          */
         this.getProgramStatements = function(name, callback) {
-            if (TEnvironment.debug) {
-                try {
-                    this.getProgramCode(name, function(code) {
-                        var statements = TParser.parse(code);
+            try {
+                this.getProgramCode(name, function(code) {
+                    if (code instanceof TError) {
+                        callback.call(this, code);
+                    } else {
+                        var statements = TParser.parse(code, name);
                         callback.call(this, statements);
-                    });
-                }
-                catch (e) {
-                    var error = new TError(e);
-                    error.setProgramName(name);
-                    error.setCode(code);
-                    callback.call(this, error);
-                }
-            } else {
-                var url = TEnvironment.getBackendUrl('getstatements');
-                var input = {'name': name};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e!== false) {
-                            callback.call(this, e);
-                        } else {
-                            if (data['statements'].type && data['statements'].type === "Program") {
-                                callback.call(this, data['statements']);
-                            } else {
-                                // Fix for statements not correctly formated
-                                callback.call(this, {type:"Program", body:data['statements']});
-                            }
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
                     }
                 });
+            }
+            catch (e) {
+                var error = new TError(e);
+                error.setProgramName(name);
+                error.setCode(code);
+                callback.call(this, error);
             }
         };
 
@@ -165,10 +137,10 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
          * @param {String[]} statements
          * @param {Function} callback
          */
-        this.saveProgram = function(name, code, statements, callback) {
+        this.saveProgram = function(name, code, callback) {
             if (!TEnvironment.debug) {
                 var url = TEnvironment.getBackendUrl('setprogramcontent');
-                var input = {'name': name, 'code': code, 'statements': JSON.stringify(statements)};
+                var input = {'name': name, 'code': code};
                 if (projectId) {
                     input['project_id'] = projectId;
                 }
