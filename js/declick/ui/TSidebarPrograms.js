@@ -101,6 +101,12 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function(
                 var nameElement = document.createElement("div");
                 nameElement.id = "tsidebar-program-" + id;
                 nameElement.appendChild(document.createTextNode(displayedName));
+                element.setAttribute("draggable", "true");
+                element.ondragstart = function (e) {
+                    var programName = $(e.target).find("div").text();
+                    e.dataTransfer.setData("text/plain", "\"" + programName + "\"" );
+                };
+
                 element.appendChild(nameElement);
                 if (edited) {
                     var closeElement = document.createElement("div");
