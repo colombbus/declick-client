@@ -1,10 +1,20 @@
 {
-  "name": "tangara-client",
-  "version": "0.1.0",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-jshint": "^0.11.2",
-    "grunt-contrib-uglify": "~0.5.0",
-    "grunt-jsdoc": "^0.6.7"
-  }
+    "name": "tangara-client",
+    "version": "0.1.0",
+    "dependencies": {
+        "requirejs": "2.1.15",
+        "jquery": "1.11.1",
+        "jquery.animate-enhanced": "1.1.0",
+        "ace": "1.1.7",
+        "babylonjs": "v1.14",
+        "split-pane": "v0.3",
+        "jquery.ui": "1.11.2",
+        "quintus": "latest"
+    },
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-contrib-jshint": "^0.11.2",
+        "grunt-contrib-uglify": "~0.5.0",
+        "grunt-jsdoc": "^0.6.7"
+    }
 }
