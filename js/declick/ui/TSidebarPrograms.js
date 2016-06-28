@@ -59,7 +59,6 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function 
                 }
 
                 $(element).click(function (e) {
-                    console.log("fonction jq click 9");
                     if ($(this).hasClass('tsidebar-renaming'))
                         return false;
                     if (current) {
