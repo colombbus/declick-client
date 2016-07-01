@@ -1,20 +1,24 @@
 {
-    "name": "tangara-client",
+    "name": "declick-client",
     "version": "0.1.0",
+    "license": "GPL v3.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/colombbus/declick-client.git"
+    },
     "dependencies": {
         "requirejs": "2.1.15",
         "jquery": "1.11.1",
-        "jquery.animate-enhanced": "1.1.0",
-        "ace": "1.1.7",
-        "babylonjs": "v1.14",
-        "split-pane": "v0.3",
-        "jquery.ui": "1.11.2",
+        "three": "0.78.0",
+        "jquery-ui": "~1.10.0",
+        "@shagstrom/split-pane": "~0.9.0",
         "quintus": "latest"
     },
     "devDependencies": {
         "grunt": "^0.4.5",
         "grunt-contrib-jshint": "^0.11.2",
         "grunt-contrib-uglify": "~0.5.0",
-        "grunt-jsdoc": "^0.6.7"
+        "grunt-jsdoc": "^0.6.7",
+        "jasmine-core": "v2.1.3"
     }
 }
