@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'TUI', 'ui/TConsole', 'ui/TToolbar', 'ui/TLog', 'ui/TMessage', 'TRuntime', 'TEnvironment'], function(TComponent, $, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TMessage, TRuntime, TEnvironment) {
+define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'TUI', 'ui/TConsole', 'ui/TToolbar', 'ui/TLog', 'ui/TMessage', 'ui/CacheHeaders', 'TRuntime', 'TEnvironment'], function(TComponent, $, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TMessage,CacheHeaders, TRuntime, TEnvironment) {
     function TFrame(callback) {
         var initialized = false;
         var canvas, editor, sidebar, toolbar, console, log, message;
@@ -30,6 +30,13 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $loading = component.find("#tframe-loading");
             var loadingText = $loading.find("p");
             loadingText.text(TEnvironment.getMessage('loading-message'));
+            
+            if (TEnvironment.config['no-cache-browser']) {
+                header = new CacheHeaders(function (c) {
+                    var h = document.getElementsByTagName("head")[0];
+                    $(h).append(c);
+                });
+            }
             
             canvas = new TCanvas(function(c) {
                 component.find("#TCanvas").replaceWith(c);
