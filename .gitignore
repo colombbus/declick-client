@@ -18,3 +18,4 @@ bin-release/
 /node_modules/
 /resources/config.json
 .project
+npm-debug.log
