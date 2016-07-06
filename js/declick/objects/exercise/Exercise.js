@@ -180,7 +180,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
         if (this.frame) {
             this.frame.setScore(score);
         }
-        if (score >= requiredScore) {
+        if (this.score >= requiredScore) {
             this.validate(message);
         }
         else {
