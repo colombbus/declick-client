@@ -1,9 +1,9 @@
-define(['TEnvironment', 'TRuntime', 'TProject', 'TError'], function(TEnvironment, TRuntime, TProject, TError) {
+define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exercise', 'TParser'], function(TEnvironment, TRuntime, TProject, TError, Exercise, TParser) {
     /**
      * TExercise manage exercises in "Learn" part of Declick.
      * @exports TExercise
      */
-    function TExercise() {
+    function TExerciseProject() {
         // associated project
         var project = new TProject();
         TEnvironment.setProject(project);
@@ -11,9 +11,12 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError'], function(TEnvironment
         var initStatements = false;
         var startStatements = false;
         var endStatements = false;
+        var exerciseStatements = false;
         var solutionCode = false;
         var instructions = false;
         var hints = false;
+        var newStructure = false;
+        var name = "exercise_123456";
 
         /**
          * Set Project's ID.
@@ -122,7 +125,11 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError'], function(TEnvironment
          * Exectute init statements if any.
          */
         this.init = function() {
-            if (initStatements !== false) {
+            if (newStructure) {
+                TRuntime.executeStatements(exerciseStatements);
+                TRuntime.executeStatements(TParser.parse(name+".init()"));
+            }
+            else if (initStatements !== false) {
                 TRuntime.executeStatements(initStatements);
             }
         };
@@ -219,6 +226,18 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError'], function(TEnvironment
             });
         };
         
+        /** Loads exercise
+         * @param {Function} callback
+         */
+        var loadExercise = function(callback) {
+            project.getProgramCode("exercise", function(result) {
+                if (!(result instanceof TError)) {
+                    exerciseStatements = TParser.parse(name+" = (function(){\n"+result+"return this\n})()");
+                }
+                callback.call(this);
+            });
+        };
+        
         /**
          * Initialize Exercise.
          * @param {Function} callback
@@ -241,6 +260,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError'], function(TEnvironment
                 var endPresent = false;
                 var checkPresent = false;
                 var solutionPresent = false;
+                var exercisePresent = false;
                 var toLoad = 0;
                 
                 if (programs.indexOf("init") > -1) {
@@ -266,6 +286,12 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError'], function(TEnvironment
                 if (programs.indexOf("solution") > -1) {
                     toLoad++;
                     solutionPresent = true;
+                }
+
+                if (programs.indexOf("exercise") > -1) {
+                    toLoad++;
+                    exercisePresent = true;
+                    newStructure = true;
                 }
                 
                 // 2nd check existing resources
@@ -300,10 +326,13 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError'], function(TEnvironment
                 if (solutionPresent) {
                     loadSolution(checkLoad);
                 }
+                if (exercisePresent) {
+                    loadExercise(checkLoad);
+                }
             }, id);
             
         };
     }
     
-    return TExercise;
+    return TExerciseProject;
 });

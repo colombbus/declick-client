@@ -1,9 +1,9 @@
-define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExercise', 'TError', 'objects/teacher/Teacher', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExercise, TError, Teacher) {
+define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExerciseProject', 'TError', 'objects/teacher/Teacher', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExerciseProject, TError, Teacher) {
     function TLearnFrame(callback) {
         var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right, $success, $successText;
         var canvas, editor;
 
-        var exercise = new TExercise();
+        var exercise = new TExerciseProject();
         var bottomSolution = 0;
         var score = 0;
         var lastSubmission = "";

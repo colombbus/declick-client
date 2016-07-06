@@ -33,7 +33,7 @@ require.config({
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
         "Grader": "env/Grader",
-        "TExercise": "data/TExercise",
+        "TExerciseProject": "data/TExerciseProject",
         "TResource": "data/TResource",
         "jschannel": "../libs/jschannel/jschannel",
         "js-interpreter":"../libs/js-interpreter/interpreter"
