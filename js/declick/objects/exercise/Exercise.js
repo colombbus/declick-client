@@ -178,7 +178,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
            this.setMessage(optMessage);
         }
         if (this.frame) {
-            this.frame.setScore(score);
+            this.frame.setScore(this.score);
         }
         if (this.score >= requiredScore) {
             this.validate(message);
