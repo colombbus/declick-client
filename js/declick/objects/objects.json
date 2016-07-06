@@ -558,5 +558,14 @@
             "fr": "Matrice"
         },
         "parents": false
-    }
+    },
+    "Exercise": {
+        "path": "exercise",
+        "translations": {
+            "fr": "Exercise",
+            "es": "Exercise",
+            "en": "Exercise"
+        },
+        "parents": false
+    }    
 }

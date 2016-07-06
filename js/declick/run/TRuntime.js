@@ -143,6 +143,10 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             return runtimeCallback;
         };
 
+        this.getTObject = function(objectName) {
+            return interpreter.getObject(objectName);
+        };
+
         this.getTObjectName = function(reference) {
             if (reference.objectName) {
                 return reference.objectName;

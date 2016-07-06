@@ -10,6 +10,17 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
         // Runtime
         this.synchronousManager = new SynchronousManager();
         TRuntime.addInstance(this);
+        
+        this.statements = [];
+        this.frame = false;
+        this.score = 0;
+        this.message = "";
+        this.values = {};
+        this.requiredScore = 1;
+        this.displayedClasses = [];
+        this.displayedMethods = [];
+        this.completions = {};
+        this.timer = -1;
     };
 
     Exercise.prototype = Object.create(TObject.prototype);
@@ -18,16 +29,6 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
 
     //Learn.countObject
 
-    var statements = [];
-    var frame = false;
-    var score = 0;
-    var message = "";
-    var values = {};
-    var requiredScore = 1;
-    var displayedClasses = [];
-    var displayedMethods = [];
-    var completions = {};
-    var timer = -1;
     
     
     /**
@@ -35,7 +36,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @param {String[]} value
      */
     Exercise.prototype.setStatements = function(value) {
-        statements = value;
+        this.statements = value;
     };
 
     /**
@@ -43,7 +44,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @param {String} value
      */
     Exercise.prototype.dumpStatements = function(value) {
-        console.debug(statements);
+        console.debug(this.statements);
     };
 
     /**
@@ -51,7 +52,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @param {Boolean} value
      */
     Exercise.prototype.setFrame = function(value) {
-        frame = value;
+        this.frame = value;
     };
 
     /**
@@ -88,8 +89,8 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @returns {Boolean} Returns true if value is in statement, else false.
      */
     Exercise.prototype.hasStatement = function(value) {
-        for (var i = 0; i < statements.length; i++) {
-            var statement = statements[i];
+        for (var i = 0; i < this.statements.length; i++) {
+            var statement = this.statements[i];
             if (check(statement, value)) {
                 return true;
             }
@@ -103,7 +104,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      */
     Exercise.prototype.statementsLength = function()
     {
-        return (statements.length);
+        return (this.statements.length);
     };
     
     /**
@@ -115,7 +116,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      */
     Exercise.prototype.verifyRegexp = function(value) {
         var re = new RegExp(value);
-        return re.test(statements);
+        return re.test(this.statements);
     };
     
     /**
@@ -123,7 +124,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @param {Number} value
      */
     Exercise.prototype.setScore = function(value) {
-        score = value;
+        this.score = value;
     };
 
     /**
@@ -131,7 +132,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @param {Number} value
      */
     Exercise.prototype.setMessage = function(value) {
-        message  = value;
+        this.message  = value;
     };
     
     
@@ -140,8 +141,8 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @param {String} message
      */
     Exercise.prototype.validate = function(message) {
-        if (frame) {
-            frame.validateExercise(message);
+        if (this.frame) {
+            this.frame.validateExercise(message);
         }
     };
 
@@ -150,8 +151,8 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @param {String} message
      */
     Exercise.prototype.invalidate = function(message) {
-        if (frame) {
-            frame.invalidateExercise(message);
+        if (this.frame) {
+            this.frame.invalidateExercise(message);
         }
     };
     
@@ -160,7 +161,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @param {number} value
      */
     Exercise.prototype.setRequiredScore = function(value) {
-        requiredScore = value;
+        this.requiredScore = value;
     };
     
 
@@ -176,8 +177,8 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
         if(typeof optMessage !== "undefined") {
            this.setMessage(optMessage);
         }
-        if (frame) {
-            frame.setScore(score);
+        if (this.frame) {
+            this.frame.setScore(score);
         }
         if (score >= requiredScore) {
             this.validate(message);
@@ -194,7 +195,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
     Exercise.prototype.wait = function(delay) {
         this.synchronousManager.begin();
         var parent = this;
-        timer = window.setTimeout(function() {
+        this.timer = window.setTimeout(function() {
             parent.synchronousManager.end();
         }, delay);
     };
@@ -205,7 +206,7 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @param {String} value
      */
     Exercise.prototype.set = function(name, value) {
-        values[name] = value;
+        this.values[name] = value;
     };
 
     /**
@@ -214,8 +215,8 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * @returns {String|Boolean}    Returns values[name], or false if undefined.
      */
     Exercise.prototype.get = function(name) {
-        if (typeof values[name] !== 'undefined') {
-            return values[name];
+        if (typeof this.values[name] !== 'undefined') {
+            return this.values[name];
         } else {
             return false;
         }
@@ -241,21 +242,21 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
      * Set Text Mode.
      */
     Exercise.prototype.setTextMode = function() {
-        frame.setTextMode();
+        this.frame.setTextMode();
     };
 
     /**
      * Set Program Mode.
      */
     Exercise.prototype.setProgramMode = function() {
-        frame.setProgramMode();
+        this.frame.setProgramMode();
     };
     
     /**
      * Set Completions.
      */
     Exercise.prototype.setCompletions = function(json) {
-        completions = json;
+        this.completions = json;
     };
     
     /**
@@ -267,10 +268,10 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
                return [];
             }
             if (typeof completions[classes] === 'object') {
-                displayedClasses.push(classes);
+                this.displayedClasses.push(classes);
             }
         }
-        return displayedClasses;
+        return this.displayedClasses;
     };
 	
 	/**
@@ -302,11 +303,23 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
     };
 
     Exercise.prototype.clear = function() {
-        if (timer !== -1) {
-            window.clearTimeout(timer);
+        if (this.timer !== -1) {
+            window.clearTimeout(this.timer);
         }
         this.synchronousManager.end();
     };
     
+    Exercise.prototype.init = function() {
+    };
+
+    Exercise.prototype.start = function() {
+    };
+
+    Exercise.prototype.end = function() {
+    };
+
+    Exercise.prototype.check = function() {
+    };
+
     return Exercise;
 });

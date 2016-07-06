@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExerciseProject', 'TError', 'objects/teacher/Teacher', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExerciseProject, TError, Teacher) {
+define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExerciseProject', 'TError', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExerciseProject, TError) {
     function TLearnFrame(callback) {
         var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right, $success, $successText;
         var canvas, editor;
@@ -99,7 +99,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.displayed = function() {
             canvas.displayed();
             editor.displayed();
-            Teacher.setFrame(this);
+            exercise.setFrame(this);
             $right.on("splitpane:resized", function() {
                 editor.resize();
             });
@@ -184,8 +184,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     statements = statements.body;
                 }
                 //TODO: only if no error
-                Teacher.setStatements(statements);
-                exercise.check();
+                exercise.check(statements);
             } catch (err) {
                 var error;
                 if (!(err instanceof TError)) {
