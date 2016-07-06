@@ -181,10 +181,10 @@ define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, Synchro
             this.frame.setScore(this.score);
         }
         if (this.score >= this.requiredScore) {
-            this.validate(message);
+            this.validate(this.message);
         }
         else {
-            this.invalidate(message);
+            this.invalidate(this.message);
         }
     };
     
