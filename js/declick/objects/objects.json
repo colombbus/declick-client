@@ -558,5 +558,12 @@
             "fr": "Matrice"
         },
         "parents": false
+    },
+    "Midi": {
+        "path": "midi",
+        "translations": {
+            "fr": "Midi"
+        },
+        "parents": false
     }
 }
