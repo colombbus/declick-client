@@ -162,7 +162,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
         };
 
 
-        this.enableEditor = function(updateServer) {
+        this.enableEditor = function (updateServer) {
             if (!editorEnabled) {
                 // hide console
                 this.hideConsole();
@@ -176,7 +176,9 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, 
                 editorEnabled = true;
                 if (typeof updateServer === 'undefined' || updateServer) {
                     if (typeof window.parent !== 'undefined') {
-                        window.parent.switchEditor();
+                        if (typeof window.parent.switchEditor === 'function') {
+                            window.parent.switchEditor();
+                        }
                     }
                 }
             }
