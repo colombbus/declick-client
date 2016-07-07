@@ -42,7 +42,7 @@ require.config({
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
         "Grader": "env/Grader",
-        "js-interpreter":"../libs/js-interpreter/interpreter"
+        "js-interpreter": "../libs/js-interpreter/interpreter"
     },
     map: {
         "fileupload": {
@@ -80,29 +80,28 @@ require.config({
 //window.location.protocol + "//" + window.location.host+ window.location.pathname.split("/").slice(0, -1).join("/")+"/js/declick",
 //baseUrl: 'js/declick',
 // Start the main app logic.
-
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject', 'Task', 'Grader'], function($, TEnvironment, TRuntime, TFrame, TProject) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject', 'Task', 'Grader'], function ($, TEnvironment, TRuntime, TFrame, TProject) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
-        TEnvironment.load(function() {
+        TEnvironment.load(function () {
             TEnvironment.log("*******************");
             TEnvironment.log("* Loading Runtime *");
             TEnvironment.log("*******************");
-            TRuntime.load(function() {
+            TRuntime.load(function () {
                 TEnvironment.log("***************************");
                 TEnvironment.log("* Building User Interface *");
                 TEnvironment.log("***************************");
-                frame = new TFrame(function(component) {
+                frame = new TFrame(function (component) {
                     $("body").append(component);
                     TEnvironment.log("*******************");
                     TEnvironment.log("* Initiating link *");
                     TEnvironment.log("*******************");
                     var currentProject = new TProject();
-                    currentProject.init(function() {
+                    currentProject.init(function () {
                         TEnvironment.setProject(currentProject);
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             frame.displayed();
                             TRuntime.init();
                             if (typeof window.parent !== 'undefined') {
@@ -123,5 +122,3 @@ if (loading.complete) {
 } else {
     loading.onload = load();
 }
-
-
