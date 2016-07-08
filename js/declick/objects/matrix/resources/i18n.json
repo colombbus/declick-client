@@ -19,7 +19,7 @@
            {"name":"_shift","translated":"d\u00e9caler","displayed":"d\u00e9caler(direction,0)"},
            {"name":"_rotate","translated":"pivoter","displayed":"pivoter(direction)"},
            {"name":"_reverse","translated":"retourner","displayed":"retourner()"},
-           {"name":"_cover","translated":"englober","displayed":"englober()"},
+           {"name":"_cover","translated":"englober","displayed":"englober()"}
         ]
     },
     "en": {
@@ -43,7 +43,7 @@
            {"name":"_rotate","translated":"rotate","displayed":"rotate(direction)"},
            {"name":"_reverse","translated":"reverse","displayed":"reverse()"},
            {"name":"_print","translated":"print","displayed":"print()"},
-           {"name":"_cover","translated":"cover","displayed":"cover()"},
+           {"name":"_cover","translated":"cover","displayed":"cover()"}
         ]
     }
 }
