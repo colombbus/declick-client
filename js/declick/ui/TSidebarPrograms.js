@@ -127,7 +127,13 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TProgram', 'jquery'], function 
                 element.setAttribute("draggable", "true");
                 element.ondragstart = function (e) {
                     var el = $(e.target).find("div");
-                    e.dataTransfer.setData("text/plain", "\"" + el.text() + "\"");
+                    var programName = el.text();
+                    var length = programName.length;
+                    if (programName.charAt(length - 1) === "*"
+                            && programName.charAt(length - 2) === " ") {
+                        programName = programName.slice(0, -2);
+                    }
+                    e.dataTransfer.setData("text/plain", "\"" + programName + "\"");
                 };
                 $list.append(element);
             }
