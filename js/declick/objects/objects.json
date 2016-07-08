@@ -552,7 +552,7 @@
         "parents": false,
         "instance": true
     },
-    "Matrice": {
+    "Matrix": {
         "path": "matrix",
         "translations": {
             "fr": "Matrice"
