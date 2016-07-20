@@ -670,7 +670,7 @@
                     var seen = [ ];
 
                     var pruneFunctions = function (path, obj) {
-                        if (seen.indexOf(obj) >= 0) {
+                        if (obj && seen.indexOf(obj) >= 0) {
                             throw "params cannot be a recursive data structure"
                         }
                         seen.push(obj);
