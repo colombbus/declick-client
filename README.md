@@ -1,6 +1,6 @@
-Declick-client
+declick-client
 =========
 
-An educational IDE online
+an educational IDE online
 
-Declick-client (javascript) works with Declick-server (PHP)
+declick-client (JavaScript) works with declick-server (PHP)
