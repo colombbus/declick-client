@@ -1,0 +1,22 @@
+{
+    "fr": {
+        "tangaraman":"tangy",
+        "garçon":"boy",
+        "fille":"girl",
+        "bob":"bob",
+        "unknown character":"Il n'existe pas de héros de type « {0} ». Les héros disponibles sont : « tangaraman », « bob », « garçon » et « fille »",
+        "forward":"avancer",
+        "backward":"reculer",
+        "front":"arrêt",
+        "wrong object type":"L'objet {0} ne peut pas être attrapé",
+        "wrong set":"Ensemble d'images introuvable"
+    },
+    "en": {
+        "boy":"boy",
+        "girl":"girl",
+        "dog":"dog",
+        "cat":"cat",
+        "unknown skeleton":"Hero '{0}' unknown",
+        "wrong object type":"Object {0} cannot be caught"
+    }
+}

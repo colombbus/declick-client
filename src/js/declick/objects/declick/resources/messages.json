@@ -1,0 +1,8 @@
+{
+    "fr": {
+        "script unreachable":"Programme « {0} » introuvable"
+    },
+    "en": {
+        "script unreachable":"Could not find program '{0}'"
+    }
+}

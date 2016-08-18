@@ -1,0 +1,8 @@
+{
+    "fr": {
+        "methods": [
+            {"name": "_start", "translated": "d\u00e9marrer", "displayed": "d\u00e9marrer()"},
+            {"name": "_pause", "translated": "pause", "displayed": "pause"}
+        ]
+    }
+}

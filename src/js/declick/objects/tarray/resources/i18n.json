@@ -1,0 +1,10 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_addValue","translated":"ajouterValeur","displayed":"ajouterValeur(0)"},
+            {"name":"_getValue","translated":"r\u00e9cup\u00e9rerValeur","displayed":"r\u00e9cup\u00e9rerValeur(1)"},
+            {"name":"_setValueAt","translated":"d\u00e9finirValeur","displayed":"d\u00e9finirValeur(1,0)"},
+            {"name":"_getLength","translated":"r\u00e9cup\u00e9rerNombreDeValeurs","displayed":"r\u00e9cup\u00e9rerNombreDeValeurs()"}
+        ]
+    }
+}

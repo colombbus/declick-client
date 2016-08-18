@@ -1,0 +1,8 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_detect","translated":"d\u00e9tecter","displayed":"d\u00e9tecter(\"touche\")"},
+            {"name":"_wait","translated":"attendre","displayed":"attendre()"}
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_zoomIn","translated":"agrandir","displayed":"agrandir(1)"},
+            {"name":"_zoomOut","translated":"r\u00e9tr\u00e9cir","displayed":"r\u00e9tr\u00e9cir(1)"},
+            {"name":"_setAngle","translated":"d\u00e9finirAngle","displayed":"d\u00e9finirAngle(360)"},
+            {"name":"_rotate","translated":"pivoter","displayed":"pivoter(30)"},
+            {"name":"_scale","translated":"zoomer","displayed":"zoomer(1)"},
+            {"name":"_setCenterLocation","translated":"d\u00e9finirPositionCentre","displayed":"d\u00e9finirPositionCentre(0,0)"},
+            {"name":"_setLocation","translated":"d\u00e9finirPosition","displayed":"d\u00e9finirPosition(0,0)"},
+            {"name":"_getXCenter","translated":"r\u00e9cup\u00e9rerCoordonn\u00e9eXCentre","displayed":"r\u00e9cup\u00e9rerCoordonn\u00e9eXCentre()"},
+            {"name":"_getYCenter","translated":"r\u00e9cup\u00e9rerCoordonn\u00e9eYCentre","displayed":"r\u00e9cup\u00e9rerCoordonn\u00e9eYCentre()"},
+            {"name":"_getX","translated":"r\u00e9cup\u00e9rerCoordonn\u00e9eX","displayed":"r\u00e9cup\u00e9rerCoordonn\u00e9eX()"},
+            {"name":"_getY","translated":"r\u00e9cup\u00e9rerCoordonn\u00e9eY","displayed":"r\u00e9cup\u00e9rerCoordonn\u00e9eY()"},
+            {"name":"_getWidth","translated":"r\u00e9cup\u00e9rerLargeur","displayed":"r\u00e9cup\u00e9rerLargeur()"},
+            {"name":"_getHeight","translated":"r\u00e9cup\u00e9rerHauteur","displayed":"r\u00e9cup\u00e9rerHauteur()"},
+            {"name":"_hide","translated":"cacher","displayed":"cacher()"},
+            {"name":"_show","translated":"montrer","displayed":"montrer()"},
+            {"name":"_ifClick","translated":"siClic","displayed":"siClic(\"commande\")"},
+            {"name":"_removeClickCommands","translated":"supprimerCommandesClic","displayed":"supprimerCommandesClic()"}
+        ]
+    }
+}

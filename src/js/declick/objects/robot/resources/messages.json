@@ -1,0 +1,20 @@
+{
+    "fr": {
+        "robot":"robot",
+        "file not found":"Fichier « {0} » introuvable",
+        "resource not found":"Image « {0} » introuvable",
+        "wrong set":"Ensemble d'images incorrect",
+        "no item":"Il n'y a pas d'item à cet endroit",
+        "no carried item":"Aucun item n'est porté",
+        "gauche":"left",
+        "droite":"right",
+        "haut":"top",
+        "bas":"bottom",
+        "wrong carrying parameter":"Paramètre incorrect"
+    },
+    "en": {
+        "file not found":"File '{0}' not found",
+        "resource not found":"Picture '{0}' not found",
+        "wrong set":"Wrong images set"
+    }
+}

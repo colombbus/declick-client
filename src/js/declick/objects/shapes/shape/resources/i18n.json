@@ -1,0 +1,15 @@
+{
+    "hide": ["_alwaysMoveForward", "_alwaysMoveBackward", "_alwaysMoveUpward", "_alwaysMoveDownward", "_setImage", "_addImage", "_setTransparent", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImage", "_removeImageSet", "_setAspect", "_stop", "_ifCollision", "_ifCollisionWith", "_watchCollisions", "_centerGoTo", "_zoomIn", "_zoomOut", "_scale", "_getXCenter", "_getYCenter", "_getX", "_getY", "_setCenterLocation", "_setCategory"],
+    "fr": {
+        "methods":[
+            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
+            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(50)"},
+            {"name":"_moveUpward","translated":"monter","displayed":"monter(50)"},
+            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
+            {"name":"_color","translated":"couleur","displayed":"couleur(\"rouge\")"},
+            {"name":"_width","translated":"\u00e9paisseur","displayed":"\u00e9paisseur(1)"},
+            {"name":"_fill","translated":"remplir","displayed":"remplir(true)"},
+            {"name":"_fillColor","translated":"couleurRemplissage","displayed":"couleurRemplissage(\"marron\")"}
+        ]
+    }
+}

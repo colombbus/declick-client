@@ -1,0 +1,18 @@
+{
+    "fr": {
+        "garcon":"boy",
+        "fille":"girl",
+        "chien":"dog",
+        "chat":"cat",
+        "unknown skeleton":"Personnage « {0} » introuvable",
+        "wrong object type":"L'objet {0} ne peut pas être attrapé"
+    },
+    "en": {
+        "boy":"boy",
+        "girl":"girl",
+        "dog":"dog",
+        "cat":"cat",
+        "unknown skeleton":"Human '{0}' unknown",
+        "wrong object type":"Object {0} cannot be caught"
+    }
+}

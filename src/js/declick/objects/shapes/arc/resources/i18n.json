@@ -1,0 +1,9 @@
+{
+    "hide": ["_setAngle", "_rotate"],
+    "fr": {
+        "methods":[
+            {"name":"_setAngles","translated":"d\u00e9finirAngles","displayed":"d\u00e9finirAngles(0, 180)"},
+            {"name":"_setRay","translated":"d\u00e9finirRayon","displayed":"d\u00e9finirRayon(50)"}        
+        ]
+    }
+}

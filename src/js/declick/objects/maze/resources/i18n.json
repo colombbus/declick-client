@@ -1,0 +1,11 @@
+{
+    "hide": ["_startAutoAsset", "_setMovementDuration", "_setPauseDuration", "_setGravity", "_countItems", "_countCarriedItems", "_ifCatch", "_jump", "_stopAutoAsset", "_dropItem", "_mayCatch", "_mayFall", "_pickupItem", "_rotate", "_setJumpSpeed", "_zoomIn", "_zoomOut", "_moveTo", "_centerGoTo", "_setAngle", "_setStep", "_setCenterLocation", "_scale", "_getX", "_getY", "_getXCenter", "_getYCenter", "_watchCollisions", "_ifCollision", "_ifCollisionWith"],
+    "fr": {
+        "methods":[
+            {"name":"_buildGround","translated":"poserSol","displayed":"poserSol(0,0)"},
+            {"name":"_buildEntrance","translated":"poserEntr\u00e9e","displayed":"poserEntr\u00e9e(0,0)"},
+            {"name":"_buildExit","translated":"poserSortie","displayed":"poserSortie(0,0)"},
+            {"name":"_buildWall","translated":"poserMur","displayed":"poserMur(0,0)"}
+            ]
+    }
+}

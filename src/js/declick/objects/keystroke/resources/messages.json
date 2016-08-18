@@ -1,0 +1,12 @@
+{
+    "fr": {
+        "entree":"return",
+        "gauche":"left",
+        "droite":"right",
+        "haut":"up",
+        "bas":"down",
+        "unknown key":"La touche « {0} » n'existe pas"
+    },
+    "en": {
+    }
+}

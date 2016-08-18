@@ -1,0 +1,15 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_round","translated":"arrondir","displayed":"arrondir(1.5)"},
+            {"name":"_cos","translated":"cosinus","displayed":"cosinus(42)"},
+            {"name":"_sin","translated":"sinus","displayed":"sinus(42)"},
+            {"name":"_tan","translated":"tangente","displayed":"tangente(42)"},
+            {"name":"_pow","translated":"puissance","displayed":"puissance(10,4)"},
+            {"name":"_square","translated":"carr\u00e9","displayed":"carr\u00e9(32)"},
+            {"name":"_cube","translated":"cube","displayed":"cube(6)"},
+            {"name":"_sqrt","translated":"racineCarr\u00e9e","displayed":"racineCarr\u00e9e(9)"},
+            {"name":"_pi","translated":"r\u00e9cup\u00e9rerPi","displayed":"r\u00e9cup\u00e9rerPi()"}
+        ]
+    }
+}

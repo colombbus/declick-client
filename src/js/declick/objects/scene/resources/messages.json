@@ -1,0 +1,12 @@
+{
+    "fr": {
+        "sombre":"dark",
+        "nature":"nature",
+        "unknown scene":"Il n'existe pas de décor de type « {0} ». Les décors disponibles sont : « nature » et « sombre »",
+        "wrong set":"Ensemble d'images introuvable"
+    },
+    "en": {
+        "dark":"dark",
+        "nature":"nature"
+    }
+}

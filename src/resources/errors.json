@@ -1,0 +1,17 @@
+{
+    "fr": {
+        "Syntax error":"Erreur de syntaxe",
+        "Internal Server Error":"Erreur interne du serveur",
+        "backend-error-project_not_set":"Aucun projet en cours",
+        "backend-error-edition_forbidden":"Vous ne pouvez pas modifier ce projet",
+        "backend-error-program_not_found":"Programme introuvable",
+        "runtime-error-undefined":"« {0} » n'est pas défini",
+        "runtime-error-not-a-function":"La fonction « {0} » n'existe pas",
+        "runtime-error-undefined-not-a-function":"Cette action n'existe pas",
+        "runtime-error-syntax-error-line":"Erreur de syntaxe à la ligne {0}",
+        "runtime-error-syntax-error":"Erreur de syntaxe",
+        "runtime-error-not-variable-error":"« {0} » n'existe pas",
+        "runtime-error-unterminated-string-error":"Il manque un guillemet",
+        "runtime-error-unknown-function":"Fonction inconnue"
+    }
+}

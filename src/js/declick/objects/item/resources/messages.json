@@ -1,0 +1,14 @@
+{
+    "fr": {
+        "pièce":"coin.png",
+        "vie":"life.png",
+        "poison":"poison.png",
+        "clé":"key.png",
+        "balle":"ball.gif",
+        "coffre":"safe.png",
+        "panneau":"sign.png",
+        "default":"pièce"
+    },
+    "en": {
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_goTo","translated":"allerA","displayed":"allerA(0,0)"},
+            {"name":"_setSize","translated":"d\u00e9finirTaille","displayed":"d\u00e9finirTaille(1,1)"},
+            {"name":"_watchCollisions","translated":"surveillerCollisions","displayed":"surveillerCollisions(true)"},
+            {"name":"_color","translated":"couleur","displayed":"couleur(\"rouge\")"},
+            {"name":"_width","translated":"\u00e9paisseur","displayed":"\u00e9paisseur(1)"},
+            {"name":"_fill","translated":"remplir","displayed":"remplir(true)"},
+            {"name":"_fillColor","translated":"couleurRemplissage","displayed":"couleurRemplissage(\"marron\")"}
+        ]
+    }
+}

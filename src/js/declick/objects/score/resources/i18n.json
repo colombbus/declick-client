@@ -1,0 +1,14 @@
+{
+    "fr": {
+        "methods": [
+            {"name": "_eraseScoreNumber", "translated":"effacerNombreScore","displayed":"effacerNombreScore()"},
+            {"name": "_increaseScore", "translated":"augmenterScore","displayed":"augmenterScore()"},
+            {"name": "_decreaseScore", "translated":"baisserScore","displayed":"baisserScore()"},
+            {"name": "_setLabel", "translated": "d\u00e9finirLabel", "displayed": "d\u00e9finirLabel(\"label\")"},
+            {"name": "_setScoreNumber", "translated": "d\u00e9finirNombreScore", "displayed": "d\u00e9finirNombreScore(0)"},
+            {"name": "_getLabel", "translated":"r\u00e9cup\u00e9rerLabel","displayed":"r\u00e9cup\u00e9rerLabel"},
+            {"name": "_getScoreNumber", "translated":"r\u00e9cup\u00e9rerNombreScore","displayed":"r\u00e9cup\u00e9rerNombreScore"},
+            {"name": "_getScore", "translated":"r\u00e9cup\u00e9rerScore","displayed":"r\u00e9cup\u00e9rerScore"}
+        ]
+    }
+}

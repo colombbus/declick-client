@@ -1,0 +1,14 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_setAspect","translated":"changer","displayed":"changer(\"garçon\")"},
+            {"name":"_stopAutoAsset","translated":"arr\u00eaterMouvement","displayed":"arr\u00eaterMouvement()"},
+            {"name":"_startAutoAsset","translated":"d\u00e9marrerMouvement","displayed":"d\u00e9marrerMouvement()"},
+            {"name":"_setMovementDuration","translated":"d\u00e9finirDur\u00e9eMouvement","displayed":"d\u00e9finirDur\u00e9eMouvement(500)"},
+            {"name":"_setPauseDuration","translated":"d\u00e9finirDur\u00e9eArr\u00eat","displayed":"d\u00e9finirDur\u00e9eArr\u00eat(1200)"},
+            {"name":"_addScene","translated":"ajouterD\u00e9cor","displayed":"ajouterD\u00e9cor(d\u00e9cor)"},
+            {"name":"_mayCatch","translated":"peutAttraper","displayed":"peutAttraper(item)"},
+            {"name":"_ifCatch","translated":"siAttrape","displayed":"siAttrape(item, \"commande\")"}
+        ]
+    }
+}

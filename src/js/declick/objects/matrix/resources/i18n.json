@@ -1,0 +1,49 @@
+{
+    "fr": {
+        "methods": [
+           {"name":"_reset","translated":"r\u00e9initialiser","displayed":"r\u00e9initialiser()"},
+           {"name":"_count","translated":"compter","displayed":"compter()"},
+           {"name":"_get","translated":"r\u00e9cup\u00e9rer","displayed":"r\u00e9cup\u00e9rer(0,0)"},
+           {"name":"_set","translated":"d\u00e9finir","displayed":"d\u00e9finir(0,0,0)"},
+           {"name":"_scan","translated":"parcourir","displayed":"parcourir()"},
+           {"name":"_propagate","translated":"propagate","displayed":"propagate(0,0,callback,masque)"},
+           {"name":"_edit","translated":"changer","displayed":"changer(0,0,tâche)"},
+           {"name":"_select","translated":"s\u00e9lectionner","displayed":"s\u00e9lectionner(0,0,10,10)"},
+           {"name":"_filter","translated":"filtrer","displayed":"filtrer(filtre)"},
+           {"name":"_copy","translated":"copier","displayed":"copier()"},
+           {"name":"_transform","translated":"transformer","displayed":"transformer(tâche)"},
+           {"name":"_apply","translated":"appliquer","displayed":"appliquer(tâche)"},
+           {"name":"_replace","translated":"remplacer","displayed":"remplacer(Matrice)"},
+           {"name":"_insert","translated":"ins\u00e9rer","displayed":"ins\u00e9rer(Matrice)"},
+           {"name":"_extract","translated":"extraire","displayed":"extraire()"},
+           {"name":"_shift","translated":"d\u00e9caler","displayed":"d\u00e9caler(direction,0)"},
+           {"name":"_rotate","translated":"pivoter","displayed":"pivoter(direction)"},
+           {"name":"_reverse","translated":"retourner","displayed":"retourner()"},
+           {"name":"_cover","translated":"englober","displayed":"englober()"}
+        ]
+    },
+    "en": {
+        "methods": [
+           {"name":"_reset","translated":"reset","displayed":"reset()"},
+           {"name":"_count","translated":"count","displayed":"count()"},
+           {"name":"_get","translated":"get","displayed":"get(0,0)"},
+           {"name":"_set","translated":"set","displayed":"set(0,0,0)"},
+           {"name":"_scan","translated":"scan","displayed":"scan()"},
+           {"name":"_propagate","translated":"propagate","displayed":"propagate(0,0,callback,mask)"},
+           {"name":"_edit","translated":"edit","displayed":"edit(0,0,task)"},
+           {"name":"_select","translated":"select","displayed":"select(0,0,10,10)"},
+           {"name":"_filter","translated":"filter","displayed":"filter(filter)"},
+           {"name":"_copy","translated":"copier","displayed":"copier()"},
+           {"name":"_transform","translated":"transform","displayed":"transform(task)"},
+           {"name":"_apply","translated":"apply","displayed":"apply(task)"},
+           {"name":"_replace","translated":"replace","displayed":"replace(Matrix)"},
+           {"name":"_insert","translated":"insert","displayed":"insert(Matrix)"},
+           {"name":"_extract","translated":"extract","displayed":"extract()"},
+           {"name":"_shift","translated":"shift","displayed":"shift(direction,0)"},
+           {"name":"_rotate","translated":"rotate","displayed":"rotate(direction)"},
+           {"name":"_reverse","translated":"reverse","displayed":"reverse()"},
+           {"name":"_print","translated":"print","displayed":"print()"},
+           {"name":"_cover","translated":"cover","displayed":"cover()"}
+        ]
+    }
+}

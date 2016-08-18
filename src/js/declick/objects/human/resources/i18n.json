@@ -1,0 +1,17 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
+            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(50)"},
+            {"name":"_moveUpward","translated":"monter","displayed":"monter(50)"},
+            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
+            {"name":"_raiseLeftArm","translated":"leverBrasGauche","displayed":"leverBrasGauche(90)"},
+            {"name":"_raiseRightArm","translated":"leverBrasDroit","displayed":"leverBrasDroit(90)"},
+            {"name":"_lowerLeftArm","translated":"baisserBrasGauche","displayed":"baisserBrasGauche(90)"},
+            {"name":"_lowerRightArm","translated":"baisserBrasDroit","displayed":"baisserBrasDroit(50)"},
+            {"name":"_stop","translated":"arr\u00eater","displayed":"arr\u00eater()"},
+            {"name":"_change","translated":"changer","displayed":"changer(\"garçon\")"},
+            {"name":"_mayCatch","translated":"peutAttraper","displayed":"peutAttraper(objet)"}
+        ]
+    }
+}

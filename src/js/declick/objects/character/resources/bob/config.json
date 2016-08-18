@@ -1,0 +1,9 @@
+{
+    "images": {
+            "forward":["bob_right_1.png", "bob_right_2.png", "bob_right_3.png", "bob_right_4.png", "bob_right_5.png", "bob_right_6.png"],
+            "backward":["bob_left_1.png", "bob_left_2.png", "bob_left_3.png", "bob_left_4.png", "bob_left_5.png", "bob_left_6.png"],
+            "front":["bob_front_1.png", "bob_front_2.png"]
+        },
+    "durationMove": 1,
+    "durationPause": 1
+}

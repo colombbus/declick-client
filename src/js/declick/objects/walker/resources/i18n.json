@@ -1,0 +1,12 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_addBlock","translated":"ajouterBloc","displayed":"ajouterBloc(bloc)"},
+            {"name":"_addPlatform","translated":"ajouterPlateforme","displayed":"ajouterPlateforme(plateforme)"},
+            {"name":"_mayFall","translated":"peutTomber","displayed":"peutTomber(false)"},
+            {"name":"_setJumpSpeed","translated":"d\u00e9finirVitesseSaut","displayed":"d\u00e9finirVitesseSaut(100)"},
+            {"name":"_jump","translated":"sauter","displayed":"sauter()"},
+            {"name":"_setGravity","translated":"d\u00e9finirGravit\u00e9","displayed":"d\u00e9finirGravit\u00e9(100)"}
+        ]
+    }
+}

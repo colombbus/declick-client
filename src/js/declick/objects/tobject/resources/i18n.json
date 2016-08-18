@@ -1,0 +1,7 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_delete","translated":"supprimer","displayed":"supprimer()"}
+        ]
+    }
+}

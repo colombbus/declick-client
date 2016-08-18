@@ -1,0 +1,9 @@
+{
+    "images": {
+            "forward":["robot_right_1.png","robot_right_2.png","robot_right_3.png","robot_right_2.png"],
+            "backward":["robot_left_1.png","robot_left_2.png","robot_left_3.png","robot_left_2.png"],
+            "front":["robot_face_1.png","robot_face_2.png"]
+        },
+    "durationMove": 0.3,
+    "durationPause": 1
+}

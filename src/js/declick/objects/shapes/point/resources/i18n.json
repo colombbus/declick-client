@@ -1,0 +1,7 @@
+{
+    "hide": ["_fillColor", "_setAngle", "_rotate", "_fill"],
+    "fr": {
+        "methods":[
+        ]
+    }
+}

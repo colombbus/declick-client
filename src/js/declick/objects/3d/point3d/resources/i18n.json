@@ -1,0 +1,17 @@
+{
+    "fr": {
+        "methods": [
+            {"name": "_getName","translated": "cacher","displayed": "cacher()"},
+            {"name": "_setName","translated": "cacher","displayed": "cacher()"},
+            {"name": "_setX","translated": "d\u00e9finirCoordonn\u00e9esX","displayed": "d\u00e9finirCoordonn\u00e9esX(0)"},
+            {"name": "_setY","translated": "d\u00e9finirCoordonn\u00e9esY","displayed": "d\u00e9finirCoordonn\u00e9esY(0)"},
+            {"name": "_setZ","translated": "d\u00e9finirCoordonn\u00e9esZ","displayed": "d\u00e9finirCoordonn\u00e9esZ(0)"},
+            {"name": "_getX","translated": "r\u00e9cup\u00e9rerCoordonn\u00e9esX","displayed": "r\u00e9cup\u00e9rerCoordonn\u00e9esX()"},
+            {"name": "_getY","translated": "r\u00e9cup\u00e9rerCoordonn\u00e9esY","displayed": "r\u00e9cup\u00e9rerCoordonn\u00e9esY()"},
+            {"name": "_getZ","translated": "r\u00e9cup\u00e9rerCoordonn\u00e9esZ","displayed": "r\u00e9cup\u00e9rerCoordonn\u00e9esZ()"},
+            {"name": "_setCoordinates","translated": "d\u00e9finirCoordonn\u00e9es","displayed": "d\u00e9finirCoordonn\u00e9es(0,0,0)"},
+            {"name": "_hide","translated": "cacher","displayed": "cacher()"},
+            {"name": "_show","translated": "montrer","displayed": "montrer()"}
+        ]
+    }
+}

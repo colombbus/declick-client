@@ -1,0 +1,30 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_moveForward","translated":"avancer","displayed":"avancer(50)"},
+            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(50)"},
+            {"name":"_moveUpward","translated":"monter","displayed":"monter(50)"},
+            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
+            {"name":"_stop","translated":"arr\u00eater","displayed":"arr\u00eater()"},
+            {"name":"_setVelocity","translated":"d\u00e9finirVitesse","displayed":"d\u00e9finirVitesse(100)"},
+            {"name":"_addImage","translated":"ajouterImage","displayed":"ajouterImage(\"image\")"},
+            {"name":"_setImage","translated":"d\u00e9finirImage","displayed":"d\u00e9finirImage(\"image\")"},
+            {"name":"_alwaysMoveForward","translated":"avancerToujours","displayed":"avancerToujours()"},
+            {"name":"_alwaysMoveBackward","translated":"reculerToujours","displayed":"reculerToujours()"},
+            {"name":"_alwaysMoveUpward","translated":"monterToujours","displayed":"monterToujours()"},
+            {"name":"_alwaysMoveDownward","translated":"descendreToujours","displayed":"descendreToujours()"},
+            {"name":"_ifCollision","translated":"siCollision","displayed":"siCollision(\"commande\")"},
+            {"name":"_ifCollisionWith","translated":"siCollisionAvec","displayed":"siCollisionAvec(objet, \"commande\")"},
+            {"name":"_setCategory","translated":"d\u00e9finirCat\u00e9gorie","displayed":"d\u00e9finirCat\u00e9gorie(\"nom\")"},
+            {"name":"_displayImage","translated":"afficherImage","displayed":"afficherImage(\"image\")"},
+            {"name":"_setTransparent","translated":"rendreTransparent","displayed":"rendreTransparent(\"couleur\")"},
+            {"name":"_displayNextImage","translated":"afficherImageSuivante","displayed":"afficherImageSuivante()"},
+            {"name":"_displayPreviousImage","translated":"afficherImagePr\u00e9c\u00e9dente","displayed":"afficherImagePr\u00e9c\u00e9dente()"},
+            {"name":"_goTo","translated":"allerA","displayed":"allerA(0,0)"},
+            {"name":"_centerGoTo","translated":"centreAllerA","displayed":"centreAllerA(0,0)"},
+            {"name":"_watchCollisions","translated":"surveillerCollisions","displayed":"surveillerCollisions(true)"},
+            {"name":"_removeImage","translated":"supprimerImage","displayed":"supprimerImage(\"image\")"},
+            {"name":"_removeImageSet","translated":"supprimerImages","displayed":"supprimerImages(\"ensemble\")"}
+        ]
+    }
+}

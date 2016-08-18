@@ -1,0 +1,13 @@
+{
+    "fr": {
+        "methods":[
+            {"name": "_addCommand", "translated": "ajouterCommande", "displayed": "ajouterCommande(\"touche\", \"commande\")"},
+            {"name": "_removeCommands", "translated": "supprimerCommandes", "displayed": "supprimerCommandes(\"touche\")"},
+            {"name": "_activate", "translated": "activer", "displayed": "activer()"},
+            {"name": "_deactivate", "translated": "d\u00e9sactiver", "displayed": "d\u00e9sactiver()"},
+            {"name": "_addCommandRelease", "translated": "ajouterCommandeRepos", "displayed": "ajouterCommandeRepos(\"commande\")"},
+            {"name": "_removeCommandRelease", "translated": "supprimerCommandesRepos", "displayed": "supprimerCommandesRepos()"},
+            {"name":"_displayCommands","translated":"afficherCommandes","displayed":"afficherCommandes(true)"}
+        ]
+    }
+}

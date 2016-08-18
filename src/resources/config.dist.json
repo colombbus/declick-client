@@ -1,0 +1,12 @@
+{
+    "debug": false,
+    "backend-path": "/declick-server/web/app.php/",
+    "wpaint-path": "/js/libs/wpaint-2.5.0/",
+    "slide-url": "http://pages.declick.net/",
+    "document-domain": false,
+    "cache": true,
+    "log": false,
+    "error": true,
+    "cache-version": 0,
+    "no-cache-browser": true
+}

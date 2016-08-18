@@ -1,0 +1,25 @@
+{
+    "hide": ["_alwaysMoveForward", "_alwaysMoveBackward", "_alwaysMoveUpward", "_alwaysMoveDownward", "_centerGoTo", "_getXCenter", "_getYCenter", "_setImage", "_setTransparent", "_setMovementDuration", "_setPauseDuration", "_displayImage", "_displayNextImage", "_displayPreviousImage", "_removeImageSet", "_setAspect", "_setCenterLocation"],
+    "fr": {
+        "methods":[
+            {"name":"_moveForward","translated":"avancer","displayed":"avancer(1)"},
+            {"name":"_moveBackward","translated":"reculer","displayed":"reculer(1)"},
+            {"name":"_moveUpward","translated":"monter","displayed":"monter(1)"},
+            {"name":"_moveDownward","translated":"descendre","displayed":"descendre(1)"},
+            {"name":"_setVelocity","translated":"d\u00e9finirVitesse","displayed":"d\u00e9finirVitesse(100)"},
+            {"name":"_setStep","translated":"d\u00e9finirPas","displayed":"d\u00e9finirPas(50)"},
+            {"name":"_countItems","translated":"compterItems","displayed":"compterItems()"},
+            {"name":"_pickup","translated":"ramasser","displayed":"ramasser()"},
+            {"name":"_drop","translated":"d\u00e9poser","displayed":"d\u00e9poser()"},
+            {"name":"_countCarriedItems","translated":"compterItemsRamass\u00e9s","displayed":"compterItemsRamass\u00e9s()"},
+            {"name":"_wasBlocked","translated":"estBloqu\u00e9","displayed":"estBloqu\u00e9(\"haut\")"},
+            {"name":"_getItemName","translated":"r\u00e9cup\u00e9rerNomItem","displayed":"r\u00e9cup\u00e9rerNomItem()"},
+            {"name":"_getGridX","translated":"r\u00e9cup\u00e9rerGrilleX","displayed":"r\u00e9cup\u00e9rerGrilleX()"},
+            {"name":"_getGridY","translated":"r\u00e9cup\u00e9rerGrilleY","displayed":"r\u00e9cup\u00e9rerGrilleY()"},
+            {"name":"_isOverExit","translated":"estSurSortie","displayed":"estSurSortie()"},
+            {"name":"_isOver","translated":"estSur", "displayed" :false},
+            {"name":"_isOverItem","translated":"estSurItem","displayed":"estSurItem(\"nom\")"},
+            {"name":"_isCarrying","translated":"porteItem","displayed":"porteItem(item)"}
+            ]
+    }
+}

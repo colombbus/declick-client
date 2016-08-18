@@ -1,0 +1,9 @@
+b = new Bloc("block.png")
+s = new Animation("sensor.png")
+s.définirPosition(480, 80);
+teacher.set("atteint", false);
+bob = new Robot()
+bob.ajouterBloc(b)
+bob.définirPosition(90,85)
+bob.définirPas(80)
+s.siCollision("teacher.set('atteint',true)", bob);

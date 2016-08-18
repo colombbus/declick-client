@@ -1,0 +1,12 @@
+{
+    "fr": {
+        "methods":[
+            {"name":"_moveForward","translated":"avancer","displayed":"avancer()"},
+            {"name":"_defineURL","translated":"d\u00e9finirURL","displayed":"d\u00e9finirURL('192.168.1.1:5000')"},
+            {"name":"_moveBackward","translated":"reculer","displayed":"reculer()"},
+            {"name":"_turnLeft","translated":"tournerGauche","displayed":"tournerGauche()"},
+            {"name":"_turnRight","translated":"tournerDroite","displayed":"tournerDroite()"},
+            {"name":"_stop","translated":"arr\u00eater","displayed":"arr\u00eater()"}
+        ]
+    }
+}

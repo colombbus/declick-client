@@ -1,0 +1,15 @@
+{
+    "fr": {
+        "robot":"robot",
+        "file not found":"Fichier « {0} » introuvable",
+        "resource not found":"Image « {0} » introuvable",
+        "wrong set":"Ensemble d'images incorrect",
+        "parameter ground":"poserSol() ne prend pas de paramètre",
+        "parameter wall":"poserMur() ne prend pas de paramètre"
+    },
+    "en": {
+        "file not found":"File '{0}' not found",
+        "resource not found":"Picture '{0}' not found",
+        "wrong set":"Wrong images set"
+    }
+}
