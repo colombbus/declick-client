@@ -13,7 +13,7 @@ module.exports = function (grunt) {
                     optimize: 'uglify', /* test: 'none' / prod: 'uglify' */
                     baseUrl: 'js/declick/',
                     mainConfigFile: 'src/js/declick/main.js',
-                    skipDirOptimize: false,
+                    skipDirOptimize: true,
                     findNestedDependencies: true,
                     removeCombined: true,
                     skipModuleInsertion: true,
