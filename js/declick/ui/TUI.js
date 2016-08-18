@@ -1,4 +1,4 @@
-define(['jquery', 'TRuntime', 'TEnvironment', 'quintus'], function($, TRuntime, TEnvironment, TError, Quintus) {
+define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironment, TError) {
     var TUI = function() {
         var frame;
         var canvas;
