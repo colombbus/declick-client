@@ -1,5 +1,4 @@
 module.exports = function (grunt) {
-
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -7,17 +6,79 @@ module.exports = function (grunt) {
 //      options: {
 //        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 //      },
-
-        jshint: {
-            all: ['Gruntfile.js', 'js/tangara/**/*.js']
-        },
-        
-        jsdoc : {
-            dist : {
-                src: ['js/tangara/**/*.js'],
+        requirejs: {
+            compile: {
                 options: {
-                    destination: 'doc/api'
+                    appDir: 'src',
+                    optimize: 'uglify', /* test: 'none' / prod: 'uglify' */
+                    baseUrl: 'js/declick/',
+                    mainConfigFile: 'src/js/declick/main.js',
+                    skipDirOptimize: false,
+                    findNestedDependencies: true,
+                    removeCombined: true,
+                    skipModuleInsertion: true,
+                    /*paths: {
+                        'jquery':'empty:',
+                        'quintus':'empty:',
+                        'acorn':'empty:',
+                        'js-interpreter':'empty:',
+                        'split-pane':'empty:',
+                        'ace':'empty:',
+                        'ace/autocomplete':'empty:',
+                        'ace/range':'empty:',
+                        'ace/edit-session':'empty:',
+                        'ace/undomanager':'empty:',
+                        'jquery-ui/widget':'empty:',
+                        'jquery-ui/core':'empty:',
+                        'jquery-ui/draggable':'empty:',
+                        'jquery-ui/mouse':'empty:',
+                        'iframe-transport':'empty:',
+                        'fileupload':'empty:',
+                        'wColorPicker':'empty:', 
+                        'wPaint':'empty:', 
+                        'wPaint/plugins/main':'empty:', 
+                        'wPaint/plugins/text':'empty:',
+                        'wPaint/plugins/shapes':'empty:',
+                        'wPaint/plugins/flip':'empty:',
+                        'wPaint/plugins/file':'empty:',
+                        'platform-pr':'empty:', 
+                        'json':'empty:',
+                        'babylon':'empty:'
+                    },*/
+                    modules: [
+                        {
+                            name:'main',
+                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'],
+                            include: ['TLink', 'TProgram', 'TError', 'TEnvironment', 'TRuntime', 'ui/TFrame']
+                        },
+                        {
+                            name:'learn',
+                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file', 'objects/teacher/Teacher', 'objects/exercise/Exercise'],
+                            include: ['TLink', 'TProgram', 'TError', 'TEnvironment', 'TRuntime', 'ui/TLearnFrame']
+                        },
+                        {
+                            name:'execute',
+                            exclude: ['jquery', 'TEnvironment', 'TRuntime'],
+                            include: ['TLink', 'TProgram', 'TError']                            
+                        }
+                    ],
+                    dir: 'dist'
                 }
+            }
+        },
+        front_end_modules: {
+            jquery: {
+                src: ['dist/jquery.min.js'],
+                dest: 'src/js/libs/jquery'
+            },
+            babylonjs: {
+                options: {
+                    dest: 'src/js/libs/babylonjs'
+                }
+            },
+            requirejs: {
+                src: ['require.js'],
+                dest: 'src/js/libs/requirejs'
             }
         }
 //        ,
@@ -28,12 +89,15 @@ module.exports = function (grunt) {
     });
 
     // Load the plugin that provides the "uglify" task.
-//    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-front-end-modules');
+    //grunt.loadNpmTasks('grunt-contrib-uglify');
+    //grunt.loadNpmTasks('grunt-jsdoc');
     
-    // Default task(s).
-//    grunt.registerTask('default', ['uglify']);
-    grunt.registerTask('default', ['jshint']);
-
+    // Install task
+    grunt.registerTask('install_declick', ['front_end_modules']);
+    
+    // Default task
+    grunt.registerTask('build_declick', ['requirejs']);
 };
