@@ -160,6 +160,10 @@ define(['TUtils', 'SynchronousManager', 'TObject', 'TRuntime'], function( TUtils
     Keyboard.prototype.clear = function() {
         this.waiting = false;
         this.keys = [];
+        var names = TUtils.getKeyNames();
+        for (var i = 0;i<names.length;i++) {
+            this[names[i]] = false;
+        }        
         this.synchronousManager.end();
     };
     

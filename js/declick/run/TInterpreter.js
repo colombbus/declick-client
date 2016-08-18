@@ -1,18 +1,31 @@
 define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils, acorn, Interpreter) {
     function TInterpreter() {
-        var MAX_STEP = 100;        
-        
+        var MAX_STEP = 100;
+
         var log, errorHandler;
         var classes = {};
         var translatedClasses = {};
         var instances  = {};
         var stored  = {};
         var stepCount =0;
-        
+
         var interpreter;
         var running = false;
-        
+
         var priorityStatementsAllowed = true;
+
+	Object.defineProperty(this, 'output',
+	{
+	    get: function ()
+	    {
+		return interpreter.value;
+	    }
+	});
+
+	this.convertToNative = function (data)
+	{
+	    return getNativeData(data);
+	};
 
         var getNativeData = function(data) {
             if (data.type) {
@@ -88,9 +101,9 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             }
             return parent;
         };
-        
+
         this.initialize = function() {
-            
+
             var initFunc = function(interpreter, scope) {
 
                 // #1 Declare translated Instances
@@ -104,7 +117,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                         return getInterpreterData(instances[className][methodName].apply(this.data, args));
                     };
                 };
-                
+
                 var getInstance = function(name) {
                     var object = interpreter.createObject(interpreter.FUNCTION);
                     object.data = instances[name];
@@ -127,10 +140,10 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     }
                     interpreter.setProperty(scope, name, object, true);
                 }
-                
+
                 // #2 Declare translated Classes
                 // generate wrapper for translated methods
-                
+
                 var getObject = function(name) {
                     var wrapper = function() {
                         var obj = interpreter.createObject(getClass(name));
@@ -161,7 +174,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             };
             interpreter =  new Interpreter("", initFunc);
         };
-        
+
         this.setLog = function(element) {
             log = element;
         };
@@ -169,7 +182,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         this.setErrorHandler = function(handler) {
             errorHandler = handler;
         };
-        
+
         /* Lifecycle management */
 
         var clear = function() {
@@ -212,12 +225,12 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
               scope: scope,
               thisExpression: scope,
               done: false
-            }];            
+            }];
             interpreter.paused_ = false;
             priorityStatementsAllowed = true;
         };
-        
-        
+
+
         var nextStep = function() {
             try {
                 if (interpreter.step()) {
@@ -266,7 +279,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 }
             }
         };
-        
+
         var run = function() {
             running = true;
             nextStep();
@@ -329,7 +342,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         this.addInstance = function(func, name) {
             instances[name] = func;
         };
-        
+
         this.getClass = function(name) {
             if (classes[name]) {
                 return classes[name];
@@ -349,7 +362,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 return null;
             }
         };
-        
+
         this.getObjectName = function(reference) {
             var scope = interpreter.getScope();
             while (scope) {
@@ -363,7 +376,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             }
             return null;
         };
-        
+
         this.deleteObject = function(reference) {
             var scope = interpreter.getScope();
             while (scope) {
@@ -380,7 +393,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             }
             return false;
         };
-        
+
         this.exposeProperty = function(reference, property, propertyName) {
             var scope = interpreter.getScope();
             while (scope) {
@@ -401,7 +414,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             }
             return false;
         };
-        
+
         this.createCallStatement = function(functionStatement) {
             var state = [{type: "InnerCallExpression",arguments: [], func_: functionStatement, loc: functionStatement.node.loc}];
             return state;
@@ -411,16 +424,16 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             var statement = {type: "CallbackStatement", callback: callback};
             return statement;
         };
-        
+
         this.interrupt = function() {
             interpreter.stateStack.shift();
             interpreter.stateStack.unshift({node:{type: "InterruptStatement"}, priority:true, done:false});
         };
-        
+
         this.allowPriorityStatements = function() {
             priorityStatementsAllowed = true;
         };
-        
+
         this.refusePriorityStatements = function() {
             priorityStatementsAllowed = false;
         };
@@ -443,7 +456,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             if (!scope.fixed[nameStr]) {
               scope.properties[nameStr] = value;
             } else {
-                this.throwException(this.REFERENCE_ERROR, nameStr + ' is alderady defined');                    
+                this.throwException(this.REFERENCE_ERROR, nameStr + ' is alderady defined');
             }
             return;
           }
@@ -508,7 +521,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         throw realError;
       }
     };
-    
+
     // add support for Repeat statement
     Interpreter.prototype['stepRepeatStatement'] = function() {
         var state = this.stateStack[0];
@@ -536,7 +549,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     state.countHandled = true;
                 } else {
                     state.countReady = true;
-                    this.stateStack.unshift({node: node.count});            
+                    this.stateStack.unshift({node: node.count});
                 }
             } else {
                 state.infinite = true;
@@ -544,7 +557,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             }
         }
     };
-    
+
     // add support for inner call
     Interpreter.prototype['stepInnerCallExpression'] = function() {
         var state = this.stateStack.shift();
@@ -557,7 +570,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         this.stateStack.unshift({node: {type:"CallExpression", arguments:arguments}, arguments:arguments, n_:n, doneCallee_: true, func_: state.node.func_, funcThis_: this.stateStack[this.stateStack.length - 1].thisExpression});
     };
 
-    
+
     Interpreter.prototype.insertBlock = function(block, priority) {
         // Find index at which insertion has to be made
         var index=this.stateStack.length-1;
@@ -565,13 +578,13 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             index--;
         }
         index++;
-        
+
         // Append the new statements
         block.type = "BlockStatement";
         this.stateStack.splice(index, 0, {node: block, priority:priority, done:false});
     };
-    
-    
+
+
     // add ability to insert code
     Interpreter.prototype.insertCode = function(code, priority, parameters, callbackStatement) {
         // Find index at which insertion has to be made
@@ -580,7 +593,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             index--;
         }
         index++;
-        
+
         // Append the new statements
         if (typeof callbackStatement !== 'undefined') {
             this.stateStack.splice(index, 0, {node: callbackStatement, priority:priority, done:false});
@@ -595,7 +608,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             }
         }
     };
-    
+
     // add ability to handle dynamic properties
     Interpreter.prototype.getProperty = function(obj, name) {
         name = name.toString();
@@ -645,7 +658,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         state = this.stateStack.shift();
         while (state &&
             state.node.type != 'CallExpression' &&
-            state.node.type != 'NewExpression' && 
+            state.node.type != 'NewExpression' &&
             state.node.type != 'Program') {
             if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
                 return;
@@ -660,7 +673,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             throw SyntaxError('Illegal break statement');
         }
     };
-    
+
     // handle interrupt statements
     Interpreter.prototype['stepInterruptStatement'] = function() {
         var state = this.stateStack.shift();
@@ -675,7 +688,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             index--;
         }
         index++;
-        
+
         state = this.stateStack.splice(index, 1)[0];
         while (state &&
             state.node.type != 'Program') {
@@ -702,7 +715,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         }
     };
 
-    
+
     return TInterpreter;
 });
 

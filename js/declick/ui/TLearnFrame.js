@@ -1,9 +1,9 @@
-define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExercise', 'TError', 'objects/teacher/Teacher', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExercise, TError, Teacher) {
+define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExerciseProject', 'TError', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExerciseProject, TError) {
     function TLearnFrame(callback) {
         var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right, $success, $successText, $slideFrame;
         var canvas, editor;
 
-        var exercise = new TExercise();
+        var exercise = new TExerciseProject();
         var bottomSolution = 0;
         var score = 0;
         var lastSubmission = "";
@@ -48,7 +48,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $buttonCheck.click(function(e) {
                 execute();
             });
-            
+
             var $buttonNext = component.find(".ttoolbar-button-next");
             $buttonNext.prepend(TEnvironment.getMessage('button-next-step'));
             $buttonNext.click(function(e) {
@@ -59,19 +59,19 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $buttonClose.click(function(e) {
                 hideSuccess();
             });
-            
+
             $instructions = component.find("#tlearnframe-instructions");
             $instruction = component.find("#tlearnframe-instruction");
             $solution = component.find("#tlearnframe-solution");
             $solution = component.find("#tlearnframe-solution");
             $solutionContent = component.find("#tlearnframe-solution-content");
-            
+
             $loading = component.find("#tlearnframe-loading");
             var loadingText = $loading.find("p");
             loadingText.text(TEnvironment.getMessage('loading-message'));
-            
+
             $right = component.find("#tlearnframe-right");
-            
+
             $success = component.find("#tlearnframe-success");
             $successText = component.find("#tlearnframe-success-text");
         
@@ -102,20 +102,20 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.displayed = function() {
             canvas.displayed();
             editor.displayed();
-            Teacher.setFrame(this);
+            exercise.setFrame(this);
             $right.on("splitpane:resized", function() {
                 editor.resize();
             });
             initSplitPane();
-            // declare itself as log 
+            // declare itself as log
             TRuntime.setLog(this);
-            
+
             var self = this;
             window.addEventListener("hashchange", function() {
                 self.load();
             }, false);
         };
-        
+
         this.init = function() {
             var height = $solution.height();
             $solution.css('top', -height + "px");
@@ -128,7 +128,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             window.platform.initWithTask(window.task);
             initialized = true;
         };
-        
+
         this.load = function(callback) {
             var hash = document.location.hash;
             var part = hash.substring(1);
@@ -144,7 +144,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     self.loaded();
                     if (typeof callback !== 'undefined') {
                         callback.call(this);
-                    }                    
+                    }
                 });
             } else {
                 var exerciseId = parseInt(hash.substring(1));
@@ -175,7 +175,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 }
             }
         };
-        
+
         this.loading = function() {
             $slideFrame.hide();
             $loading.stop().css({opacity:1}).show();
@@ -187,11 +187,10 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             });
         };
 
-        var execute = function() {
-            hideMessage();
-            if (!textMode) {
-                clear();
-            }
+	var context = this;
+
+	var step = function ()
+	{
             try {
                 var statements;
                 if(textMode) {
@@ -206,9 +205,27 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     exercise.end();
                     statements = statements.body;
                 }
-                //TODO: only if no error
-                Teacher.setStatements(statements);
-                exercise.check();
+                exercise.check(statements, function (output)
+		{
+		    var message;
+		    if (output.result === 'success')
+		    {
+			if (output.score < 100)
+			{
+			    message = output.message;
+			}
+			context.validateExercise(message);
+		    }
+		    else if (output.result === 'faillure')
+		    {
+			context.invalidateExercise(output.message);
+		    }
+		    else if (output.action === 'reset')
+		    {
+			exercise.executeInit();
+			step();
+		    }
+		});
             } catch (err) {
                 var error;
                 if (!(err instanceof TError)) {
@@ -219,6 +236,14 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 }
                 showError(error.getMessage());
             }
+	};
+
+        var execute = function() {
+            hideMessage();
+            if (!textMode) {
+                clear();
+            }
+	    step();
         };
 
         var clear = function() {
@@ -278,7 +303,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             }
             messageDisplayed = true;
         };
-        
+
         var showSuccess = function(message) {
             $successText.text(message);
             $success.show();
@@ -330,7 +355,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                         if (typeof callback !== 'undefined') {
                             callback.call(this);
                         }
-                    });                    
+                    });
                 } else {
                     exercise.init();
                     // TODO: send callback to exercise.init() when interpreter supports callbacks
@@ -355,9 +380,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             });
             solutionDisplayed = false;
         };
-        
-        
-        
+
+
+
         /**
          * Get the code unparsed
          * @returns {string}
@@ -373,8 +398,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.getText = function() {
             return $input.val();
         };
-        
-        
+
+
         /**
          * Get the answer entered by user
          * @returns {string}
@@ -386,15 +411,15 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 return this.getCode();
             }
         };
-        
+
         /**
          * Get the last submission entered by user
          * @returns {string}
          */
         this.getLastSubmission = function() {
             return lastSubmission;
-        };        
-        
+        };
+
         /**
          * Set the code in the editor
          * @param {string} value
@@ -402,7 +427,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.setCode = function(value) {
             editor.setValue(value);
         };
-        
+
         /**
          * Set the value of text editor
          * @param {string} value
@@ -410,11 +435,11 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.setText = function(value) {
             $input.val(value);
         };
-        
+
         /**
          * Set the value of user's answer
          * @param {string} value
-         */        
+         */
         this.setAnswer = function(value) {
             if (textMode) {
                 this.setText(value);
@@ -422,7 +447,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 this.setCode(value);
             }
         };
-        
+
         /**
          * Get the score
          * @returns {number}
@@ -430,7 +455,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.getScore = function() {
             return score;
         };
-        
+
         /**
          * Set the score
          * @param {number} value
@@ -438,7 +463,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.setScore = function(value) {
             score = value;
         };
-        
+
         /**
          * Get the message
          * @returns {string}
@@ -446,7 +471,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.getMessage = function() {
             return exercise.getMessage();
         };
-        
+
         /**
          * Set the message
          * @param {string} value
@@ -455,7 +480,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.setMessage = function(value) {
             return exercise.setMessage(value);
         };
-        
+
         /**
          * Get the message
          * @returns {string}
@@ -463,7 +488,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.getSolution = function() {
             return exercise.getSolution();
         };
-        
+
         /**
          * Display or hide the solution
          * @param {boolean} display or hide the solution
@@ -477,7 +502,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 closeSolution();
             }
         };
-        
+
         this.setTextMode = function() {
             // copy current value if any
             // TODO: fix this
@@ -493,9 +518,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             textMode = false;
         };
 
-        
+
         // LOG MANAGEMENT
-        
+
         this.addError = function(error) {
             showError(error.getMessage());
         };
