@@ -1,6 +1,6 @@
 define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExercise', 'TError', 'objects/teacher/Teacher', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExercise, TError, Teacher) {
     function TLearnFrame(callback) {
-        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right, $success, $successText;
+        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right, $success, $successText, $slideFrame;
         var canvas, editor;
 
         var exercise = new TExercise();
@@ -73,6 +73,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             
             $success = component.find("#tlearnframe-success");
             $successText = component.find("#tlearnframe-success-text");
+        
+            $slideFrame = component.find("#tlearnframe-slide");
             
             var self = this;
             canvas = new TLearnCanvas(function(c) {
@@ -119,6 +121,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $solution.css('bottom', height + bottomSolution + "px");
             $solution.css('visibility', 'visible');
             $solution.hide();
+            $slideFrame.hide();
+            
             canvas.removeLoading();
             window.platform.initWithTask(window.task);
             initialized = true;
@@ -126,35 +130,51 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         
         this.load = function(callback) {
             var hash = document.location.hash;
-            var exerciseId = parseInt(hash.substring(1));
-            if (isNaN(exerciseId)) {
-                TEnvironment.error("Could not find exercise id");
+            var part = hash.substring(1);
+            if (part.substring(0,1) === "s") {
+                // slide
                 if (!initialized) {
-                    self.init();
+                    this.init();
                 }
-                if (typeof callback !== 'undefined') {
-                    callback.call(this);
-                }
-            } else if (exerciseId !== exercise.getId()) {
                 this.loading();
-                var self = this;
-                this.loadExercise(exerciseId, function() {
-                    if (!initialized) {
-                        self.init();
-                    }
-                    self.loaded();
-                    if (typeof callback !== 'undefined') {
-                        callback.call(this);
-                    }                    
-                });
-            } else {
+                var slideId = part.substring(1);
+                this.displaySlide(slideId);
+                this.loaded();
                 if (typeof callback !== 'undefined') {
                     callback.call(this);
                 }                    
+            } else {
+                var exerciseId = parseInt(hash.substring(1));
+                if (isNaN(exerciseId)) {
+                    TEnvironment.error("Could not parse exercise id");
+                    if (!initialized) {
+                        this.init();
+                    }
+                    if (typeof callback !== 'undefined') {
+                        callback.call(this);
+                    }
+                } else if (exerciseId !== exercise.getId()) {
+                    this.loading();
+                    var self = this;
+                    this.loadExercise(exerciseId, function() {
+                        if (!initialized) {
+                            self.init();
+                        }
+                        self.loaded();
+                        if (typeof callback !== 'undefined') {
+                            callback.call(this);
+                        }                    
+                    });
+                } else {
+                    if (typeof callback !== 'undefined') {
+                        callback.call(this);
+                    }                    
+                }
             }
         };
         
         this.loading = function() {
+            $slideFrame.hide();
             $loading.stop().css({opacity:1}).show();
         };
 
@@ -265,6 +285,10 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $success.hide();
         };
 
+        var hideSlide = function(message) {
+            $slideFrame.hide();
+        };
+
         var hideMessage = function() {
             $message.hide();
             $message.removeClass("tlearnframe-error");
@@ -283,6 +307,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 hideMessage();
             }
             hideSuccess();
+            hideSlide();
             // by default: program mode
             this.setProgramMode();
             TRuntime.clear();
@@ -474,6 +499,11 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             // do nothing
         };
 
+
+        this.displaySlide = function(slideId) {
+            $slideFrame.attr("src", TEnvironment.getConfig("slide-url")+slideId);
+            $slideFrame.show();
+        };
 
     }
 
