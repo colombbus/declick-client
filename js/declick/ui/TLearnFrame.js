@@ -11,6 +11,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         var initialized = false;
         var messageDisplayed = false;
         var solutionDisplayed = false;
+        var slideDisplayed = false;
         
         TComponent.call(this, "TLearnFrame.html", function(component) {
             $text = component.find("#tlearnframe-text");
@@ -153,7 +154,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     if (typeof callback !== 'undefined') {
                         callback.call(this);
                     }
-                } else if (exerciseId !== exercise.getId()) {
+                } else if (exerciseId !== exercise.getId() || slideDisplayed) {
                     this.loading();
                     var self = this;
                     this.loadExercise(exerciseId, function() {
@@ -281,12 +282,13 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $success.show();
         };
 
-        var hideSuccess = function(message) {
+        var hideSuccess = function() {
             $success.hide();
         };
 
-        var hideSlide = function(message) {
+        var hideSlide = function() {
             $slideFrame.hide();
+            slideDisplayed = false;
         };
 
         var hideMessage = function() {
@@ -503,6 +505,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         this.displaySlide = function(slideId) {
             $slideFrame.attr("src", TEnvironment.getConfig("slide-url")+slideId);
             $slideFrame.show();
+            slideDisplayed = true;
         };
 
     }
