@@ -74,17 +74,6 @@ function load() {
                     // Create task and grader
                     window.task = new Task(this);
                     window.grader = new Grader();
-                    //window.platform.initWithTask(window.task);
-                    // get exercise id
-                    var exerciseId;
-                    if (typeof init_exerciseId !== 'undefined') {
-                        // get id from server
-                        exerciseId = init_exerciseId;
-                    } else {
-                        // get id from hash
-                        var hash = document.location.hash;
-                        exerciseId = parseInt(hash.substring(1));
-                    }
                     TEnvironment.log("********************");
                     TEnvironment.log("* Loading exercise *");
                     TEnvironment.log("********************");
