@@ -139,11 +139,13 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 }
                 this.loading();
                 var slideId = part.substring(1);
-                this.displaySlide(slideId);
-                this.loaded();
-                if (typeof callback !== 'undefined') {
-                    callback.call(this);
-                }                    
+                var self = this;
+                this.displaySlide(slideId, function() {
+                    self.loaded();
+                    if (typeof callback !== 'undefined') {
+                        callback.call(this);
+                    }                    
+                });
             } else {
                 var exerciseId = parseInt(hash.substring(1));
                 if (isNaN(exerciseId)) {
@@ -287,8 +289,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
 
         var hideSlide = function() {
-            // remove content
-            $slideFrame.attr("url", "");
+            $slideFrame.off("load");
             $slideFrame.hide();
             slideDisplayed = false;
         };
@@ -504,10 +505,15 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
 
 
-        this.displaySlide = function(slideId) {
+        this.displaySlide = function(slideId, callback) {
+            $slideFrame.one("load", function(event) {
+                $slideFrame.show();
+                slideDisplayed = true;
+                if (typeof callback !== 'undefined') {
+                    callback.call(this);
+                }                                    
+            });
             $slideFrame.attr("src", TEnvironment.getConfig("slide-url")+slideId);
-            $slideFrame.show();
-            slideDisplayed = true;
         };
 
     }
