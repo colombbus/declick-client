@@ -48,18 +48,16 @@ module.exports = function (grunt) {
                     modules: [
                         {
                             name:'main',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'],
-                            include: ['TLink', 'TProgram', 'TError', 'TEnvironment', 'TRuntime', 'ui/TFrame']
+                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file']
                         },
                         {
                             name:'learn',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file', 'objects/teacher/Teacher', 'objects/exercise/Exercise'],
-                            include: ['TLink', 'TProgram', 'TError', 'TEnvironment', 'TRuntime', 'ui/TLearnFrame']
+                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'],
+                            excludeShallow:['objects/teacher/Teacher', 'objects/exercise/Exercise', 'SynchronousManager', 'TObject']
                         },
                         {
                             name:'execute',
-                            exclude: ['jquery', 'TEnvironment', 'TRuntime'],
-                            include: ['TLink', 'TProgram', 'TError']                            
+                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file']
                         }
                     ],
                     dir: 'dist'
