@@ -37,6 +37,7 @@ require.config({
         "TUtils": "utils/TUtils",
         "TResource": "data/TResource",
         "platform-pr": "../libs/pem-task/platform-pr",
+        "jschannel": "../libs/jschannel/jschannel",
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
         "Grader": "env/Grader",
