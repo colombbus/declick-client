@@ -27,7 +27,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
         this.setId = function(value) {
             project.setId(value);
         };
-        
+
         /**
          * Returns Project's ID.
          * @returns {String}
@@ -35,7 +35,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
         this.getId = function() {
             return project.getId();
         };
-        
+
         /**
          * Checks if Exercise has insructions.
          * @returns {Boolean}
@@ -43,7 +43,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
         this.hasInstructions = function() {
             return (instructions !== false);
         };
-        
+
         /**
          * Checks if Exercise has a solution.
          * @returns {Boolean}
@@ -84,7 +84,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
         this.hasEnd = function() {
             return (endStatements !== false);
         };
-        
+
         /**
          * Checks if Exercise has check statements.
          * @returns {Boolean}
@@ -92,7 +92,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
         this.hasCheck = function() {
             return (checkStatements !== false);
         };
-        
+
         /**
          * Get Project's instructions if defined.
          * @param {Function} callback
@@ -102,7 +102,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                 project.getResourceContent("instructions.html", callback);
             }
         };
-        
+
         /**
          * Returns solution code.
          * @returns {String}
@@ -112,7 +112,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                 return solutionCode;
             }
         };
-        
+
         /**
          * Get Project's hints.
          * @param {function} callback
@@ -121,8 +121,15 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
             if (hints !== false) {
                 project.getResourceContent("hints.html", callback);
             }
-        };        
-        
+        };
+
+	this.executeInit = function ()
+	{
+            if (initStatements !== false) {
+                TRuntime.executeStatements(initStatements);
+            }
+	};
+
         /**
          * Exectute init statements if any.
          */
@@ -131,10 +138,8 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                 TRuntime.executeStatements(exerciseStatements);
                 exercise = TRuntime.getTObject(name);
                 exercise.setFrame(frame);
-            } 
-            if (initStatements !== false) {
-                TRuntime.executeStatements(initStatements);
             }
+	    this.executeInit();
         };
 
         /**
@@ -145,7 +150,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                 TRuntime.executeStatements(startStatements);
             }
         };
-        
+
         /**
          * Exectute end statements if any.
          */
@@ -154,21 +159,21 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                 TRuntime.executeStatements(endStatements);
             }
         };
-        
+
         /**
          * Execute check statements if any.
          */
-        this.check = function(statements) {
+        this.check = function(statements, callback) {
             if (exercise !== false) {
                 exercise.setStatements(statements);
             } else {
                 Teacher.setStatements(statements);
             }
             if (checkStatements !== false) {
-                TRuntime.executeStatements(checkStatements);
+		TRuntime.evaluate(checkStatements, callback);
             }
         };
-        
+
         /**
          * Loads init statements.
          * @param {Function} callback
@@ -207,7 +212,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                 callback.call(this);
             });
         };
-        
+
         /**
          * Loads check statements.
          * @param {Function} callback
@@ -233,7 +238,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                 callback.call(this);
             });
         };
-        
+
         /** Loads exercise
          * @param {Function} callback
          */
@@ -253,7 +258,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                 callback.call(this);
             });
         };
-        
+
         /**
          * Initialize Exercise.
          * @param {Function} callback
@@ -267,7 +272,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
             solutionCode = false;
             instructions = false;
             hints = false;
-            
+
             project.init(function() {
                 // 1st check existing programs
                 var programs = project.getProgramsNames();
@@ -278,7 +283,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                 var solutionPresent = false;
                 var exercisePresent = false;
                 var toLoad = 0;
-                
+
                 if (programs.indexOf("solution") > -1) {
                     toLoad++;
                     solutionPresent = true;
@@ -305,9 +310,9 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                     if (programs.indexOf("init") > -1) {
                         toLoad++;
                         initPresent = true;
-                    }                    
+                    }
                 }
-                
+
                 // 2nd check existing resources
                 var resources = project.getResourcesNames();
                 if (resources.indexOf("instructions.html") > -1) {
@@ -344,14 +349,14 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
                     loadExercise(checkLoad);
                 }
             }, id);
-            
+
         };
-        
+
         this.setFrame = function(aFrame) {
             frame = aFrame;
             Teacher.setFrame(aFrame);
         };
     }
-    
+
     return TExerciseProject;
 });

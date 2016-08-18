@@ -17,7 +17,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         this.load = function(callback) {
             // link interpreter to errorHandler
             interpreter.setErrorHandler(handleError);
-            
+
             // create graphics;
             graphics = new TGraphics();
 
@@ -73,7 +73,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             $.each(classes, function(key, val) {
                 var addObject = true;
                 if (typeof val['conditions'] !== 'undefined') {
-                    // object rely on conditions 
+                    // object rely on conditions
                     for (var i = 0; i < val['conditions'].length; i++) {
                         var condition = val['conditions'][i];
                         switch (condition) {
@@ -130,11 +130,11 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                     classesToLoad--;
                     if (classesToLoad === 0 && typeof callback !== 'undefined') {
                         callback.call(self);
-                    }                    
+                    }
                 }
             });
         };
-        
+
         this.setCallback = function(callback) {
             runtimeCallback = callback;
         };
@@ -166,7 +166,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             }
             return false;
         };
-        
+
         this.getClassTranslatedMethods = function(className) {
             var theClass = interpreter.getClass(className);
             if (theClass && typeof theClass.prototype.translatedMethodsDisplay !== 'undefined') {
@@ -202,7 +202,20 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 TEnvironment.error(error);
             }
         };
-        
+
+	this.evaluate = function (statements, callback)
+	{
+	    var breakpoint = interpreter.createCallbackStatement(function ()
+	    {
+		callback(interpreter.convertToNative(interpreter.output));
+	    });
+	    var body = statements.body.slice();
+	    statements = $.extend({}, statements);
+	    statements.body = body;
+	    statements.body.push(breakpoint);
+	    this.executeStatements(statements);
+	};
+
         this.handleError = function(err) {
             handleError(err);
         };
@@ -238,11 +251,11 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 handleError(e, programName);
             }
         };
-        
+
         this.allowPriorityStatements = function() {
             interpreter.allowPriorityStatements();
         };
-        
+
         this.refusePriorityStatements = function() {
             interpreter.refusePriorityStatements();
         };
@@ -282,11 +295,11 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         this.resume = function() {
             interpreter.resume();
         };
-        
+
         this.interrupt = function() {
             interpreter.interrupt();
         };
-        
+
         // OBJECTS MANAGEMENT
 
         this.addObject = function(object) {
@@ -294,12 +307,12 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             // initialize object with current state
             object.freeze(frozen);
         };
-        
+
         this.addInstance = function(instance) {
             tInstances.push(instance);
             // initialize object with current state
             instance.freeze(frozen);
-        };        
+        };
 
         this.removeObject = function(object) {
             var index = tObjects.indexOf(object);
@@ -329,7 +342,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         };
 
         // GRAPHICS MANAGEMENT
-        
+
         this.getGraphics = function() {
             return graphics;
         };
@@ -341,7 +354,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                 object.deleteObject();
             }
         };
-        
+
         this.clearObjects = function() {
             while (tObjects.length > 0) {
                 var object = tObjects[0];
@@ -360,12 +373,12 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             this.clearGraphics();
             this.clearObjects();
         };
-        
+
         this.init = function() {
             // init instances
             for (var i=0;i<tInstances.length;i++) {
                 tInstances[i].init();
-            }            
+            }
         };
 
         this.setDesignMode = function(value) {
@@ -395,11 +408,11 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         this.getGraphics = function() {
             return graphics;
         };
-        
+
         this.exposeProperty = function(reference, property, name) {
             interpreter.exposeProperty(reference, property, name);
         };
-        
+
         this.createCallStatement = function(functionStatement) {
             return interpreter.createCallStatement(functionStatement);
         };
