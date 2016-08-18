@@ -1,2 +1,0 @@
-bob = new Robot()
-bob.définirVitesse(50)

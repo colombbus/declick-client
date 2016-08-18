@@ -1,7 +1,0 @@
-{
-    "fr": {
-        "methods": [
-            {"name": "_addObject", "translated": "ajouterObjet", "displayed": "ajouterObjet(objet)"}
-        ]
-    }
-}
