@@ -1,10 +1,11 @@
 require.config({
     "baseUrl": 'js/declick',
     paths: {
-        "jquery": '../../node_modules/jquery/dist/jquery.min',
+        "jquery": '../libs/jquery-1.11.1/jquery-1.11.1.min',
         "jquery_animate_enhanced": '../libs/jquery.animate-enhanced/jquery.animate-enhanced.min',
         "ace": '../libs/ace-1.1.7',
-        "babylon": '../../node_modules/babylonjs/babylon',
+        "babylon": '../libs/babylonjs/babylon.1.14',
+        "babylonjs": '../libs/babylon-editor/babylon-editor',
         "split-pane": '../libs/split-pane/split-pane',
         "quintus": '../libs/quintus-0.2.0/quintus-all.min',
         "acorn": '../libs/acorn/acorn',

@@ -1,13 +1,14 @@
 require.config({
     "baseUrl": 'js/declick',
     paths: {
-        "jquery": '../../node_modules/jquery/dist/jquery.min',
+        "jquery": '../libs/jquery-1.11.1/jquery-1.11.1.min',
         "quintus": '../libs/quintus-0.2.0/quintus-all.min',
         "acorn": '../libs/acorn/acorn',
         "TObject": 'objects/tobject/TObject',
         "TObject3D": 'objects/tobject3d/TObject3D',
         "TGraphicalObject": 'objects/tgraphicalobject/TGraphicalObject',
-        "babylon": '../../node_modules/babylonjs/babylon',
+        "babylon": '../libs/babylonjs/babylon.1.14',
+        "babylonjs": '../libs/babylon-editor/babylon-editor',
         "TProject": "data/TProject",
         "TProgram": "data/TProgram",
         "TEnvironment": "env/TEnvironment",
