@@ -2,7 +2,6 @@ require.config({
     "baseUrl": 'js/declick',
     paths: {
         "jquery": '../libs/jquery-1.11.1/jquery-1.11.1.min',
-        "jquery_animate_enhanced": '../libs/jquery.animate-enhanced/jquery.animate-enhanced.min',
         "ace": '../libs/ace-1.1.7',
         "babylon": '../libs/babylonjs/babylon.1.14',
         "babylonjs": '../libs/babylon-editor/babylon-editor',
