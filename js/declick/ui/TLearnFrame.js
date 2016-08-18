@@ -287,6 +287,8 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
 
         var hideSlide = function() {
+            // remove content
+            $slideFrame.attr("url", "");
             $slideFrame.hide();
             slideDisplayed = false;
         };
