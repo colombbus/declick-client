@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, $, TEnvironment, TUI) {
+define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI', 'ui/THints'], function(TComponent, $, TEnvironment, TUI, THints) {
     function TToolbar(callback) {
         var $main, $buttonExecute;
         var $buttonDesignMode, $buttonConsole, $buttonSaveProgram;
@@ -27,6 +27,13 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             window.setWikiClosed = function() {
                 $buttonWiki.removeClass("active");
             };
+            
+            var $buttonHints = component.find("#ttoolbar-hints");
+            $buttonHints.prop("title", TEnvironment.getMessage('button-hints'));
+            $buttonHints.click(function(e) {
+                $buttonHints.toggleClass("active");
+                THints.toggleHints();
+            });
 
             $buttonExecute.attr("title",TEnvironment.getMessage('button-execute'));
             $buttonExecute.click(function(e) {

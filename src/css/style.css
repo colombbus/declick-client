@@ -642,6 +642,16 @@ textarea.tsidebar-rename {
     background-image:url('../images/wiki_on.png');
 }
 
+
+#ttoolbar-hints {
+    background-image:url('../images/help.png');
+}
+
+#ttoolbar-hints:hover,
+#ttoolbar-hints.active {
+    background-image:url('../images/help_on.png');
+}
+
 #ttoolbar-play {
     background-image:url('../images/play.png');
     display:none;

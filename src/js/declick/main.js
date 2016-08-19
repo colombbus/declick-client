@@ -42,7 +42,8 @@ require.config({
         "Task": "env/Task",
         "Grader": "env/Grader",
         "TExerciseProject": "data/TExerciseProject",        
-        "js-interpreter": "../libs/js-interpreter/interpreter"
+        "js-interpreter": "../libs/js-interpreter/interpreter",
+        "introjs": "../libs/introjs/intro.min"
     },
     map: {
         "fileupload": {

@@ -1,0 +1,15 @@
+{
+    "hintButtonLabel":"Ok",
+    "hints":[
+        {
+            "element": "#ttoolbar-wiki",
+            "hint": "Ca c'est pour le wiki",
+            "hintPosition": "top-middle"
+        },
+        {
+            "element": "#ttoolbar-play",
+            "hint": "Ca c'est pour exécuter",
+            "position": "left"
+        }
+    ]
+}

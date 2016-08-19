@@ -54,6 +54,11 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
             return;
         };
 
+        this.setHints = function(element) {
+            hints = element;
+            return;
+        };
+
         this.getCanvas = function() {
             return canvas;
         };
@@ -624,7 +629,6 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                 sidebar.update();
             });
         };
-
     };
 
     var uiInstance = new TUI();
