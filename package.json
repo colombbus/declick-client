@@ -34,6 +34,6 @@
     "grunt-front-end-modules": "^1.2.2"
   },
   "scripts": {
-    "install": "npm install && grunt install_declick"
+    "install_declick": "npm install && grunt install_declick"
   }
 }
