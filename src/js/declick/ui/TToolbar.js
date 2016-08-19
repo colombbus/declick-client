@@ -13,19 +13,19 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, 
             $buttonConsole = component.find("#ttoolbar-console");
             $buttonSaveProgram = component.find("#ttoolbar-save");
 
-            var $buttonHelp = component.find("#ttoolbar-help");
-            $buttonHelp.prop("title", TEnvironment.getMessage('button-help'));
-            $buttonHelp.click(function(e) {
-                $buttonHelp.toggleClass("active");
-                parent.toggleHelp();
+            var $buttonWiki = component.find("#ttoolbar-wiki");
+            $buttonWiki.prop("title", TEnvironment.getMessage('button-wiki'));
+            $buttonWiki.click(function(e) {
+                $buttonWiki.toggleClass("active");
+                parent.toggleWiki();
             });
             
-            window.setHelpOpened = function() {
-                $buttonHelp.addClass("active");
+            window.setWikiOpened = function() {
+                $buttonWiki.addClass("active");
             };
 
-            window.setHelpClosed = function() {
-                $buttonHelp.removeClass("active");
+            window.setWikiClosed = function() {
+                $buttonWiki.removeClass("active");
             };
 
             $buttonExecute.attr("title",TEnvironment.getMessage('button-execute'));
