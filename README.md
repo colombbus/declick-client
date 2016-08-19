@@ -8,7 +8,7 @@ declick-client (JavaScript) works with declick-server (PHP)
 ####To install Declick environment:
 1. Install [node.js](https://nodejs.org/)
 2. Install [grunt](http://gruntjs.com)
-3. Run `npm install_declick`
+3. Run `npm run-script install`
 4. Go to *src/resources* and copy *config.dist.json* to *config.json* - change parameters according to your configuration
 
 ####To build Declick:
