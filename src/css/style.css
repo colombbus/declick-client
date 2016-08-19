@@ -633,13 +633,13 @@ textarea.tsidebar-rename {
     padding:0;
 }
 
-#ttoolbar-help {
-    background-image:url('../images/help.png');
+#ttoolbar-wiki {
+    background-image:url('../images/wiki.png');
 }
 
-#ttoolbar-help:hover,
-#ttoolbar-help.active {
-    background-image:url('../images/help_on.png');
+#ttoolbar-wiki:hover,
+#ttoolbar-wiki.active {
+    background-image:url('../images/wiki_on.png');
 }
 
 #ttoolbar-play {
