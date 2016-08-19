@@ -77,6 +77,10 @@ module.exports = function (grunt) {
             requirejs: {
                 src: ['require.js'],
                 dest: 'src/js/libs/requirejs'
+            },
+            'intro.js': {
+                src: ['minified/intro.min.js', 'minified/introjs.min.css', 'themes/*'],
+                dest: 'src/js/libs/introjs'
             }
         }
 //        ,

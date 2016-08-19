@@ -21,3 +21,4 @@ npm-debug.log
 /src/js/libs/jquery/
 /src/js/libs/requirejs/
 /src/js/libs/babylonjs/
+/src/js/libs/introjs/
