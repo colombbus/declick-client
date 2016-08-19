@@ -9,7 +9,7 @@ dist/*
 # should NOT be excluded as they contain compiler settings and other important
 # information for Eclipse / Flash Builder.
 /nbproject/private/
-/resources/config.json
+/src/resources/config.json
 
 /bower_components/*
 /js/libs-bower/*
