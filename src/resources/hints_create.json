@@ -2,14 +2,47 @@
     "hintButtonLabel":"Ok",
     "hints":[
         {
+            "element": "#tsidebar-switch-programs",
+            "hint": "Afficher la liste des programmes du projet en cours",
+            "position":"left",
+            "hintPosition": "left"
+        },
+        {
+            "element": "#tsidebar-switch-resources",
+            "hint": "Afficher la liste des média (images, sons, etc.) du projet en cours",
+            "position":"left",
+            "hintPosition": "left"
+        },
+        {
+            "element": "#tsidebar-new-program",
+            "hint": "Créer un nouveau programme",
+            "position":"top",
+            "hintPosition": "left"
+        },
+        {
+            "element": "#tsidebar-delete-program",
+            "hint": "Supprimer le programme en cours de sélection",
+            "position":"top",
+            "hintPosition": "left"
+        },
+        {
+            "element": "#ttoolbar-save",
+            "hint": "Enregistrer le programme",
+            "position":"top",
+            "hintPosition": "left"
+        },
+        {
             "element": "#ttoolbar-wiki",
-            "hint": "Ca c'est pour le wiki",
-            "hintPosition": "top-middle"
+            "hint": "Afficher ou cacher le wiki",
+            "hintPosition": "left",
+            "position":"top"
+            
         },
         {
             "element": "#ttoolbar-play",
-            "hint": "Ca c'est pour exécuter",
-            "position": "left"
+            "hint": "Lancer l'exécution du programme",
+            "hintPosition": "left",
+            "position": "top"
         }
     ]
 }
