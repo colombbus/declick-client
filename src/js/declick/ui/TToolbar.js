@@ -19,7 +19,7 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI', 'ui/THints'], function
                 $buttonWiki.toggleClass("active");
                 parent.toggleWiki();
             });
-            
+
             window.setWikiOpened = function() {
                 $buttonWiki.addClass("active");
             };
@@ -27,7 +27,7 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI', 'ui/THints'], function
             window.setWikiClosed = function() {
                 $buttonWiki.removeClass("active");
             };
-            
+
             var $buttonHints = component.find("#ttoolbar-hints");
             $buttonHints.prop("title", TEnvironment.getMessage('button-hints'));
             $buttonHints.click(function(e) {
@@ -52,7 +52,7 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI', 'ui/THints'], function
                 TUI.toggleConsole();
             });
 
-            
+
             $buttonSaveProgram.attr("title", TEnvironment.getMessage('option-save-program'));
             $buttonSaveProgram.click(function(e) {
                 if (!$(this).is(':disabled')) {
@@ -112,7 +112,7 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI', 'ui/THints'], function
                 $buttonSaveProgram.prop("disabled", true);
             }
         };
-        
+
         this.setSaveAvailable = function(value) {
             if (value && saveEnabled) {
                 $buttonSaveProgram.addClass("active");
@@ -120,15 +120,14 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI', 'ui/THints'], function
                 $buttonSaveProgram.removeClass("active");
             }
         };
-        
+
         this.getHeight = function() {
             if (currentHeight === -1) {
                 currentHeight = $main.outerHeight(false);
             }
             return currentHeight;
-        };        
+        };
     }
-    ;
 
     TToolbar.prototype = Object.create(TComponent.prototype);
     TToolbar.prototype.constructor = TToolbar;
