@@ -651,6 +651,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'ui/THints'], function($, TRuntime
 
         this.toggleHints = function() {
             THints.toggleHints();
+            toolbar.setHintsDisplayed(THints.visible());
         };
 
     };

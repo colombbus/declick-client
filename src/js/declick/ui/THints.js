@@ -87,7 +87,11 @@ define(['jquery', 'introjs', 'TEnvironment'], function($, introjs, TEnvironment)
         this.setPage = function(page) {
             currentPage = page;
         };
-    }
+
+        this.visible = function() {
+            return hintsDisplayed;
+        };
+     }
 
     var instance = new THints();
 
