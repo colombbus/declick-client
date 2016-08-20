@@ -574,5 +574,15 @@
             "en": "Exercise"
         },
         "parents": false
-    }    
+    }
+    ,
+    "Girl": {
+        "path": "girl",
+        "translations": {
+            "fr": "Fille",
+            "es": "TBD",
+            "en": "Girl"
+        },
+        "parents": true
+    }
 }

@@ -1,0 +1,9 @@
+{
+    "images": {
+            "forward":["right_1.png","right_2.png","right_3.png","right_2.png"],
+            "backward":["left_1.png","left_2.png","left_3.png","left_2.png"],
+            "front":["face_1.png","face_2.png"]
+        },
+    "durationMove": 0.3,
+    "durationPause": 1
+}
