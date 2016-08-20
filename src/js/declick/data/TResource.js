@@ -2,7 +2,7 @@ define(['jquery'], function($) {
     var TResource = function() {
         var cacheEnabled = false;
         var log = false;
-        
+
         /*
          * Set cache support (i.e. use of localStorage)
          * If true, check validity of cached data, ensuring that it is no older than 1 day
@@ -29,11 +29,11 @@ define(['jquery'], function($) {
                     // in case setItem throws an exception (e.g. private mode)
                     // set cacheEnabled to false
                     cacheEnabled = false;
-                }                
+                }
             }
             return cacheEnabled;
         };
-        
+
         /*
          * Get value from a JSON resource file
          * @param {String} name the name of resource file
@@ -77,13 +77,13 @@ define(['jquery'], function($) {
                     callback.call(this, value);
                 },
                 error: function(data, status, error) {
-                    this.error("Error loading resource '"+name+"'");
+                    self.error("Error loading resource '"+name+"'");
                     callback.call(this, {});
                 }
             });
         };
-        
-        
+
+
          /*
          * Get value from a text resource file
          * @param {String} name the name of resource file
@@ -122,11 +122,11 @@ define(['jquery'], function($) {
                 }
             });
         };
-        
+
         this.setLog = function(value) {
             log = value;
         };
-        
+
         this.setError = function(value) {
             error = value;
         };
@@ -145,8 +145,8 @@ define(['jquery'], function($) {
             }
         };
     };
-    
+
     var resourceInstance = new TResource();
-    
+
     return resourceInstance;
 });
