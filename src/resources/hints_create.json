@@ -18,14 +18,14 @@
         {
             "element": "#tsidebar-new-program",
             "hint": "Créer un nouveau programme",
-            "position":"top",
+            "position":"left",
             "hintPosition": "left",
             "pages":["editor"]
         },
         {
             "element": "#tsidebar-delete-program",
             "hint": "Supprimer le programme en cours de sélection",
-            "position":"top",
+            "position":"left",
             "hintPosition": "left",
             "pages":["editor"]
         },
@@ -54,14 +54,14 @@
             "element": "#ttoolbar-console",
             "hint": "Afficher ou cacher la console",
             "hintPosition": "left",
-            "position": "top",
+            "position": "left",
             "pages":["preview", "preview-console", "preview-design"]
         },
         {
             "element": "#ttoolbar-design-mode",
             "hint": "Activer/Désactiver le mode construction (permet de déplacer les objets à la souris)",
             "hintPosition": "left",
-            "position": "top",
+            "position": "left",
             "pages":["preview", "preview-console", "preview-design"]
         },
         {
