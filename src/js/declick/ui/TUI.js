@@ -1,4 +1,4 @@
-define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironment, TError) {
+define(['jquery', 'TRuntime', 'TEnvironment', 'ui/THints'], function($, TRuntime, TEnvironment, THints) {
     var TUI = function() {
         var frame;
         var canvas;
@@ -71,10 +71,12 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
         };
 
         this.hideConsole = function(hideLog) {
+            //TODO: check if hideLog is still used?
             if (typeof hideLog === 'undefined') {
                 hideLog = true;
             }
             if (consoleDisplayed) {
+                this.hideHints();
                 toolbar.disableConsole();
                 log.saveScroll();
                 if (hideLog) {
@@ -87,12 +89,14 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                 } else {
                     frame.lowerSeparator(console.getHeight());
                 }
+                THints.setPage("preview");
                 consoleDisplayed = false;
             }
         };
 
         this.showConsole = function() {
             if (!consoleDisplayed) {
+                this.hideHints();
                 toolbar.enableConsole();
                 console.show();
                 if (designModeEnabled) {
@@ -107,6 +111,7 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                     frame.raiseSeparator(log.getHeight()+console.getHeight());
                     log.restoreScroll();
                 }
+                THints.setPage("preview-console");
                 consoleDisplayed = true;
             }
         };
@@ -121,6 +126,7 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
 
         this.enableDesignMode = function() {
             if (!designModeEnabled) {
+                this.hideHints();
                 TRuntime.freeze(true);
                 canvas.setDesignMode(true);
                 TRuntime.setDesignMode(true);
@@ -135,6 +141,7 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                     frame.raiseSeparator(log.getHeight());
                 }
                 log.showDesignLog();
+                THints.setPage("preview-design");
                 designModeEnabled = true;
             }
         };
@@ -144,11 +151,14 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                 hideLog = true;
             }
             if (designModeEnabled) {
+                this.hideHints();
                 TRuntime.freeze(false);
                 canvas.setDesignMode(false);
                 TRuntime.setDesignMode(false);
                 toolbar.disableDesignMode();
                 log.hideDesignLog();
+                THints.setPage("preview");
+                // TODO: check if hideLog is still used?
                 if (hideLog) {
                     log.hide();
                     frame.lowerSeparator(log.getHeight());
@@ -175,9 +185,11 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                 this.disableDesignMode();
                 toolbar.enableEditor();
                 TRuntime.stop();
+                this.hideHints();
                 canvas.hide();
                 editor.show();
                 sidebar.show();
+                THints.setPage("editor");
                 editorEnabled = true;
                 if (typeof updateServer === 'undefined' || updateServer) {
                     if (typeof window.parent !== 'undefined') {
@@ -194,8 +206,10 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                 toolbar.disableEditor();
                 editor.hide();
                 sidebar.hide();
+                this.hideHints();
                 canvas.show();
                 canvas.resize();
+                THints.setPage("preview");
                 editorEnabled = false;
                 if (typeof updateServer === 'undefined' || updateServer) {
                     if (typeof window.parent !== 'undefined' && typeof window.parent.switchView !== 'undefined') {
@@ -629,6 +643,16 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                 sidebar.update();
             });
         };
+
+        this.hideHints = function() {
+            THints.hideHints();
+            toolbar.setHintsDisplayed(false);
+        };
+
+        this.toggleHints = function() {
+            THints.toggleHints();
+        };
+
     };
 
     var uiInstance = new TUI();

@@ -5,44 +5,85 @@
             "element": "#tsidebar-switch-programs",
             "hint": "Afficher la liste des programmes du projet en cours",
             "position":"left",
-            "hintPosition": "left"
+            "hintPosition": "left",
+            "pages":["editor"]
         },
         {
             "element": "#tsidebar-switch-resources",
             "hint": "Afficher la liste des média (images, sons, etc.) du projet en cours",
             "position":"left",
-            "hintPosition": "left"
+            "hintPosition": "left",
+            "pages":["editor"]
         },
         {
             "element": "#tsidebar-new-program",
             "hint": "Créer un nouveau programme",
             "position":"top",
-            "hintPosition": "left"
+            "hintPosition": "left",
+            "pages":["editor"]
         },
         {
             "element": "#tsidebar-delete-program",
             "hint": "Supprimer le programme en cours de sélection",
             "position":"top",
-            "hintPosition": "left"
+            "hintPosition": "left",
+            "pages":["editor"]
         },
         {
             "element": "#ttoolbar-save",
             "hint": "Enregistrer le programme",
             "position":"top",
-            "hintPosition": "left"
+            "hintPosition": "left",
+            "pages":["editor"]
         },
         {
             "element": "#ttoolbar-wiki",
             "hint": "Afficher ou cacher le wiki",
             "hintPosition": "left",
-            "position":"top"
-            
+            "position":"top",
+            "pages":["editor", "preview", "preview-console", "preview-design"]
         },
         {
             "element": "#ttoolbar-play",
             "hint": "Lancer l'exécution du programme",
             "hintPosition": "left",
-            "position": "top"
+            "position": "top",
+            "pages":["editor"]
+        },
+        {
+            "element": "#ttoolbar-console",
+            "hint": "Afficher ou cacher la console",
+            "hintPosition": "left",
+            "position": "top",
+            "pages":["preview", "preview-console", "preview-design"]
+        },
+        {
+            "element": "#ttoolbar-design-mode",
+            "hint": "Activer/Désactiver le mode construction (permet de déplacer les objets à la souris)",
+            "hintPosition": "left",
+            "position": "top",
+            "pages":["preview", "preview-console", "preview-design"]
+        },
+        {
+            "element": "#tconsole-text",
+            "hint": "Ecrire une commande à exécuter directement",
+            "hintPosition": "left",
+            "position": "top",
+            "pages":["preview-console"]
+        },
+        {
+            "element": "#tconsole-play",
+            "hint": "Exécuter la commande",
+            "hintPosition": "left",
+            "position": "top",
+            "pages":["preview-console"]
+        },
+        {
+            "element": "#tconsole-clear",
+            "hint": "Réinitialiser l'environnement d'exécution (efface l'écran et l'historique)",
+            "hintPosition": "left",
+            "position": "top",
+            "pages":["preview-console"]
         }
     ]
 }

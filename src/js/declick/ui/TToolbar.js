@@ -1,7 +1,7 @@
-define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI', 'ui/THints'], function(TComponent, $, TEnvironment, TUI, THints) {
+define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI'], function(TComponent, $, TEnvironment, TUI) {
     function TToolbar(callback) {
         var $main, $buttonExecute;
-        var $buttonDesignMode, $buttonConsole, $buttonSaveProgram;
+        var $buttonDesignMode, $buttonConsole, $buttonSaveProgram, $buttonHints;
         var editorMode = false;
         var saveEnabled = false;
         var currentHeight = -1;
@@ -28,11 +28,10 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI', 'ui/THints'], function
                 $buttonWiki.removeClass("active");
             };
 
-            var $buttonHints = component.find("#ttoolbar-hints");
+            $buttonHints = component.find("#ttoolbar-hints");
             $buttonHints.prop("title", TEnvironment.getMessage('button-hints'));
             $buttonHints.click(function(e) {
-                $buttonHints.toggleClass("active");
-                THints.toggleHints();
+                TUI.toggleHints();
             });
 
             $buttonExecute.attr("title",TEnvironment.getMessage('button-execute'));
@@ -118,6 +117,14 @@ define(['ui/TComponent', 'jquery', 'TEnvironment', 'TUI', 'ui/THints'], function
                 $buttonSaveProgram.addClass("active");
             } else {
                 $buttonSaveProgram.removeClass("active");
+            }
+        };
+
+        this.setHintsDisplayed = function(value) {
+            if (value) {
+                $buttonHints.addClass("active");
+            } else {
+                $buttonHints.removeClass("active");
             }
         };
 
