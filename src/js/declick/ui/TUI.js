@@ -406,7 +406,7 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                 // close performed
                 // check if program was current editing program in editor, in which case we set next editing program as current program
                 if (name === editor.getProgramName()) {
-                    var result = nextProgram(name);
+                    result = nextProgram(name);
                     if (result) {
                         this.setSaveEnabled(true);
                         sidebar.setProgramsEditionEnabled(true);
@@ -470,11 +470,11 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                 editor.setSaveEnabled(false);
             }
         };
-        
+
         this.setEditionEnabled = function(value) {
             sidebar.setEditionEnabled(value);
         };
-        
+
         this.updateSidebarPrograms = function() {
             sidebar.updatePrograms();
         };
@@ -496,7 +496,7 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
             programsDisplayed = true;
             resourcesDisplayed = false;
         };
-        
+
         this.togglePrograms = function() {
             if (programsDisplayed) {
                 sidebar.close();
@@ -523,17 +523,18 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
         };
 
         this.delete = function() {
+            var goOn, name;
+            var self = this;
             var project = TEnvironment.getProject();
             if (programsDisplayed) {
                 // Program deletion
-                var name = editor.getProgramName();
+                name = editor.getProgramName();
                 if (name === false) {
                     // editor disabled
                     return;
                 }
-                var goOn = window.confirm(TEnvironment.getMessage('delete-program-confirm', name));
+                goOn = window.confirm(TEnvironment.getMessage('delete-program-confirm', name));
                 if (goOn) {
-                    var self = this;
                     project.deleteProgram(name, function(error) {
                         if (typeof error !== 'undefined') {
                             self.addLogError(error);
@@ -556,11 +557,10 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
                 editor.giveFocus();
             } else {
                 // Resource deletion
-                var name = sidebar.getCurrentResourceName();
+                name = sidebar.getCurrentResourceName();
                 if (name !== "") {
-                    var goOn = window.confirm(TEnvironment.getMessage('delete-resource-confirm', name));
+                    goOn = window.confirm(TEnvironment.getMessage('delete-resource-confirm', name));
                     if (goOn) {
-                        var self = this;
                         project.deleteResource(name, function(error) {
                             if (typeof error !== 'undefined') {
                                 self.addLogError(error);
