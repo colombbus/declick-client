@@ -50,6 +50,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
             aceEditor.setTheme("ace/theme/twilight");
+            aceEditor.$blockScrolling = Infinity;
             aceEditor.on('input', function() {
                 if (triggerPopup) {
                     triggerPopup = false;
@@ -155,7 +156,7 @@ define(['TUI', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRuntime', 'jque
             // set cursor to the end of line
             aceEditor.gotoPageDown();
         };
-        
+
         /**
          * Brings the current `textInput` into focus.
          */

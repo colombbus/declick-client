@@ -48,16 +48,16 @@ module.exports = function (grunt) {
                     modules: [
                         {
                             name:'main',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jschannel', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file']
+                            exclude: ['jquery', 'platform-pr', 'json', 'jschannel', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file']
                         },
                         {
                             name:'learn',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jschannel', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'],
+                            exclude: ['jquery', 'platform-pr', 'json', 'jschannel', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'],
                             excludeShallow:['objects/teacher/Teacher', 'objects/exercise/Exercise', 'SynchronousManager', 'TObject']
                         },
                         {
                             name:'execute',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file']
+                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file']
                         }
                     ],
                     dir: 'dist'
@@ -81,6 +81,10 @@ module.exports = function (grunt) {
             'intro.js': {
                 src: ['minified/intro.min.js', 'minified/introjs.min.css', 'themes/*'],
                 dest: 'src/js/libs/introjs'
+            },
+            'ace-builds': {
+                src: ['src-min/ace.js', 'src-min/ext-language_tools.js', 'src-min/mode-javascript.js', 'src-min/theme-twilight.js'],
+                dest: 'src/js/libs/ace'
             }
         }
 //        ,

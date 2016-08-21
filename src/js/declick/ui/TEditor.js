@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', 'ace/undomanager', 'ace/autocomplete', 'TEnvironment', 'TUI', 'TUtils', 'TRuntime'], function(TComponent, $, ace, ace_edit_session, ace_range, ace_undo_manager, ace_autocomplete, TEnvironment, TUI, TUtils, TRuntime) {
+define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/autocomplete', 'ace/range', 'TEnvironment', 'TUI', 'TUtils', 'TRuntime'], function(TComponent, $, ace, ace_autocomplete, ace_range, TEnvironment, TUI, TUtils, TRuntime) {
     /**
      * TEditor manages the editor console. It runs with lib ace.
      * @param {Function} callback
@@ -17,10 +17,12 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
         var aceEditor;
         var codeChanged = false;
         var program;
-        var AceEditSession = ace_edit_session.EditSession;
-        var AceUndoManager = ace_undo_manager.UndoManager;
+
+        var AceEditSession = ace.EditSession;
+        var AceUndoManager = ace.UndoManager;
         var AceRange = ace_range.Range;
         var AceAutocomplete = ace_autocomplete.Autocomplete;
+
         var errorMarker = null;
         var disabled = false;
         var disabledSession = new AceEditSession('');
@@ -48,6 +50,7 @@ define(['ui/TComponent', 'jquery', 'ace/ace', 'ace/edit_session', 'ace/range', '
             aceEditor.setHighlightActiveLine(false);
             aceEditor.setBehavioursEnabled(false);
             aceEditor.setTheme("ace/theme/twilight");
+            aceEditor.$blockScrolling = Infinity;
 
             var self = this;
             aceEditor.on('input', function() {

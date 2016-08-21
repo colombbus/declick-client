@@ -2,7 +2,9 @@ require.config({
     "baseUrl": 'js/declick',
     paths: {
         "jquery": '../libs/jquery/jquery.min',
-        "ace": '../libs/ace-1.1.7',
+        "ace": '../libs/ace',
+        "ace/autocomplete": '../libs/ace/ext-language_tools',
+        "ace/range": '../libs/ace/ace',
         "babylon": '../libs/babylonjs/babylon',
         "split-pane": '../libs/split-pane/split-pane',
         "quintus": '../libs/quintus-0.2.0/quintus-all.min',
@@ -48,8 +50,11 @@ require.config({
         },
         'split-pane': {
             deps: ['jquery']
+        },
+        "ace/autocomplete": {
+            deps: ["ace/ace"]
         }
-    }    
+    }
 });
 
 function load() {
@@ -97,5 +102,3 @@ if (loading.complete) {
 } else {
     loading.onload = load();
 }
-
-

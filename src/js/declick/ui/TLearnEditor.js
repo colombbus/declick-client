@@ -37,6 +37,7 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
             aceEditor.setFontSize("20px");
             aceEditor.setHighlightActiveLine(false);
             aceEditor.setTheme("ace/theme/twilight");
+            aceEditor.$blockScrolling = Infinity;
             aceEditor.on('input', function() {
                 if (triggerPopup) {
                     triggerPopup = false;
@@ -60,7 +61,7 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
                     platform.validate("stay");
                 }
             });
-            
+
             aceEditor.completers = [consoleCompleter];
             aceEditor.setBehavioursEnabled(false);
 
@@ -88,14 +89,14 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
             // set cursor to the end of line
             aceEditor.gotoPageDown();
         };
-        
+
         /**
          * Brings the current `textInput` into focus.
          */
         this.focus = function() {
             aceEditor.focus();
         };
-        
+
         /**
          * Update Program & get statements of Program's code.
          * @returns {Statement[]}
@@ -136,7 +137,7 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
             }
             return computedHeight;
         };
-        
+
         /**
          * Enable helping methods.
          */
@@ -146,7 +147,7 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
             aceEditor.commands.addCommand(classCommand);
             aceEditor.commands.addCommand(AceAutocomplete.startCommand);
         };
-        
+
         /**
          * Disable helping methods.
          */
@@ -164,7 +165,7 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
         this.resize = function() {
             aceEditor.resize();
         };
-		
+
         var consoleCompleter = {
             getCompletions: function(editor, session, pos, prefix, callback) {
                 pos.column--;
@@ -176,7 +177,7 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
 
                 var tokens = session.getTokens(pos.row);
                 var index = token.index;
-				
+
 				var methodNames=[];
 
                 if (token.type !== "identifier" && token.type !== "text" && token.type !== "keyword" && token.type !== "string") {
@@ -211,11 +212,11 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
 
                     name = part + name;
                 }
-				
+
                 if (name.length === 0) {
                     return false;
                 }
-				
+
 				var range = new AceRange(0, 0, pos.row, pos.column);
                 var valueBefore = session.getDocument().getTextRange(range);
                 // Since regex do not support unicode...
@@ -227,22 +228,22 @@ define(['objects/teacher/Teacher','ui/TComponent', 'TParser', 'ui/TLog', 'TEnvir
 				// Searching if the token was an instancied object
 				if ((token.type === "identifier")|| (result === null)) {
 					var word = token.value;
-					
+
 				    var uninstancied = ["tangara", "declick" ,"clavier", "teacher"];
-					
+
 					if (uninstancied.indexOf(word) > -1) {
 						result = [word, word];
 					}
 				}
-				
+
                 var completions = [];
-                
+
 				console.log("Completed name " + result);
                 if (result !== null && result.length > 0) {
                     var className = result[1];
 					completions = Teacher.getDisplayedMethods(className);
                 }
-								
+
                 callback(null, completions);
             }
         };
