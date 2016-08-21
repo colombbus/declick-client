@@ -84,23 +84,36 @@ if (!isCrossDomain()) {
       openUrl: function(url, success, error) {
          return platform.parent_platform.openUrl(url, success, error);
       },
+      initCallback: function(callback) {
+         this.initCallbackFun = callback;
+         if (platform.initDone) {
+            callback();
+         }
+      },
       initWithTask: function(task) {
          platform.task = task;
          window.task = task;
+         platform.initDone = true;
+         if (platform.initCallbackFun) {
+            platform.initCallbackFun();
+         }
       }
    };
 
 } else {
 
    // cross-domain version, depends on jschannel
-
-   var callAndTrigger = function(fun, triggerName) {
+   platform = {};
+   var callAndTrigger = function(fun, triggerName, error, args) {
       return function() {
-         platform.trigger(triggerName, arguments);
-         fun(arguments);
+         try {
+            platform.trigger(triggerName, args);
+            fun(arguments);
+         } catch(e) {
+            error(e.toString()+'\n'+e.stack);
+         }
       };
    };
-   platform = {};
    platform.ready = false;
    platform.initFailed = false;
    platform.initWithTask = function(task) {
@@ -121,18 +134,18 @@ if (!isCrossDomain()) {
       platform.chan = chan;
       platform.task = task;
       platform.channelId = channelId;
-      chan.bind('task.load', function(trans, views) {task.load(views, callAndTrigger(trans.complete, 'load'), trans.error);trans.delayReturn(true);});
-      chan.bind('task.unload', function(trans) {task.unload(callAndTrigger(trans.complete, 'unload'), trans.error);trans.delayReturn(true);});
+      chan.bind('task.load', function(trans, views) {task.load(views, callAndTrigger(trans.complete, 'load', trans.error, [views]), trans.error);trans.delayReturn(true);});
+      chan.bind('task.unload', function(trans) {task.unload(callAndTrigger(trans.complete, 'unload', trans.error, null), trans.error);trans.delayReturn(true);});
       chan.bind('task.getHeight', function(trans) {task.getHeight(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.getMetaData', function(trans) {task.getMetaData(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.getViews', function(trans) {task.getViews(trans.complete, trans.error);trans.delayReturn(true);});
-      chan.bind('task.showViews', function(trans, views) {task.showViews(views, callAndTrigger(trans.complete, 'showViews'), trans.error);trans.delayReturn(true);});
+      chan.bind('task.showViews', function(trans, views) {task.showViews(views, callAndTrigger(trans.complete, 'showViews', trans.error, [views]), trans.error);trans.delayReturn(true);});
       chan.bind('task.updateToken', function(trans, token) {task.updateToken(token, trans.complete, trans.error);trans.delayReturn(true);});
-      chan.bind('task.reloadAnswer', function(trans, answer) {task.reloadAnswer(answer, callAndTrigger(trans.complete, 'reloadAnswer'), trans.error);trans.delayReturn(true);});
+      chan.bind('task.reloadAnswer', function(trans, answer) {task.reloadAnswer(answer, callAndTrigger(trans.complete, 'reloadAnswer', trans.error, [answer]), trans.error);trans.delayReturn(true);});
       chan.bind('task.getAnswer', function(trans) {task.getAnswer(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.getState', function(trans) {task.getState(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.getResources', function(trans) {task.getResources(trans.complete, trans.error);trans.delayReturn(true);});
-      chan.bind('task.reloadState', function(trans, state) {task.reloadState(state, callAndTrigger(trans.complete, 'reloadState'), trans.error);trans.delayReturn(true);});
+      chan.bind('task.reloadState', function(trans, state) {task.reloadState(state, callAndTrigger(trans.complete, 'reloadState', trans.error, [state]), trans.error);trans.delayReturn(true);});
       chan.bind('grader.gradeTask', function(trans, params) {gradeAnswer(params, trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.gradeAnswer', function(trans, params) {gradeAnswer(params, trans.complete, trans.error);trans.delayReturn(true);});
    };
@@ -141,7 +154,7 @@ if (!isCrossDomain()) {
    platform.trigger = function(event, content) {
       for (var i = 0; i < platform.registered_objects.length; i++) {
          var object = platform.registered_objects[i];
-         if (typeof (object[event]) != "undefined") {
+         if (typeof object[event] !== "undefined") {
             object[event].apply(object, content);
          }
       }
@@ -156,7 +169,7 @@ if (!isCrossDomain()) {
       }
    };
    platform.stop = function() {
-      platform.chan.destroy(); 
+      platform.chan.destroy();
    };
    platform.validate = function (sMode, success, error) {
       if (!success) success = function(){}; // not mandatory, as most code doesn't use it
@@ -164,7 +177,7 @@ if (!isCrossDomain()) {
       platform.chan.call({method: "platform.validate",
          params: sMode,
          error: error,
-         success: callAndTrigger(success)
+         success: callAndTrigger(success, 'validate', error, [sMode])
       });
    };
    platform.getTaskParams = function(key, defaultValue, success, error) {
