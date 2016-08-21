@@ -76,8 +76,8 @@ function (Robot, CommandManager, TUtils)
 	    window.setTimeout(function ()
 	    {
 		context.message = null;
-		context.synchronousManager.end();
 		context.sayCommands.executeCommands({'parameters': [message]});
+		context.synchronousManager.end();
 	    }, (message.length * 50) + 1500);
 	}
     });
