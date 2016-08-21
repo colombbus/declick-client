@@ -72,11 +72,11 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             // fix for old tilew instead of tileW
             if(this.tilew) {
                 this.tileW = this.tilew;
-                delete this['tilew'];
+                delete this.tilew;
             }
             if(this.tileh) {
                 this.tileH = this.tileh;
-                delete this['tileh'];
+                delete this.tileh;
             }
 
             this.cols = this.cols ||
@@ -343,8 +343,8 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	}
     	this.rows.push(row);
         // update counters
-        for (var i=0;i<row.length;i++) {
-            this.counters[row[i]]++;
+        for (var j=0;j<row.length;j++) {
+            this.counters[row[j]]++;
         }
     	this.nbRows++;
     	this.buildStructure();
@@ -380,7 +380,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * @param {Number[][]} structure
      */
     Platform.prototype._loadStructure = function(structure) {
-    	var newRows = [];
+    	var newRows = [],i;
     	if (TUtils.checkArray(structure)) {
             if (!TUtils.checkArray(structure[0])) {
                 throw new Error(this.getMessage("structure incorrect"));
@@ -388,10 +388,10 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             var newNbCols = structure[0].length;
             var tileNumber;
             // init counters
-            for (var i=0; i<this.counters.length; i++) {
+            for (i=0; i<this.counters.length; i++) {
                 this.counters[i]=0;
             }
-            for (var i=0; i<structure.length; i++) {
+            for (i=0; i<structure.length; i++) {
                 newRows[i] = [];
                 for (var j = 0; j<newNbCols; j++) {
                     if (j<structure[i].length) {
@@ -430,7 +430,8 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * @param {Number} number
      */
     Platform.prototype._setTile = function(x,y,number) {
-    	x = TUtils.getInteger(x);
+        var i,j;
+        x = TUtils.getInteger(x);
     	y = TUtils.getInteger(y);
     	number = TUtils.getInteger(number);
     	if (x<0) {
@@ -445,9 +446,9 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	}
         if (y>=this.nbRows) {
             // rows have to be created
-            for (var i=this.nbRows; i<=y; i++) {
+            for (i=this.nbRows; i<=y; i++) {
                 this.rows[i] = [];
-                for (var j=0; j<this.nbCols; j++) {
+                for (j=0; j<this.nbCols; j++) {
                    this.rows[i].push(0);
                    this.counters[0]++;
                 }
@@ -456,8 +457,8 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
         if (x>=this.nbCols) {
             // cols have to be created
-            for (var i=0; i< this.nbRows; i++) {
-                for (var j = this.nbCols; j<=x; j++) {
+            for (i=0; i< this.nbRows; i++) {
+                for (j = this.nbCols; j<=x; j++) {
                     this.rows[i].push(0);
                     this.counters[0]++;
                 }
@@ -484,6 +485,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * Loads resources and draws Platform.
      */
     Platform.prototype.buildSheet = function() {
+        var tile;
     	if (this.tiles.length===0) {
     		return;
     	}
@@ -499,7 +501,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         canvas.width = tileW*(this.tiles.length+1);
         canvas.height = tileH;
         if (this.baseTile !== "") {
-            var tile = this.resources.get(this.baseTile);
+            tile = this.resources.get(this.baseTile);
             if (!tile) {
                 // resource not already loaded: exit
                 return;
@@ -507,7 +509,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             ctx.drawImage(tile, 0, 0);
         }
     	for (var i =0; i< this.tiles.length;i++) {
-            var tile = this.resources.get(this.tiles[i]);
+            tile = this.resources.get(this.tiles[i]);
             if (!tile) {
                 // resource not already loaded: exit
                 return;
@@ -538,12 +540,12 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * @param {type} arguments
      * @returns {Boolean}
      */
-    Platform.prototype.isReady = function(callback, arguments) {
+    Platform.prototype.isReady = function(callback, args) {
         if (this.gObject.p.initialized) {
             return true;
         } else {
             if (typeof callback !== 'undefined') {
-                this.gObject.perform(callback, arguments);
+                this.gObject.perform(callback, args);
             }
             return false;
         }
@@ -586,14 +588,15 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * @param {Number[]} row
      */
     Platform.prototype._setRow = function(x, y, row) {
+        var i,j;
     	if (this.nbCols === 0 && this.nbRows === 0) {
             this.nbCols = row.length+x;
     	}
         if (y>=this.nbRows) {
             // rows have to be created
-            for (var i=this.nbRows; i<=y; i++) {
+            for (i=this.nbRows; i<=y; i++) {
                 this.rows[i] = [];
-                for (var j=0; j<this.nbCols; j++) {
+                for (j=0; j<this.nbCols; j++) {
                    this.rows[i].push(0);
                    this.counters[0]++;
                 }
@@ -603,8 +606,8 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         var newNbCols = row.length+x;
         if (newNbCols>this.nbCols) {
             // cols have to be created
-            for (var i=0; i< this.nbRows; i++) {
-                for (var j = this.nbCols; j<newNbCols; j++) {
+            for (i=0; i< this.nbRows; i++) {
+                for (j = this.nbCols; j<newNbCols; j++) {
                     this.rows[i].push(0);
                     this.counters[0]++;
                 }
@@ -613,7 +616,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
 
         var previous;
-        for (var i=0; i<row.length; i++) {
+        for (i=0; i<row.length; i++) {
             previous = this.rows[y][x+i];
             this.counters[previous]--;
             this.rows[y][x+i] = row[i];
@@ -651,6 +654,3 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
 
     return Platform;
 });
-
-
-
