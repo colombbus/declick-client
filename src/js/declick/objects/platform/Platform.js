@@ -33,9 +33,9 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.prototype.className = "Platform";
     Platform.instances = [];
     Platform.registered = [];
-    
+
     var graphics = Platform.prototype.graphics;
-    
+
     Platform.register =  function(object) {
         Platform.registered.push(object);
         for (var i=0;i<Platform.instances.length; i++) {
@@ -51,7 +51,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
     };
 
-    
+
     var TSpriteSheet = graphics.addClass("SpriteSheet", "TSpriteSheet", {
     	init: function(img, options) {
             TUtils.extend(this,{
@@ -70,16 +70,16 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             });
             if(options) { TUtils.extend(this,options); }
             // fix for old tilew instead of tileW
-            if(this.tilew) { 
-                this.tileW = this.tilew; 
-                delete this['tilew']; 
+            if(this.tilew) {
+                this.tileW = this.tilew;
+                delete this['tilew'];
             }
-            if(this.tileh) { 
-                this.tileH = this.tileh; 
-                delete this['tileh']; 
+            if(this.tileh) {
+                this.tileH = this.tileh;
+                delete this['tileh'];
             }
 
-            this.cols = this.cols || 
+            this.cols = this.cols ||
                         Math.floor(this.w / (this.tileW + this.spacingX));
 
             this.frames = this.cols * (Math.ceil(this.h/(this.tileH + this.spacingY)));
@@ -93,7 +93,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
                     this.tileW, this.tileH);
             }
     });
-    
+
     Platform.prototype.gClass = graphics.addClass("TileLayer", "TPlatform", {
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
@@ -220,9 +220,9 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             return this.p.id;
         },
         size: function(force) {
-            if(force || (!this.p.w || !this.p.h)) { 
+            if(force || (!this.p.w || !this.p.h)) {
             	this.setDimensions();
-            } 
+            }
         },
         drawBlock: function(ctx, blockX, blockY) {
             // Fixed a bug in Quintus(?): startX and startY should not hold references to p.x and p.y
@@ -248,7 +248,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             return this.p.collidable[tileNum];
         }
     });
-    
+
     /**
      * Set a new tile image. There can be many tiles.
      * Its value in the structure will depend of the moment where it is added :
@@ -263,7 +263,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             throw new Error(this.getMessage("file not found", name));
         }
     };
-    
+
     /**
      * Set a new tile image. There can be many tiles.
      * Its value in the structure will depend of the moment where it is added :
@@ -283,11 +283,15 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             }
         });
     };
-    
+
+    Platform.prototype._setCollidableTile = function(number, value) {
+        this.setCollidableTile(number, value);
+    };
+
     Platform.prototype.setCollidableTile = function(number, value) {
         this.gObject.setCollidable(number, value);
     };
-    
+
     /**
      * Set the background image. There is only one base tile.
      * Its value in the structure is 0.
@@ -310,7 +314,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             throw new Error(this.getMessage("file not found", imageName));
         }
     };
-    
+
     /**
      * Add a new row, at the end of the structure.
      * If the row is too short, it is filled with 0.
@@ -324,7 +328,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         } else {
             row = arguments;
         }
-        
+
     	if (this.nbCols === 0 && this.nbRows === 0) {
             this.nbCols = row.length;
     	}
@@ -345,7 +349,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	this.nbRows++;
     	this.buildStructure();
     };
-    
+
     /**
      * Add a new column, at the end of the structure.
      * If the column is too short, it is filled with 0.
@@ -369,7 +373,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	this.nbCols++;
     	this.buildStructure();
     };
-    
+
     /**
      * Create a new structure from a 2D matrix.
      * Each empty tile will be filled with a 0.
@@ -464,7 +468,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.counters[this.rows[y][x]]--;
         this.rows[y][x] = number;
         this.counters[number]++;
-        this.buildStructure();        
+        this.buildStructure();
     };
 
     /**
@@ -475,7 +479,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	this.buildSheet();
     	this.built = true;
     };
-    
+
     /**
      * Loads resources and draws Platform.
      */
@@ -526,7 +530,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.prototype.buildStructure = function() {
     	this.gObject.setStructure(this.rows);
     };
-    
+
     /**
      * Returns Platform is ready or not.
      * If Platform isn't ready, call callback if defined.
@@ -544,25 +548,25 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             return false;
         }
     };
-    
+
     Platform.prototype.getEntranceLocation = function() {
         return this.entranceLocation;
     };
-    
-    
+
+
     Platform.prototype.setEntranceLocation = function(x,y) {
         this.entranceLocation = [x,y];
         // warn every robots registered that entrance has been added
         for (var i=0;i<Platform.registered.length;i++) {
             var object = Platform.registered[i];
             object.setEntranceLocation(x,y);
-        }        
+        }
     };
 
     Platform.prototype.getExitLocations = function() {
         return this.exitLocations;
     };
-    
+
     Platform.prototype.addExitLocation = function(x,y) {
         if (this.exitLocations === false) {
             this.exitLocations = [];
@@ -572,9 +576,9 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         for (var i=0;i<Platform.registered.length;i++) {
             var object = Platform.registered[i];
             object.addExitLocation(x,y);
-        }        
+        }
     };
-    
+
     /**
      * Sets a row, starting from the given location.
      * If the row is too short, it is filled with 0.
@@ -607,7 +611,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             }
             this.nbCols = newNbCols;
         }
-        
+
         var previous;
         for (var i=0; i<row.length; i++) {
             previous = this.rows[y][x+i];
@@ -616,20 +620,20 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             this.counters[row[i]]++;
         }
         this.buildStructure();
-    };    
-    
+    };
+
     Platform.prototype._getTileCount = function(tileNumber) {
         if (typeof this.counters[tileNumber] !== 'undefined') {
             return this.counters[tileNumber];
         }
         return 0;
     };
-    
+
     Platform.prototype.getTilesLength = function() {
         return this.tiles.length;
     };
-    
-    
+
+
     /**
      * Delete Platform.
      */
@@ -643,8 +647,8 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
     	TGraphicalObject.prototype.deleteObject.call(this);
     };
-    
-    
+
+
     return Platform;
 });
 

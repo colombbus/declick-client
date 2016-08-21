@@ -9,7 +9,8 @@
             {"name":"_setBaseTile","translated":"d\u00e9finirBriqueFond","displayed":"d\u00e9finirBriqueFond(\"image\")"},
             {"name":"_setTile","translated":"d\u00e9finirBrique","displayed":"d\u00e9finirBrique(0,0,1)"},
             {"name":"_getStructure","translated":"r\u00e9cup\u00e9rerStructure","displayed":"r\u00e9cup\u00e9rerStructure()"},
-            {"name":"_getTileCount","translated":"compterBriques","displayed":"compterBriques(1)"}
+            {"name":"_getTileCount","translated":"compterBriques","displayed":"compterBriques(1)"},
+            {"name":"_setCollidableTile","translated":"rendreBriqueBloquante","displayed":"rendreBriqueBloquante(1, true)"}
          ]
     }
 }
