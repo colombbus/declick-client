@@ -130,6 +130,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
 
         this.load = function(callback) {
+            hideSuccess();
             var hash = document.location.hash;
             var part = hash.substring(1);
             if (part.substring(0,1) === "s") {
@@ -336,7 +337,6 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             if (messageDisplayed) {
                 hideMessage();
             }
-            hideSuccess();
             hideSlide();
             // by default: program mode
             this.setProgramMode();
