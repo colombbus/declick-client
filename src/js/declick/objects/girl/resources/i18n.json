@@ -1,6 +1,10 @@
 {
-    "fr": {
-        "methods":[
-            ]
+    "fr":
+    {
+        "methods":
+        [
+            {"name":"_say","translated":"dire","displayed":"dire(\"message\")"},
+            {"name":"_ifSay","translated":"siDit","displayed":"siDit(rappel)"}
+        ]
     }
 }
