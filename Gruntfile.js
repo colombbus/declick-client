@@ -34,25 +34,25 @@ module.exports = function (grunt) {
                         'jquery-ui/mouse':'empty:',
                         'iframe-transport':'empty:',
                         'fileupload':'empty:',
-                        'wColorPicker':'empty:', 
-                        'wPaint':'empty:', 
-                        'wPaint/plugins/main':'empty:', 
+                        'wColorPicker':'empty:',
+                        'wPaint':'empty:',
+                        'wPaint/plugins/main':'empty:',
                         'wPaint/plugins/text':'empty:',
                         'wPaint/plugins/shapes':'empty:',
                         'wPaint/plugins/flip':'empty:',
                         'wPaint/plugins/file':'empty:',
-                        'platform-pr':'empty:', 
+                        'platform-pr':'empty:',
                         'json':'empty:',
                         'babylon':'empty:'
                     },*/
                     modules: [
                         {
                             name:'main',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file']
+                            exclude: ['jquery', 'platform-pr', 'json', 'jschannel', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file']
                         },
                         {
                             name:'learn',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'],
+                            exclude: ['jquery', 'platform-pr', 'json', 'jschannel', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'ace/edit_session', 'ace/undomanager', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'],
                             excludeShallow:['objects/teacher/Teacher', 'objects/exercise/Exercise', 'SynchronousManager', 'TObject']
                         },
                         {
@@ -96,10 +96,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-front-end-modules');
     //grunt.loadNpmTasks('grunt-contrib-uglify');
     //grunt.loadNpmTasks('grunt-jsdoc');
-    
+
     // Install task
     grunt.registerTask('install_declick', ['front_end_modules']);
-    
+
     // Default task
     grunt.registerTask('build_declick', ['requirejs']);
 };

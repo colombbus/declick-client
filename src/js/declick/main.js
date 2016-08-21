@@ -41,7 +41,7 @@ require.config({
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
         "Grader": "env/Grader",
-        "TExerciseProject": "data/TExerciseProject",        
+        "TExerciseProject": "data/TExerciseProject",
         "js-interpreter": "../libs/js-interpreter/interpreter",
         "introjs": "../libs/introjs/intro.min"
     },
@@ -74,6 +74,10 @@ require.config({
         },
         'split-pane': {
             deps: ['jquery']
+        },
+        'platform-pr': {
+            deps: ['jquery', 'jschannel'],
+            exports: '$'
         }
     }
 });
