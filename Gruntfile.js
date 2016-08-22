@@ -10,7 +10,7 @@ module.exports = function (grunt) {
             compile: {
                 options: {
                     appDir: 'src',
-                    optimize: 'uglify', /* test: 'none' / prod: 'uglify' */
+                    optimize: 'none', /* test: 'none' / prod: 'uglify' */
                     baseUrl: 'js/declick/',
                     mainConfigFile: 'src/js/declick/main.js',
                     skipDirOptimize: true,
@@ -57,7 +57,8 @@ module.exports = function (grunt) {
                         },
                         {
                             name:'execute',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file']
+                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'],
+                            include: ['TUI']
                         }
                     ],
                     dir: 'dist'
