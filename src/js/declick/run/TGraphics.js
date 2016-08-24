@@ -61,7 +61,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
             if (typeof skip === 'undefined') {
                 skip = 0;
             }
-            
+
             var grid = obj.grid, gridCell, col;
 
             for (var y = grid.Y1; y <= grid.Y2; y++) {
@@ -79,10 +79,10 @@ define(['jquery', 'quintus'], function($, Quintus) {
             }
             return false;
         };
-        
+
         // Tweak Quintus to be able to remove a collisionlayer
         Q.Stage.prototype.removeCollisionLayer = function(layer) {
-        	var index = this._collisionLayers.indexOf(layer); 
+        	var index = this._collisionLayers.indexOf(layer);
         	if (index !== -1) {
         		this._collisionLayers.splice(index, 1);
         	}
@@ -275,9 +275,77 @@ define(['jquery', 'quintus'], function($, Quintus) {
             Q.stage().remove(object);
         };
 
+	function drawGrid(context)
+	{
+	    var stage = Q.stage();
+	    var canvas = Q.el;
+	    var position = {X : 0, Y: 0};
+	    var dimensions = {width: canvas.width, height: canvas.height};
+	    if (stage.has('viewport'))
+	    {
+		var viewport = stage.viewport;
+		position.X = viewport.x;
+		position.Y = viewport.y;
+		dimensions.width = (viewport.centerX - viewport.x) * 2;
+		dimensions.height = (viewport.centerY - viewport.y) * 2;
+	    }
+	    context.beginPath();
+	    var interval = 40;
+	    var linesCount, index;
+	    // mark vertical lines
+	    var offset = interval - (position.X % interval);
+	    if (offset > interval)
+	    {
+		offset -= interval;
+	    }
+	    var linesCount = Math.floor((dimensions.width - offset) / interval) + 1;
+	    for (index = 0; index < linesCount; index++)
+	    {
+		context.moveTo(offset + (index * interval) - 0.5, 0);
+		context.lineTo(offset + (index * interval) - 0.5, dimensions.height);
+	    }
+	    // mark horizontal lines
+	    var offset = interval - (position.Y % interval);
+	    if (offset > interval)
+	    {
+		offset -= interval;
+	    }
+	    var linesCount = Math.floor((dimensions.height - offset) / interval) + 1;
+	    for (index = 0; index < linesCount; index++)
+	    {
+		context.moveTo(0, offset + (index * interval) + 0.5);
+		context.lineTo(dimensions.width, offset + (index * interval) + 0.5);
+	    }
+	    // paint lines
+	    context.lineWidth = 1;
+	    context.strokeStyle = '#C8DEE5';
+	    context.stroke();
+	}
+
+	var gridDisplay = false;
+
+	this.displayGrid = function ()
+	{
+	    gridDisplay = true;
+	};
+
+	this.maskGrid = function ()
+	{
+	    gridDisplay = false;
+	};
+
         this.setCanvas = function(id) {
             Q.setup(id, {maximize: true}).touch(Q.SPRITE_ALL);
             Q.stageScene(null);
+	    var renderer = Q.stage().render;
+	    Q.stage().render = function (context)
+	    {
+		if (gridDisplay === true)
+		{
+		    drawGrid(context);
+		}
+		renderer.apply(Q.stage(), [context]);
+	    };
         };
 
         this.resize = function(width, height) {
@@ -303,7 +371,7 @@ define(['jquery', 'quintus'], function($, Quintus) {
 
         this.regridObject = function(object) {
             Q._generateCollisionPoints(object);
-            object.stage.regrid(object);            
+            object.stage.regrid(object);
         };
 
         this.searchCollisionLayer = function(object, collisionMask, regrid) {

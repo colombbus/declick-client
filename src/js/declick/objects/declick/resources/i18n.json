@@ -10,7 +10,9 @@
             {"name":"_init","translated":"initialiser","displayed":"initialiser()"},
             {"name":"_clearScreen","translated":"effacerEcran","displayed":false},
             {"name":"_interrupt","translated":"interrompre","displayed":"interrompre()"},
-            {"name":"_wait","translated":"attendre","displayed":"attendre(1000)"}
+            {"name":"_wait","translated":"attendre","displayed":"attendre(1000)"},
+            {"name":"_displayGrid","translated":"afficherGrille","displayed":"afficherGrille()"},
+            {"name":"_maskGrid","translated":"masquerGrille","displayed":"masquerGrille()"}
         ]
     }
 }

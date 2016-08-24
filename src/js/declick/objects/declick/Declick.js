@@ -5,7 +5,8 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
      * It allows several interactions.
      * @exports Declick
      */
-    var Declick = function() {
+    var Declick = function()
+    {
         this.synchronousManager = new SynchronousManager();
         TRuntime.addInstance(this);
     };
@@ -13,6 +14,18 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     Declick.prototype = Object.create(TObject.prototype);
     Declick.prototype.constructor = Declick;
     Declick.prototype.className = "Declick";
+
+    Declick.prototype._displayGrid = function ()
+    {
+	TRuntime.getGraphics().displayGrid();
+    };
+
+    Declick.prototype._maskGrid = function ()
+    {
+	TRuntime.getGraphics().maskGrid();
+    };
+
+
 
     /**
      * Write "value" in logs.
@@ -64,7 +77,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
                 TRuntime.allowPriorityStatements();
                 TRuntime.handleError(statements);
             }
-            TRuntime.insertStatements(statements);        
+            TRuntime.insertStatements(statements);
             sm.end();
             TRuntime.allowPriorityStatements();
         });
@@ -98,7 +111,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     Declick.prototype._unpause = function() {
         TRuntime.start();
     };
-    
+
     /**
      * Wait for a given duration
      * @param {Integer} duration
@@ -124,15 +137,15 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
         else
             return answer;
     };
-    
-    
+
+
     /**
      * Interrupt execution
      */
     Declick.prototype._interrupt = function() {
         TRuntime.interrupt();
     };
-    
+
     Declick.prototype.freeze = function(value) {
     };
 
