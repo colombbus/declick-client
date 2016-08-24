@@ -89,7 +89,7 @@ define(['jquery', 'TResource'], function ($, TResource) {
          * @returns {String} Returns the URL of module.
          */
         this.getBackendUrl = function (module) {
-            var url = window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -2).join("/");
+            var url = window.location.protocol + "//" + window.location.host;
             url += this.config['backend-path'] + "assets/";
             if (typeof module !== "undefined") {
                 url = url + module;
@@ -255,7 +255,7 @@ define(['jquery', 'TResource'], function ($, TResource) {
         this.isLogEnabled = function () {
             return this.config["log"];
         };
-        
+
         this.getFirstBrowserLanguage = function () {
             var nav = window.navigator;
             var browserLanguagePropertyKeys = ['language', 'browserLanguage', 'systemLanguage', 'userLanguage'];
@@ -288,5 +288,3 @@ define(['jquery', 'TResource'], function ($, TResource) {
 
     return environmentInstance;
 });
-
-

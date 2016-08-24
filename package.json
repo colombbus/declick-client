@@ -21,6 +21,7 @@
     "url": "https://github.com/colombbus/declick-client.git"
   },
   "dependencies": {
+    "ace-builds": "^1.2.2",
     "babylonjs": "~2.0.1",
     "intro.js": "^2.2.0",
     "jquery": "1.11.1",

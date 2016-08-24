@@ -12,7 +12,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         var messageDisplayed = false;
         var solutionDisplayed = false;
         var slideDisplayed = false;
-        
+
         TComponent.call(this, "TLearnFrame.html", function(component) {
             $text = component.find("#tlearnframe-text");
             $input = $text.find("#tlearnframe-text-input");
@@ -52,7 +52,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             var $buttonNext = component.find(".ttoolbar-button-next");
             $buttonNext.prepend(TEnvironment.getMessage('button-next-step'));
             $buttonNext.click(function(e) {
-                platform.validate("next");
+                platform.validate("nextImmediate");
             });
 
             var $buttonClose = component.find(".ttoolbar-button-close");
@@ -74,9 +74,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
 
             $success = component.find("#tlearnframe-success");
             $successText = component.find("#tlearnframe-success-text");
-        
+
             $slideFrame = component.find("#tlearnframe-slide");
-            
+
             var self = this;
             canvas = new TLearnCanvas(function(c) {
                 component.find("#TLearnCanvas").replaceWith(c);
@@ -123,13 +123,14 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $solution.css('visibility', 'visible');
             $solution.hide();
             $slideFrame.hide();
-            
+
             canvas.removeLoading();
             window.platform.initWithTask(window.task);
             initialized = true;
         };
 
         this.load = function(callback) {
+            hideSuccess();
             var hash = document.location.hash;
             var part = hash.substring(1);
             if (part.substring(0,1) === "s") {
@@ -166,12 +167,12 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                         self.loaded();
                         if (typeof callback !== 'undefined') {
                             callback.call(this);
-                        }                    
+                        }
                     });
                 } else {
                     if (typeof callback !== 'undefined') {
                         callback.call(this);
-                    }                    
+                    }
                 }
             }
         };
@@ -336,7 +337,6 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             if (messageDisplayed) {
                 hideMessage();
             }
-            hideSuccess();
             hideSlide();
             // by default: program mode
             this.setProgramMode();
@@ -536,7 +536,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 slideDisplayed = true;
                 if (typeof callback !== 'undefined') {
                     callback.call(this);
-                }                                    
+                }
             });
             $slideFrame.attr("src", TEnvironment.getConfig("slide-url")+slideId);
         };
