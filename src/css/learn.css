@@ -102,6 +102,10 @@ pre[class*="language-"], :not(pre) > code[class*="language-"]{
 	border:none;
 }
 
+:not(pre) > code[class*="language-"] {
+	padding: .15em .2em;
+}
+
 #tlearnframe-instruction .reponse {
     color: green;
 }
