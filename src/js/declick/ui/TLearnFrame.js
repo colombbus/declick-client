@@ -188,10 +188,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             });
         };
 
-	var context = this;
+        var context = this;
 
-	var step = function ()
-	{
+        var step = function (){
             try {
                 var statements;
                 if(textMode) {
@@ -207,26 +206,26 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     statements = statements.body;
                 }
                 exercise.check(statements, function (output)
-		{
-		    var message;
-		    if (output.result === 'success')
-		    {
-			if (output.score < 100)
-			{
-			    message = output.message;
-			}
-			context.validateExercise(message);
-		    }
-		    else if (output.result === 'faillure')
-		    {
-			context.invalidateExercise(output.message);
-		    }
-		    else if (output.action === 'reset')
-		    {
-			exercise.executeInit();
-			step();
-		    }
-		});
+                {
+                    var message;
+                    if (output.result === 'success')
+                    {
+                        if (output.score < 100)
+                        {
+                            message = output.message;
+                        }
+                        context.validateExercise(message);
+                    }
+                    else if (output.result === 'faillure')
+                    {
+                        context.invalidateExercise(output.message);
+                    }
+                    else if (output.action === 'reset')
+                    {
+                        exercise.executeInit();
+                        step();
+                    }
+                });
             } catch (err) {
                 var error;
                 if (!(err instanceof TError)) {
@@ -237,14 +236,14 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 }
                 showError(error.getMessage());
             }
-	};
+        };
 
         var execute = function() {
             hideMessage();
             if (!textMode) {
                 clear();
             }
-	    step();
+            step();
         };
 
         var clear = function() {
@@ -350,14 +349,12 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 if (exercise.hasInstructions()) {
                     exercise.getInstructions(function(data) {
                         $instructions.html(data);
-                        var self = this;
-                        Prism.highlightAll(false, function() {
-                            exercise.init();
-                            // TODO: send callback to exercise.init() when interpreter supports callbacks
-                            if (typeof callback !== 'undefined') {
-                                callback.call(self);
-                            }
-                        })
+                        Prism.highlightAll(false);
+                        exercise.init();
+                        // TODO: send callback to exercise.init() when interpreter supports callbacks
+                        if (typeof callback !== 'undefined') {
+                            callback.call(this);
+                        }
                     });
                 } else {
                     exercise.init();
@@ -387,26 +384,26 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
 
 
         /**
-         * Get the code unparsed
-         * @returns {string}
-         */
+        * Get the code unparsed
+        * @returns {string}
+        */
         this.getCode = function() {
             return editor.getValue();
         };
 
         /**
-         * Get the value of text input
-         * @returns {string}
-         */
+        * Get the value of text input
+        * @returns {string}
+        */
         this.getText = function() {
             return $input.val();
         };
 
 
         /**
-         * Get the answer entered by user
-         * @returns {string}
-         */
+        * Get the answer entered by user
+        * @returns {string}
+        */
         this.getAnswer = function() {
             if (textMode) {
                 return this.getText();
@@ -416,33 +413,33 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
 
         /**
-         * Get the last submission entered by user
-         * @returns {string}
-         */
+        * Get the last submission entered by user
+        * @returns {string}
+        */
         this.getLastSubmission = function() {
             return lastSubmission;
         };
 
         /**
-         * Set the code in the editor
-         * @param {string} value
-         */
+        * Set the code in the editor
+        * @param {string} value
+        */
         this.setCode = function(value) {
             editor.setValue(value);
         };
 
         /**
-         * Set the value of text editor
-         * @param {string} value
-         */
+        * Set the value of text editor
+        * @param {string} value
+        */
         this.setText = function(value) {
             $input.val(value);
         };
 
         /**
-         * Set the value of user's answer
-         * @param {string} value
-         */
+        * Set the value of user's answer
+        * @param {string} value
+        */
         this.setAnswer = function(value) {
             if (textMode) {
                 this.setText(value);
@@ -452,50 +449,50 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         };
 
         /**
-         * Get the score
-         * @returns {number}
-         */
+        * Get the score
+        * @returns {number}
+        */
         this.getScore = function() {
             return score;
         };
 
         /**
-         * Set the score
-         * @param {number} value
-         */
+        * Set the score
+        * @param {number} value
+        */
         this.setScore = function(value) {
             score = value;
         };
 
         /**
-         * Get the message
-         * @returns {string}
-         */
+        * Get the message
+        * @returns {string}
+        */
         this.getMessage = function() {
             return exercise.getMessage();
         };
 
         /**
-         * Set the message
-         * @param {string} value
-         * @returns {unresolved}
-         */
+        * Set the message
+        * @param {string} value
+        * @returns {unresolved}
+        */
         this.setMessage = function(value) {
             return exercise.setMessage(value);
         };
 
         /**
-         * Get the message
-         * @returns {string}
-         */
+        * Get the message
+        * @returns {string}
+        */
         this.getSolution = function() {
             return exercise.getSolution();
         };
 
         /**
-         * Display or hide the solution
-         * @param {boolean} display or hide the solution
-         */
+        * Display or hide the solution
+        * @param {boolean} display or hide the solution
+        */
         this.displaySolution = function(display) {
             if (exercise.hasSolution() && display) {
                 var solutionCode = exercise.getSolution();
