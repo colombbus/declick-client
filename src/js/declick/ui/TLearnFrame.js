@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExerciseProject', 'TError', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExerciseProject, TError) {
+define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExerciseProject', 'TError', 'prism', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExerciseProject, TError, Prism) {
     function TLearnFrame(callback) {
         var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right, $success, $successText, $slideFrame;
         var canvas, editor;
@@ -350,11 +350,14 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 if (exercise.hasInstructions()) {
                     exercise.getInstructions(function(data) {
                         $instructions.html(data);
-                        exercise.init();
-                        // TODO: send callback to exercise.init() when interpreter supports callbacks
-                        if (typeof callback !== 'undefined') {
-                            callback.call(this);
-                        }
+                        var self = this;
+                        Prism.highlightAll(false, function() {
+                            exercise.init();
+                            // TODO: send callback to exercise.init() when interpreter supports callbacks
+                            if (typeof callback !== 'undefined') {
+                                callback.call(self);
+                            }
+                        })
                     });
                 } else {
                     exercise.init();

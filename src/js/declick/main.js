@@ -45,7 +45,8 @@ require.config({
         "Grader": "env/Grader",
         "TExerciseProject": "data/TExerciseProject",
         "js-interpreter": "../libs/js-interpreter/interpreter",
-        "introjs": "../libs/introjs/intro.min"
+        "introjs": "../libs/introjs/intro.min",
+        "prism":"../libs/prism/prism"
     },
     map: {
         "fileupload": {
@@ -83,6 +84,9 @@ require.config({
         },
         "ace/autocomplete": {
             deps: ["ace/ace"]
+        },
+        'prism': {
+            exports: 'Prism'
         }
     }
 });

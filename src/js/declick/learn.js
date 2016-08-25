@@ -36,7 +36,8 @@ require.config({
         "TExerciseProject": "data/TExerciseProject",
         "TResource": "data/TResource",
         "jschannel": "../libs/jschannel/jschannel",
-        "js-interpreter":"../libs/js-interpreter/interpreter"
+        "js-interpreter":"../libs/js-interpreter/interpreter",
+        "prism":"../libs/prism/prism"
     },
     map: {
         "fileupload": {
@@ -53,6 +54,9 @@ require.config({
         },
         "ace/autocomplete": {
             deps: ["ace/ace"]
+        },
+        'prism': {
+            exports: 'Prism'
         }
     }
 });

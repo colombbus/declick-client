@@ -90,10 +90,16 @@ body {
     margin: 5px 0;
 }
 
-#tlearnframe-instruction .code,
+/*#tlearnframe-instruction .code,
 #tlearnframe-instruction code {
     font-family:"DejaVu","Helvetica Neue",Helvetica,Arial,sans-serif;
     color:#E42C20;
+}*/
+
+pre[class*="language-"], :not(pre) > code[class*="language-"]{
+	border-radius:0;
+	box-shadow:none;
+	border:none;
 }
 
 #tlearnframe-instruction .reponse {
