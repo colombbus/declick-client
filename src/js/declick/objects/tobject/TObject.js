@@ -8,7 +8,7 @@ define(['jquery', 'TRuntime', 'TEnvironment'], function($, TRuntime, TEnvironmen
         TRuntime.addObject(this);
     }
 
-    TObject.prototype.objectName;
+    TObject.prototype.objectName = "";
     TObject.prototype.className = "TObject";
     TObject.prototype.objectPath = "tobject";
 
