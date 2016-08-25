@@ -15,6 +15,11 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     Declick.prototype.constructor = Declick;
     Declick.prototype.className = "Declick";
 
+    Declick.prototype.clear = function ()
+    {
+	this._maskGrid();
+    };
+
     Declick.prototype._displayGrid = function ()
     {
 	TRuntime.getGraphics().displayGrid();
