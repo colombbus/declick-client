@@ -46,7 +46,7 @@ require.config({
         "TExerciseProject": "data/TExerciseProject",
         "js-interpreter": "../libs/js-interpreter/interpreter",
         "introjs": "../libs/introjs/intro.min",
-        "prism":"../libs/prism/prism"
+        "prism":"../libs/prism/prism",
     },
     map: {
         "fileupload": {

@@ -37,7 +37,7 @@ require.config({
         "TResource": "data/TResource",
         "jschannel": "../libs/jschannel/jschannel",
         "js-interpreter":"../libs/js-interpreter/interpreter",
-        "prism":"../libs/prism/prism"
+        "prism":"../libs/prism/prism",
     },
     map: {
         "fileupload": {

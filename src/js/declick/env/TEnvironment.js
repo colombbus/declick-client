@@ -16,7 +16,7 @@ define(['jquery', 'TResource'], function ($, TResource) {
         this.language = "fr";
 
         // Config parameters: default values
-        this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache": true, "log": false, "error": true, "cache-version": 0};
+        this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache": true, "log": false, "error": true, "cache-version": 0, "optimized":false};
         this.debug;
 
         /**

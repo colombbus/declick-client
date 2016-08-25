@@ -1,4 +1,4 @@
-define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterpreter', 'TUtils', 'TI18n', 'TResource'], function($, TError, TGraphics, TParser, TEnvironment, TInterpreter, TUtils, TI18n, TResource) {
+define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterpreter', 'TUtils', 'TI18n', 'TResource', 'objects'], function($, TError, TGraphics, TParser, TEnvironment, TInterpreter, TUtils, TI18n, TResource) {
     function TRuntime() {
         var interpreter = new TInterpreter();
         var runtimeCallback;

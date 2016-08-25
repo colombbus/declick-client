@@ -1,4 +1,4 @@
-define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exercise', 'TParser', 'objects/teacher/Teacher'], function(TEnvironment, TRuntime, TProject, TError, Exercise, TParser, Teacher) {
+define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'], function(TEnvironment, TRuntime, TProject, TError, Exercise, TParser) {
     /**
      * TExercise manage exercises in "Learn" part of Declick.
      * @exports TExercise
@@ -19,6 +19,10 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'objects/exercise/Exer
         //TODO: generate this name dynamically and find a way to protect it
         var name = "exercise_123456";
         var frame = false;
+        var Teacher;
+        require(['objects/teacher/Teacher'], function(TeacherObj) {
+            Teacher = TeacherObj;
+        });
 
         /**
          * Set Project's ID.

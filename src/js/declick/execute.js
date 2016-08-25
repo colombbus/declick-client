@@ -24,7 +24,7 @@ require.config({
         "TError": "utils/TError",
         "TUtils": "utils/TUtils",
         "TResource": "data/TResource",
-        "js-interpreter":"../libs/js-interpreter/interpreter"
+        "js-interpreter":"../libs/js-interpreter/interpreter",
     }
 });
 

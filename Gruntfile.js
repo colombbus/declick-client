@@ -2,10 +2,6 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-//    uglify: {
-//      options: {
-//        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-//      },
         requirejs: {
             compile: {
                 options: {
@@ -17,48 +13,23 @@ module.exports = function (grunt) {
                     findNestedDependencies: true,
                     removeCombined: true,
                     skipModuleInsertion: true,
-                    /*paths: {
-                        'jquery':'empty:',
-                        'quintus':'empty:',
-                        'acorn':'empty:',
-                        'js-interpreter':'empty:',
-                        'split-pane':'empty:',
-                        'ace':'empty:',
-                        'ace/autocomplete':'empty:',
-                        'ace/range':'empty:',
-                        'ace/edit-session':'empty:',
-                        'ace/undomanager':'empty:',
-                        'jquery-ui/widget':'empty:',
-                        'jquery-ui/core':'empty:',
-                        'jquery-ui/draggable':'empty:',
-                        'jquery-ui/mouse':'empty:',
-                        'iframe-transport':'empty:',
-                        'fileupload':'empty:',
-                        'wColorPicker':'empty:',
-                        'wPaint':'empty:',
-                        'wPaint/plugins/main':'empty:',
-                        'wPaint/plugins/text':'empty:',
-                        'wPaint/plugins/shapes':'empty:',
-                        'wPaint/plugins/flip':'empty:',
-                        'wPaint/plugins/file':'empty:',
-                        'platform-pr':'empty:',
-                        'json':'empty:',
-                        'babylon':'empty:'
-                    },*/
                     modules: [
                         {
+                            name:'objects',
+                            exclude: ['jquery', 'babylon', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TLink', 'TError'],
+                            include: '<%= objectsList %>'
+                        },
+                        {
                             name:'main',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jschannel', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file', 'prism']
+                            exclude: ['jquery', 'platform-pr', 'json', 'jschannel', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file', 'prism', 'babylon', 'objects']
                         },
                         {
                             name:'learn',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jschannel', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file', 'prism'],
-                            excludeShallow:['objects/teacher/Teacher', 'objects/exercise/Exercise', 'SynchronousManager', 'TObject']
+                            exclude: ['jquery', 'platform-pr', 'json', 'jschannel', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file', 'prism', 'babylon', 'objects']
                         },
                         {
                             name:'execute',
-                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file'],
-                            include: ['TUI']
+                            exclude: ['jquery', 'platform-pr', 'json', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/draggable', 'jquery-ui/mouse', 'split-pane', 'ace/ace', 'ace/autocomplete', 'ace/range', 'iframe-transport', 'fileupload', 'wColorPicker', 'wPaint', 'wPaint/plugins/main', 'wPaint/plugins/text', 'wPaint/plugins/shapes', 'wPaint/plugins/flip', 'wPaint/plugins/file', 'babylon', 'objects']
                         }
                     ],
                     dir: 'dist'
@@ -87,6 +58,13 @@ module.exports = function (grunt) {
                 src: ['src-min/ace.js', 'src-min/ext-language_tools.js', 'src-min/mode-javascript.js', 'src-min/theme-twilight.js'],
                 dest: 'src/js/libs/ace'
             }
+        },
+        cleanempty: {
+            options: {
+                files:false,
+                folders:true
+            },
+            src: ['dist/js/declick/objects/**/*'],
         }
 //        ,
 //        build: {
@@ -95,16 +73,58 @@ module.exports = function (grunt) {
 //        }
     });
 
-    // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-front-end-modules');
+    grunt.loadNpmTasks('grunt-cleanempty');
     //grunt.loadNpmTasks('grunt-contrib-uglify');
     //grunt.loadNpmTasks('grunt-jsdoc');
+
+    // Utility tasks
+    grunt.registerTask('set_optimized', function() {
+        var declickConfig = grunt.file.readJSON("dist/resources/config.json");
+        declickConfig.optimized = true;
+        grunt.file.write("dist/resources/config.json",JSON.stringify(declickConfig));
+    });
+
+    grunt.registerTask('get_objects_list', function() {
+        var structure = grunt.file.readJSON("src/js/declick/objects/objects.json");
+        var objectsList = [];
+        for (var entry in structure) {
+            objectsList.push("objects/"+structure[entry].path+"/"+entry);
+        }
+        grunt.config('objectsList',objectsList);
+        var objectsListTUI = objectsList.push('TUI');
+        grunt.config('objectsListTUI',objectsListTUI);
+    });
+
+    grunt.registerTask('merge_files', function() {
+        var structure = grunt.file.readJSON("src/js/declick/objects/objects.json");
+        structure.TObject = {path:'tobject'};
+        structure.TGraphicalObject = {path:'tgraphicalobject'};
+        structure.TObject3D = {path:'tobject3d'};
+        var messages = {};
+        var i18n = {};
+        for (var entry in structure) {
+            var path = "dist/js/declick/objects/"+structure[entry].path+"/resources/";
+            messages[entry] = grunt.file.readJSON(path+"messages.json");
+            i18n[entry] = grunt.file.readJSON(path+"i18n.json");
+            // delete files
+            grunt.file.delete(path+"messages.json");
+            grunt.file.delete(path+"i18n.json");
+        }
+        grunt.file.write("dist/js/declick/objects/messages.json", JSON.stringify(messages));
+        grunt.file.write("dist/js/declick/objects/i18n.json", JSON.stringify(i18n));
+    });
+
 
     // Install task
     grunt.registerTask('install_declick', ['front_end_modules']);
 
-    // Default task
-    grunt.registerTask('build_declick', ['requirejs']);
+    // Build task
+    grunt.registerTask('build_declick', ['get_objects_list', 'requirejs', 'set_optimized']);
+    //TODO: see if we merge i18n and message files for objects
+    //grunt.registerTask('build_declick', ['get_objects_list', 'requirejs', 'merge_files', 'set_optimized', 'cleanempty']);
+    grunt.registerTask('default', ['build_declick']);
+
 };
