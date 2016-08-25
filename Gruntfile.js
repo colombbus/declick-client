@@ -10,7 +10,7 @@ module.exports = function (grunt) {
             compile: {
                 options: {
                     appDir: 'src',
-                    optimize: 'none', /* test: 'none' / prod: 'uglify' */
+                    optimize: 'uglify', /* test: 'none' / prod: 'uglify' */
                     baseUrl: 'js/declick/',
                     mainConfigFile: 'src/js/declick/main.js',
                     skipDirOptimize: true,
