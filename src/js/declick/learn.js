@@ -38,6 +38,7 @@ require.config({
         "jschannel": "../libs/jschannel/jschannel",
         "js-interpreter":"../libs/js-interpreter/interpreter",
         "prism":"../libs/prism/prism",
+        "introjs": "../libs/introjs/intro.min"
     },
     map: {
         "fileupload": {
