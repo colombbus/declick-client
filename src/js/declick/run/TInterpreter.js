@@ -616,108 +616,102 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
     Interpreter.prototype.getProperty = function(obj, name) {
         name = name.toString();
         if (obj == this.UNDEFINED || obj == this.NULL) {
-            this.throwException(this.TYPE_ERROR,
-                "Cannot read property '" + name + "' of " + obj);
+            this.throwException(this.TYPE_ERROR, "Cannot read property '" + name + "' of " + obj);
+        }
+        // Special cases for magic length property.
+        if (this.isa(obj, this.STRING)) {
+            if (name == 'length') {
+                return this.createPrimitive(obj.data.length);
             }
-            // Special cases for magic length property.
-            if (this.isa(obj, this.STRING)) {
-                if (name == 'length') {
-                    return this.createPrimitive(obj.data.length);
-                }
-                var n = this.arrayIndex(name);
-                if (!isNaN(n) && n < obj.data.length) {
-                    return this.createPrimitive(obj.data[n]);
-                }
-            } else if (this.isa(obj, this.ARRAY) && name == 'length') {
-                return this.createPrimitive(obj.length);
+            var n = this.arrayIndex(name);
+            if (!isNaN(n) && n < obj.data.length) {
+                return this.createPrimitive(obj.data[n]);
             }
-            while (true) {
-                if (obj.properties && name in obj.properties) {
-                    var prop = obj.properties[name];
-                    if (prop.dynamic ) {
-                        return prop.dynamic.apply(obj);
-                    }
-                    return prop;
+        } else if (this.isa(obj, this.ARRAY) && name == 'length') {
+            return this.createPrimitive(obj.length);
+        }
+        while (true) {
+            if (obj.properties && name in obj.properties) {
+                var prop = obj.properties[name];
+                if (prop.dynamic ) {
+                    return prop.dynamic.apply(obj);
                 }
-                if (obj.parent && obj.parent.properties &&
-                    obj.parent.properties.prototype) {
-                        obj = obj.parent.properties.prototype;
-                    } else {
-                        // No parent, reached the top.
-                        break;
-                    }
-                }
-                return this.UNDEFINED;
-            };
+                return prop;
+            }
+            if (obj.parent && obj.parent.properties && obj.parent.properties.prototype) {
+                obj = obj.parent.properties.prototype;
+            } else {
+                // No parent, reached the top.
+                break;
+            }
+        }
+        return this.UNDEFINED;
+    };
 
-            // change break management not to remove root program node
-            Interpreter.prototype.stepBreakStatement = function() {
-                var state = this.stateStack.shift();
-                var node = state.node;
-                var label = null;
-                if (node.label) {
-                    label = node.label.name;
-                }
-                state = this.stateStack.shift();
-                while (state &&
-                    state.node.type != 'CallExpression' &&
-                    state.node.type != 'NewExpression' &&
-                    state.node.type != 'Program') {
-                        if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
-                            return;
-                        }
-                        state = this.stateStack.shift();
-                    }
-                    if (state.node.type == 'Program'){
-                        // re-insert root node
-                        this.stateStack.push(state);
-                    } else {
-                        // Syntax error, do not allow this error to be trapped.
-                        throw SyntaxError('Illegal break statement');
-                    }
-                };
+    // change break management not to remove root program node
+    Interpreter.prototype.stepBreakStatement = function() {
+        var state = this.stateStack.shift();
+        var node = state.node;
+        var label = null;
+        if (node.label) {
+            label = node.label.name;
+        }
+        state = this.stateStack.shift();
+        while (state && state.node.type != 'CallExpression' && state.node.type != 'NewExpression' && state.node.type != 'Program') {
+            if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
+                return;
+            }
+            state = this.stateStack.shift();
+        }
+        if (state.node.type == 'Program'){
+            // re-insert root node
+            this.stateStack.push(state);
+        } else {
+            // Syntax error, do not allow this error to be trapped.
+            throw SyntaxError('Illegal break statement');
+        }
+    };
 
-                // handle interrupt statements
-                Interpreter.prototype.stepInterruptStatement = function() {
-                    var state = this.stateStack.shift();
-                    var node = state.node;
-                    var label = null;
-                    if (node.label) {
-                        label = node.label.name;
-                    }
-                    // Find index at which search has to start
-                    var index=this.stateStack.length-1;
-                    while (index>=0 && !this.stateStack[index].priority) {
-                        index--;
-                    }
-                    index++;
+    // handle interrupt statements
+    Interpreter.prototype.stepInterruptStatement = function() {
+        var state = this.stateStack.shift();
+        var node = state.node;
+        var label = null;
+        if (node.label) {
+            label = node.label.name;
+        }
+        // Find index at which search has to start
+        var index=this.stateStack.length-1;
+        while (index>=0 && !this.stateStack[index].priority) {
+            index--;
+        }
+        index++;
 
-                    state = this.stateStack.splice(index, 1)[0];
-                    while (state &&
-                        state.node.type != 'Program') {
-                            if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
-                                return;
-                            }
-                            state = this.stateStack.splice(index, 1)[0];
-                        }
-                        if (state.node.type == 'Program'){
-                            // re-insert root node
-                            this.stateStack.push(state);
-                        } else {
-                            // Syntax error, do not allow this error to be trapped.
-                            throw SyntaxError('Illegal break statement');
-                        }
-                    };
+        state = this.stateStack.splice(index, 1)[0];
+        while (state && state.node.type != 'Program') {
+            if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
+                return;
+            }
+            state = this.stateStack.splice(index, 1)[0];
+        }
+        if (state.node.type == 'Program'){
+            // re-insert root node
+            this.stateStack.push(state);
+        } else {
+            // Syntax error, do not allow this error to be trapped.
+            throw SyntaxError('Illegal break statement');
+        }
+    };
 
-                    // handle interrupt statements
-                    Interpreter.prototype.stepCallbackStatement = function() {
-                        var state = this.stateStack.shift();
-                        var node = state.node;
-                        if (node.callback) {
-                            node.callback.apply(this);
-                        }
-                    };
+    // handle interrupt statements
+    Interpreter.prototype.stepCallbackStatement = function() {
+        var state = this.stateStack.shift();
+        var node = state.node;
+        if (node.callback) {
+            node.callback.apply(this);
+        }
+    };
 
 
-                    return TInterpreter;
-                });
+    return TInterpreter;
+});
