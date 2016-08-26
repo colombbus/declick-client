@@ -1,10 +1,10 @@
 define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
     /**
-     * 
+     *
      * @exports CommandManager
      */
     var CommandManager = function() {
-        this.commands = new Array();
+        this.commands = [];
         this.enabled = {};
         this.enabled._default = true;
         this.logging = true;
@@ -16,6 +16,7 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
      * @param {String} field  Field associated to the command ; can be empty
      */
     CommandManager.prototype.addCommand = function(command, field) {
+        var i;
         if (TUtils.checkString(command)) {
             // command is a string: we parse it
             command = TParser.parse(command).body;
@@ -24,16 +25,16 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
         }
         if (typeof field === 'undefined') {
             // simple command provided
-            for (var i = 0; i < command.length; i++) {
+            for (i = 0; i < command.length; i++) {
                 this.commands.push(command[i]);
             }
         } else {
             // command with associated field
             if (typeof this.commands[field] === 'undefined') {
-                this.commands[field] = new Array();
+                this.commands[field] = [];
                 this.enabled[field] = true;
             }
-            for (var i = 0; i < command.length; i++) {
+            for (i = 0; i < command.length; i++) {
                 this.commands[field].push(command[i]);
             }
         }
@@ -53,31 +54,30 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
     };
 
     /**
-     * Execute commands, depending of parameters. 
+     * Execute commands, depending of parameters.
      * @param {String[]} parameters
      */
     CommandManager.prototype.executeCommands = function(parameters) {
         // TODO: handle parameters
         var i, cmdParameters, field;
+        var self = this;
         if (typeof parameters !== 'undefined') {
-            if (typeof parameters['field'] !== 'undefined') {
-                field = parameters['field'];
+            if (typeof parameters.field !== 'undefined') {
+                field = parameters.field;
             }
-            if (typeof parameters['parameters'] !== 'undefined') {
-                cmdParameters = parameters['parameters'];
+            if (typeof parameters.parameters !== 'undefined') {
+                cmdParameters = parameters.parameters;
             }
         }
         if (typeof field === 'undefined' ) {
             if (this.enabled._default) {
                 this.enabled._default = false;
-                var self = this;
                 TRuntime.executeNow(this.commands, cmdParameters, this.logging, function() {
                     self.enabled._default = true;
                 });
             }
         } else if (typeof this.commands[field] !== 'undefined' && this.enabled[field]) {
             this.enabled[field] = false;
-            var self = this;
             TRuntime.executeNow(this.commands[field], cmdParameters, this.logging, function() {
                 self.enabled[field] = true;
             });
@@ -110,5 +110,3 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
 
     return CommandManager;
 });
-
-
