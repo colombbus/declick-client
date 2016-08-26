@@ -14,20 +14,21 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
         var priorityStatementsAllowed = true;
 
-	Object.defineProperty(this, 'output',
-	{
-	    get: function ()
-	    {
-		return interpreter.value;
-	    }
-	});
+        Object.defineProperty(this, 'output',
+        {
+            get: function ()
+            {
+                return interpreter.value;
+            }
+        });
 
-	this.convertToNative = function (data)
-	{
-	    return getNativeData(data);
-	};
+        this.convertToNative = function (data)
+        {
+            return getNativeData(data);
+        };
 
         var getNativeData = function(data) {
+            var result;
             if (data.type) {
                 if (data.type=== "function") {
                     return data;
@@ -37,13 +38,13 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 } else if (data.type === "object") {
                     if (typeof data.length !== "undefined") {
                         // we are in an array
-                        var result = [];
+                        result = [];
                         for (var i =0; i < data.length; i++) {
                             result.push(getNativeData(data.properties[i]));
                         }
                         return result;
                     } else {
-                        var result = {};
+                        result = {};
                         for (var member in data.properties) {
                             result[member] = getNativeData(data.properties[member]);
                         }
@@ -55,9 +56,10 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         };
 
         var getInterpreterData = function(data) {
+            var result;
             if (data instanceof Array) {
                 // Array
-                var result = interpreter.createObject(interpreter.ARRAY);
+                result = interpreter.createObject(interpreter.ARRAY);
                 for (var i = 0; i<data.length;i++) {
                     interpreter.setProperty(result, i, getInterpreterData(data[i]));
                 }
@@ -67,7 +69,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 if (data.className) {
                     // declick object: wrap it
                     if (translatedClasses[data.className]) {
-                        var result = interpreter.createObject(getClass(translatedClasses[data.className]));
+                        result = interpreter.createObject(getClass(translatedClasses[data.className]));
                         result.data = data;
                         return result;
                     }
@@ -105,6 +107,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         this.initialize = function() {
 
             var initFunc = function(interpreter, scope) {
+                var name, object;
 
                 // #1 Declare translated Instances
                 var getInstanceMethodWrapper = function(className, methodName) {
@@ -129,8 +132,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     }
                     return object;
                 };
-                for (var name in instances) {
-                    var object;
+                for (name in instances) {
                     if (stored[name]) {
                         // instance already created and stored
                         object = stored[name];
@@ -160,8 +162,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     var obj = interpreter.createNativeFunction(wrapper);
                     return obj;
                 };
-                for (var name in classes) {
-                    var object;
+                for (name in classes) {
                     if (stored[name]) {
                         // instance already created and stored
                         object = stored[name];
@@ -221,10 +222,10 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 scope = interpreter.createScope(emptyAST, null);
             }
             interpreter.stateStack = [{
-              node: emptyAST,
-              scope: scope,
-              thisExpression: scope,
-              done: false
+                node: emptyAST,
+                scope: scope,
+                thisExpression: scope,
+                done: false
             }];
             interpreter.paused_ = false;
             priorityStatementsAllowed = true;
@@ -248,10 +249,11 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                 }
                 //logCommand(interpreter.stateStack);
             } catch (err) {
+                var state, error;
                 if (!(err instanceof TError)) {
-                    var error = new TError(err);
+                    error = new TError(err);
                     if (interpreter.stateStack.length>0) {
-                        var state = interpreter.stateStack[0];
+                        state = interpreter.stateStack[0];
                         if (state.node.loc) {
                             error.setLines([state.node.loc.start.line, state.node.loc.end.line]);
                         }
@@ -261,7 +263,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
                     error = err;
                 }
                 if (interpreter.stateStack.length>0) {
-                    var state = interpreter.stateStack[0];
+                    state = interpreter.stateStack[0];
                     if (!state.node.loc || !state.node.loc.source) {
                         // no program associated: remove lines if any
                         error.setLines([]);
@@ -396,13 +398,13 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
         this.exposeProperty = function(reference, property, propertyName) {
             var scope = interpreter.getScope();
+            var wrapper = function() {
+                return getInterpreterData(this.data[property]);
+            };
             while (scope) {
                 for (var name in scope.properties) {
                     var obj = scope.properties[name];
                     if (obj.data === reference) {
-                        var wrapper = function() {
-                            return getInterpreterData(this.data[property]);
-                        };
                         var prop = interpreter.createObject(null);
                         prop.dynamic = wrapper;
                         //window.console.log(typeof property);
@@ -441,7 +443,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
 
     // Modify Interpreter to handle function declaration
-    Interpreter.prototype['stepFunctionDeclaration'] = function() {
+    Interpreter.prototype.stepFunctionDeclaration = function() {
         var state = this.stateStack.shift();
         this.setValue(this.createPrimitive(state.node.id.name), this.createFunction(state.node));
     };
@@ -452,78 +454,79 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         var strict = scope.strict;
         var nameStr = name.toString();
         while (scope) {
-          if ((nameStr in scope.properties) || (!strict && !scope.parentScope)) {
-            if (!scope.fixed[nameStr]) {
-              scope.properties[nameStr] = value;
-            } else {
-                this.throwException(this.REFERENCE_ERROR, nameStr + ' is alderady defined');
+            if ((nameStr in scope.properties) || (!strict && !scope.parentScope)) {
+                if (!scope.fixed[nameStr]) {
+                    scope.properties[nameStr] = value;
+                } else {
+                    this.throwException(this.REFERENCE_ERROR, nameStr + ' is alderady defined');
+                }
+                return;
             }
-            return;
-          }
-          scope = scope.parentScope;
+            scope = scope.parentScope;
         }
         this.throwException(this.REFERENCE_ERROR, nameStr + ' is not defined');
     };
 
     // Modify Interpreter to not delete statements when looking for a try
     Interpreter.prototype.throwException = function(errorClass, opt_message) {
-      if (this.stateStack[0].interpreter) {
-        // This is the wrong interpreter, we are spinning on an eval.
-        try {
-          this.stateStack[0].interpreter.throwException(errorClass, opt_message);
-          return;
-        } catch (e) {
-          // The eval threw an error and did not catch it.
-          // Continue to see if this level can catch it.
+        var error;
+        if (this.stateStack[0].interpreter) {
+            // This is the wrong interpreter, we are spinning on an eval.
+            try {
+                this.stateStack[0].interpreter.throwException(errorClass, opt_message);
+                return;
+            } catch (e) {
+                // The eval threw an error and did not catch it.
+                // Continue to see if this level can catch it.
+            }
         }
-      }
-      if (opt_message === undefined) {
-        var error = errorClass;
-      } else {
-        var error = this.createObject(errorClass);
-        this.setProperty(error, 'message',
+        if (opt_message === undefined) {
+            error = errorClass;
+        } else {
+            error = this.createObject(errorClass);
+            this.setProperty(error, 'message',
             this.createPrimitive(opt_message), false, true);
-      }
-      // Search for a try statement.
-      var i = 0;
-      var state;
-      var length = this.stateStack.length;
-      do {
-        state = this.stateStack[i];
-        i++;
-      } while (i<length && state.node.type !== 'TryStatement');
-      if (state.node.type === 'TryStatement') {
+        }
+        // Search for a try statement.
+        var i = 0;
+        var state;
+        var length = this.stateStack.length;
+        do {
+            state = this.stateStack[i];
+            i++;
+        } while (i<length && state.node.type !== 'TryStatement');
+        if (state.node.type === 'TryStatement') {
             for (var j=0; j<i; j++) {
                 this.stateStack.shift();
             }
             // Error is being trapped.
             this.stateStack.unshift({
-              node: state.node.handler,
-              throwValue: error
+                node: state.node.handler,
+                throwValue: error
             });
-      } else {
-        // Throw a real error.
-        var realError;
-        if (this.isa(error, this.ERROR)) {
-          var errorTable = {
-            'EvalError': EvalError,
-            'RangeError': RangeError,
-            'ReferenceError': ReferenceError,
-            'SyntaxError': SyntaxError,
-            'TypeError': TypeError,
-            'URIError': URIError
-          };
-          var type = errorTable[this.getProperty(error, 'name')] || Error;
-          realError = type(this.getProperty(error, 'message'));
         } else {
-          realError = error.toString();
+            // Throw a real error.
+            var realError;
+            if (this.isa(error, this.ERROR)) {
+                var errorTable = {
+                    'EvalError': EvalError,
+                    'RangeError': RangeError,
+                    'ReferenceError': ReferenceError,
+                    'SyntaxError': SyntaxError,
+                    'TypeError': TypeError,
+                    'URIError': URIError
+                };
+                var type = errorTable[this.getProperty(error, 'name')] || Error;
+                realError = type(this.getProperty(error, 'message'));
+            } else {
+                realError = error.toString();
+            }
+            throw realError;
         }
-        throw realError;
-      }
     };
 
     // add support for Repeat statement
-    Interpreter.prototype['stepRepeatStatement'] = function() {
+    Interpreter.prototype.stepRepeatStatement = function() {
         var state = this.stateStack[0];
         state.isLoop = true;
         var node = state.node;
@@ -559,15 +562,15 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
     };
 
     // add support for inner call
-    Interpreter.prototype['stepInnerCallExpression'] = function() {
+    Interpreter.prototype.stepInnerCallExpression = function() {
         var state = this.stateStack.shift();
-        var arguments = [];
+        var args = [];
         var n =0;
         if (state.parameters) {
-            arguments = state.parameters;
+            args = state.parameters;
             n = arguments.length;
         }
-        this.stateStack.unshift({node: {type:"CallExpression", arguments:arguments}, arguments:arguments, n_:n, doneCallee_: true, func_: state.node.func_, funcThis_: this.stateStack[this.stateStack.length - 1].thisExpression});
+        this.stateStack.unshift({node: {type:"CallExpression", arguments:args}, arguments:args, n_:n, doneCallee_: true, func_: state.node.func_, funcThis_: this.stateStack[this.stateStack.length - 1].thisExpression});
     };
 
 
@@ -613,110 +616,108 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
     Interpreter.prototype.getProperty = function(obj, name) {
         name = name.toString();
         if (obj == this.UNDEFINED || obj == this.NULL) {
-          this.throwException(this.TYPE_ERROR,
-                              "Cannot read property '" + name + "' of " + obj);
-        }
-        // Special cases for magic length property.
-        if (this.isa(obj, this.STRING)) {
-          if (name == 'length') {
-            return this.createPrimitive(obj.data.length);
-          }
-          var n = this.arrayIndex(name);
-          if (!isNaN(n) && n < obj.data.length) {
-            return this.createPrimitive(obj.data[n]);
-          }
-        } else if (this.isa(obj, this.ARRAY) && name == 'length') {
-          return this.createPrimitive(obj.length);
-        }
-        while (true) {
-          if (obj.properties && name in obj.properties) {
-              var prop = obj.properties[name];
-              if (prop.dynamic ) {
-                return prop.dynamic.apply(obj);
-              }
-              return prop;
-          }
-          if (obj.parent && obj.parent.properties &&
-              obj.parent.properties.prototype) {
-            obj = obj.parent.properties.prototype;
-          } else {
-            // No parent, reached the top.
-            break;
-          }
-        }
-        return this.UNDEFINED;
-      };
-
-    // change break management not to remove root program node
-    Interpreter.prototype['stepBreakStatement'] = function() {
-        var state = this.stateStack.shift();
-        var node = state.node;
-        var label = null;
-        if (node.label) {
-            label = node.label.name;
-        }
-        state = this.stateStack.shift();
-        while (state &&
-            state.node.type != 'CallExpression' &&
-            state.node.type != 'NewExpression' &&
-            state.node.type != 'Program') {
-            if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
-                return;
+            this.throwException(this.TYPE_ERROR,
+                "Cannot read property '" + name + "' of " + obj);
             }
-            state = this.stateStack.shift();
-        }
-        if (state.node.type == 'Program'){
-            // re-insert root node
-            this.stateStack.push(state);
-        } else {
-            // Syntax error, do not allow this error to be trapped.
-            throw SyntaxError('Illegal break statement');
-        }
-    };
-
-    // handle interrupt statements
-    Interpreter.prototype['stepInterruptStatement'] = function() {
-        var state = this.stateStack.shift();
-        var node = state.node;
-        var label = null;
-        if (node.label) {
-            label = node.label.name;
-        }
-        // Find index at which search has to start
-        var index=this.stateStack.length-1;
-        while (index>=0 && !this.stateStack[index].priority) {
-            index--;
-        }
-        index++;
-
-        state = this.stateStack.splice(index, 1)[0];
-        while (state &&
-            state.node.type != 'Program') {
-            if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
-                return;
+            // Special cases for magic length property.
+            if (this.isa(obj, this.STRING)) {
+                if (name == 'length') {
+                    return this.createPrimitive(obj.data.length);
+                }
+                var n = this.arrayIndex(name);
+                if (!isNaN(n) && n < obj.data.length) {
+                    return this.createPrimitive(obj.data[n]);
+                }
+            } else if (this.isa(obj, this.ARRAY) && name == 'length') {
+                return this.createPrimitive(obj.length);
             }
-            state = this.stateStack.splice(index, 1)[0];
-        }
-        if (state.node.type == 'Program'){
-            // re-insert root node
-            this.stateStack.push(state);
-        } else {
-            // Syntax error, do not allow this error to be trapped.
-            throw SyntaxError('Illegal break statement');
-        }
-    };
+            while (true) {
+                if (obj.properties && name in obj.properties) {
+                    var prop = obj.properties[name];
+                    if (prop.dynamic ) {
+                        return prop.dynamic.apply(obj);
+                    }
+                    return prop;
+                }
+                if (obj.parent && obj.parent.properties &&
+                    obj.parent.properties.prototype) {
+                        obj = obj.parent.properties.prototype;
+                    } else {
+                        // No parent, reached the top.
+                        break;
+                    }
+                }
+                return this.UNDEFINED;
+            };
 
-    // handle interrupt statements
-    Interpreter.prototype['stepCallbackStatement'] = function() {
-        var state = this.stateStack.shift();
-        var node = state.node;
-        if (node.callback) {
-            node.callback.apply(this);
-        }
-    };
+            // change break management not to remove root program node
+            Interpreter.prototype.stepBreakStatement = function() {
+                var state = this.stateStack.shift();
+                var node = state.node;
+                var label = null;
+                if (node.label) {
+                    label = node.label.name;
+                }
+                state = this.stateStack.shift();
+                while (state &&
+                    state.node.type != 'CallExpression' &&
+                    state.node.type != 'NewExpression' &&
+                    state.node.type != 'Program') {
+                        if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
+                            return;
+                        }
+                        state = this.stateStack.shift();
+                    }
+                    if (state.node.type == 'Program'){
+                        // re-insert root node
+                        this.stateStack.push(state);
+                    } else {
+                        // Syntax error, do not allow this error to be trapped.
+                        throw SyntaxError('Illegal break statement');
+                    }
+                };
+
+                // handle interrupt statements
+                Interpreter.prototype.stepInterruptStatement = function() {
+                    var state = this.stateStack.shift();
+                    var node = state.node;
+                    var label = null;
+                    if (node.label) {
+                        label = node.label.name;
+                    }
+                    // Find index at which search has to start
+                    var index=this.stateStack.length-1;
+                    while (index>=0 && !this.stateStack[index].priority) {
+                        index--;
+                    }
+                    index++;
+
+                    state = this.stateStack.splice(index, 1)[0];
+                    while (state &&
+                        state.node.type != 'Program') {
+                            if (label ? label == state.label : (state.isLoop || state.isSwitch)) {
+                                return;
+                            }
+                            state = this.stateStack.splice(index, 1)[0];
+                        }
+                        if (state.node.type == 'Program'){
+                            // re-insert root node
+                            this.stateStack.push(state);
+                        } else {
+                            // Syntax error, do not allow this error to be trapped.
+                            throw SyntaxError('Illegal break statement');
+                        }
+                    };
+
+                    // handle interrupt statements
+                    Interpreter.prototype.stepCallbackStatement = function() {
+                        var state = this.stateStack.shift();
+                        var node = state.node;
+                        if (node.callback) {
+                            node.callback.apply(this);
+                        }
+                    };
 
 
-    return TInterpreter;
-});
-
-
+                    return TInterpreter;
+                });
