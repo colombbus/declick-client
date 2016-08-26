@@ -14,7 +14,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
         this.setProjectId = function(value) {
             projectId = value;
         };
-        
+
         /**
          * Get the list of programs.
          * @param {Function} callback
@@ -39,7 +39,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                         if (e !== false) {
                             callback.call(this, e);
                         } else {
-                            callback.call(this, data['programs'], data['id']);                            
+                            callback.call(this, data['programs'], data['id']);
                         }
                     },
                     error: function(data, status, error) {
@@ -55,8 +55,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
          * @param {String} name
          * @param {Function} callback
          */
-        this.getProgramCode = function(name, callback) {
+        this.getProgramCode = function(name, callback, async) {
             var url;
+            if (typeof async === 'undefined') {
+                async = true;
+            }
             name = TUtils.getString(name);
             if (TEnvironment.debug) {
                 url = TEnvironment.getProjectResource(name);
@@ -64,10 +67,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     dataType: "text",
                     url: url,
                     global: false,
+                    async:async,
                     success: function(data) {
                         var e = checkError(data);
                         if (e !== false) {
-                            callback.call(this, e);                            
+                            callback.call(this, e);
                         } else {
                             callback.call(this, data);
                         }
@@ -89,10 +93,11 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     type: "POST",
                     global: false,
                     data: input,
+                    async:async,                    
                     success: function(data) {
                         var e = checkError(data);
                         if (e !== false) {
-                            callback.call(this, e);                            
+                            callback.call(this, e);
                         } else {
                             callback.call(this, data['code']);
                         }
@@ -100,7 +105,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                     },
                     error: function(data, status, error) {
                         var e = new TError(error);
-                        callback.call(this, e);                            
+                        callback.call(this, e);
                     }
                 });
             }
@@ -111,7 +116,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
          * @param {String} name
          * @param {Function} callback
          */
-        this.getProgramStatements = function(name, callback) {
+        this.getProgramStatements = function(name, callback, async) {
             try {
                 this.getProgramCode(name, function(code) {
                     if (code instanceof TError) {
@@ -120,7 +125,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                         var statements = TParser.parse(code, name);
                         callback.call(this, statements);
                     }
-                });
+                }, async);
             }
             catch (e) {
                 var error = new TError(e);
@@ -260,7 +265,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                             if (e!==false) {
                                 callback.call(this, e);
                             } else {
-                                callback.call(this, data['resources'], data['id']);                                
+                                callback.call(this, data['resources'], data['id']);
                             }
                         }
                     },
@@ -271,7 +276,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 });
             }
         };
-        
+
         /**
          * Get Resource's URL.
          * @param {type} name
@@ -427,7 +432,7 @@ define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TU
                 });
             }
         };
-        
+
         /**
          * Get content of resource "name".
          * @param {String} name
