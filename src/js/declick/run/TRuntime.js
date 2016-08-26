@@ -4,9 +4,9 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         var runtimeCallback;
         var graphics;
         var log;
-        var tObjects = new Array();
-        var tInstances = new Array();
-        var tGraphicalObjects = new Array();
+        var tObjects = [];
+        var tInstances = [];
+        var tGraphicalObjects = [];
         var designMode = false;
         var frozen = false;
         var wasFrozen = false;
@@ -72,10 +72,10 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             var classesToLoad = Object.keys(classes).length;
             $.each(classes, function(key, val) {
                 var addObject = true;
-                if (typeof val['conditions'] !== 'undefined') {
+                if (typeof val.conditions !== 'undefined') {
                     // object rely on conditions
-                    for (var i = 0; i < val['conditions'].length; i++) {
-                        var condition = val['conditions'][i];
+                    for (var i = 0; i < val.conditions.length; i++) {
+                        var condition = val.conditions[i];
                         switch (condition) {
                             case '3d':
                                 if (!is3DSupported) {
@@ -87,20 +87,20 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                     }
                 }
                 if (addObject) {
-                    var lib = "objects/" + val['path'] + "/" + key;
-                    if (typeof val['translations'][language] !== 'undefined') {
+                    var lib = "objects/" + val.path + "/" + key;
+                    if (typeof val.translations[language] !== 'undefined') {
                         TEnvironment.log("adding " + lib);
-                        var translatedName = val['translations'][language];
+                        var translatedName = val.translations[language];
                         var parents, instance;
-                        if (typeof val['parents'] === 'undefined') {
+                        if (typeof val.parents === 'undefined') {
                             parents = false;
                         } else {
-                            parents = val['parents'];
+                            parents = val.parents;
                         }
-                        if (typeof val['instance'] === 'undefined') {
+                        if (typeof val.instance === 'undefined') {
                             instance = false;
                         } else {
-                            instance = val['instance'];
+                            instance = val.instance;
                         }
 
                         require([lib], function(aClass) {
@@ -111,7 +111,7 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
                                 // get its constructor
                                 aConstructor = aClass.constructor;
                             }
-                            aConstructor.prototype.objectPath = val['path'];
+                            aConstructor.prototype.objectPath = val.path;
                             TI18n.internationalize(aConstructor, parents, language, function() {
                                 TEnvironment.log("Declaring translated object '" + translatedName + "'");
                                 if (instance) {
@@ -205,9 +205,8 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
 
 	this.evaluate = function (statements, callback)
 	{
-	    var breakpoint = interpreter.createCallbackStatement(function ()
-	    {
-		callback(interpreter.convertToNative(interpreter.output));
+	    var breakpoint = interpreter.createCallbackStatement(function () {
+            callback(interpreter.convertToNative(interpreter.output));
 	    });
 	    var body = statements.body.slice();
 	    statements = $.extend({}, statements);
@@ -226,6 +225,10 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
 
         this.insertStatements = function(statements) {
             interpreter.insertStatements(statements);
+        };
+
+        this.insertStatement = function(statement, parameters) {
+            interpreter.insertStatement(statement, parameters);
         };
 
         this.executeStatementsNow = function(statements, parameters, log, callback) {
@@ -390,16 +393,17 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
         };
 
         this.freeze = function(value) {
+            var i;
             if (value) {
                 this.suspend();
             } else {
                 this.resume();
             }
 
-            for (var i = 0; i < tGraphicalObjects.length; i++) {
+            for (i = 0; i < tGraphicalObjects.length; i++) {
                 tGraphicalObjects[i].freeze(value);
             }
-            for (var i = 0; i < tObjects.length; i++) {
+            for (i = 0; i < tObjects.length; i++) {
                 tObjects[i].freeze(value);
             }
             frozen = value;
@@ -417,11 +421,12 @@ define(['jquery', 'TError', 'TGraphics', 'TParser', 'TEnvironment', 'TInterprete
             return interpreter.createCallStatement(functionStatement);
         };
 
+        this.createFunctionStatement = function(functionStatement) {
+            return interpreter.createFunctionStatement(functionStatement);
+        };
     }
 
     var runtimeInstance = new TRuntime();
 
     return runtimeInstance;
 });
-
-

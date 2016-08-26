@@ -82,7 +82,8 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
                 TRuntime.allowPriorityStatements();
                 TRuntime.handleError(statements);
             }
-            TRuntime.insertStatements(statements);
+            var statement = TRuntime.createCallStatement(TRuntime.createFunctionStatement(statements.body));
+            TRuntime.insertStatement(statement);
             sm.end();
             TRuntime.allowPriorityStatements();
         });

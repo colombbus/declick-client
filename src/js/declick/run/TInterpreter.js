@@ -308,6 +308,13 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
             }
         };
 
+        this.insertStatement = function(statement, parameters) {
+            interpreter.insertCode(statement, true, parameters);
+            if (!running) {
+                this.start();
+            }
+        };
+
         this.insertStatements = function(statements) {
             interpreter.insertBlock(statements,false);
             if (!running) {
@@ -424,6 +431,15 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
         this.createCallbackStatement = function(callback) {
             var statement = {type: "CallbackStatement", callback: callback};
+            return statement;
+        };
+
+        this.createFunctionStatement = function(body, parameters) {
+            if (typeof parameters === 'undefined') {
+                parameters = [];
+            }
+            var node = {type:'FunctionExpression', body:{type:'BlockStatement', body:body}, params:parameters};
+            var statement = interpreter.createFunction(node);
             return statement;
         };
 
