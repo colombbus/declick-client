@@ -16,7 +16,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
         var editedProgramsArray = [];
 
         /**
-         * 
+         *
          * @param {type} value
          * @returns {undefined}Set Project's name.
          * @param {String} value
@@ -42,7 +42,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
             if (isNaN(value)) {
                 value = false;
-            } 
+            }
             id = value;
             TLink.setProjectId(value);
         };
@@ -55,7 +55,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
         };
 
         /**
-         * 
+         *
          * @param {type} oldName
          * @param {type} newName
          * @param {type} callback
@@ -196,7 +196,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                 callback.call(this, program.getStatements());
             }
         };
-        
+
         /**
          * Get code of a program given in parameter.
          * Send it in parameter to callback.
@@ -223,7 +223,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
         };
 
         /**
-         * 
+         *
          * @param {type} name
          * @returns {Boolean}Checks if a program is edited.
          * @param {String} name
@@ -234,7 +234,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
         };
 
         /**
-         * 
+         *
          * @param {type} name
          * @returns {Boolean}Close a program.
          * @param {String} name
@@ -324,7 +324,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
         this.getEditedProgramsNames = function() {
             return editedProgramsNames;
         };
-        
+
         /**
          * Returns the array of edited programs.
          * @returns {TProgram[]}
@@ -358,7 +358,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                     // error sent: stop there
                     TEnvironment.setProjectAvailable(false);
                     TEnvironment.error(arg.getMessage());
-                    callback.call(this);                    
+                    callback.call(this);
                 } else {
                     self.setId(id);
                     programs = arg;
@@ -719,7 +719,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                 }
             });
         };
-        
+
         /**
          * Get the content of 'name' resource.
          * @param {String} name
@@ -740,7 +740,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                 editedProgramsArray.push(editedPrograms[editedProgramsNames[i]]);
             }
         };
-        
+
         /**
          * TBD
          * @param {type} progress
@@ -763,9 +763,17 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             }
         };
 
+        this.hasProgram = function(name) {
+            for (var i= 0; i<programs.length; i++) {
+                if (programs[i] === name) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
     }
 
     return TProject;
 
 });
-
