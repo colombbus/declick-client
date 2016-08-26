@@ -1,4 +1,4 @@
-define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
+define(['TRuntime', 'TUtils', 'TParser', 'TLink', 'TEnvironment'], function(TRuntime, TUtils, TParser, TLink, TEnvironment) {
     /**
      *
      * @exports CommandManager
@@ -18,8 +18,18 @@ define(['TRuntime', 'TUtils', 'TParser'], function(TRuntime, TUtils, TParser) {
     CommandManager.prototype.addCommand = function(command, field) {
         var i;
         if (TUtils.checkString(command)) {
-            // command is a string: we parse it
-            command = TParser.parse(command).body;
+            // command is a string: we check if it is the name of a program
+            var project = TEnvironment.getProject();
+            var statements;
+            if (project.hasProgram(command)){
+                TLink.getProgramStatements(command, function(value) {
+                    statements = value;
+                }, false);
+                command = TRuntime.createCallStatement(TRuntime.createFunctionStatement(statements.body));
+            } else {
+                // Not the name of a program: we parse it
+                command = TParser.parse(command).body;
+            }
         } else if (TUtils.checkFunction(command)) {
             command = TRuntime.createCallStatement(command);
         }
