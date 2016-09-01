@@ -17,7 +17,7 @@ define(['jquery', 'TResource'], function ($, TResource) {
 
         // Config parameters: default values
         this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache": true, "log": false, "error": true, "cache-version": 0, "optimized":false};
-        this.debug;
+        this.debug = false;
 
         /**
          * Loads environment (config, messages), and calls callback if existing
@@ -33,14 +33,14 @@ define(['jquery', 'TResource'], function ($, TResource) {
                 url: configFile,
                 success: function (data) {
                     $.extend(self.config, data);
-                    self.debug = self.config['debug'];
+                    self.debug = self.config.debug;
                     if (self.config['document-domain']) {
                         document.domain = self.config['document-domain'];
                     }
                     TResource.setCacheEnabled(self.isCacheEnabled(), self.config['cache-version']);
                     window.console.log("* Cache revision: " + self.config['cache-version']);
-                    TResource.setLog(self.config['log']);
-                    TResource.setError(self.config['error']);
+                    TResource.setLog(self.config.log);
+                    TResource.setError(self.config.error);
                     self.log("* Retrieving translated messages");
                     var messageFile = self.getResource("messages.json");
                     var language = self.language;
@@ -235,17 +235,17 @@ define(['jquery', 'TResource'], function ($, TResource) {
          * @returns {Boolean}   Returns true cache is enabled, otherwise false
          */
         this.isCacheEnabled = function () {
-            return (typeof window.localStorage !== 'undefined' && this.config['cache']);
+            return (typeof window.localStorage !== 'undefined' && this.config.cache);
         };
 
         this.log = function (message) {
-            if (this.config["log"]) {
+            if (this.config.log) {
                 window.console.log(message);
             }
         };
 
         this.error = function (message) {
-            if (this.config["error"]) {
+            if (this.config.error) {
                 window.console.error(message);
             } else {
                 this.log("ERROR> " + message);
@@ -253,7 +253,7 @@ define(['jquery', 'TResource'], function ($, TResource) {
         };
 
         this.isLogEnabled = function () {
-            return this.config["log"];
+            return this.config.log;
         };
 
         this.getFirstBrowserLanguage = function () {
