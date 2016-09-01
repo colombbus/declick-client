@@ -1,4 +1,4 @@
-define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'TUI', 'ui/TConsole', 'ui/TToolbar', 'ui/TLog', 'ui/TMessage', 'ui/CacheHeaders', 'TRuntime', 'TEnvironment', 'ui/THints'], function(TComponent, $, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TMessage,CacheHeaders, TRuntime, TEnvironment, THints) {
+define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui/TSidebar', 'TUI', 'ui/TConsole', 'ui/TToolbar', 'ui/TLog', 'ui/TMessage', 'TRuntime', 'TEnvironment', 'ui/THints'], function(TComponent, $, SplitPane, TCanvas, TEditor, TSidebar, TUI, TConsole, TToolbar, TLog, TMessage, TRuntime, TEnvironment, THints) {
     function TFrame(callback) {
         var initialized = false;
         var canvas, editor, sidebar, toolbar, console, log, message;
@@ -30,16 +30,9 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $loading = component.find("#tframe-loading");
             var loadingText = $loading.find("p");
             loadingText.text(TEnvironment.getMessage('loading-message'));
-            
-            if (TEnvironment.config['no-cache-browser']) {
-                var header = new CacheHeaders(function (c) {
-                    var h = document.getElementsByTagName("head")[0];
-                    $(h).append(c);
-                });
-            }
-            
+
             THints.loadHints("hints_create.json");
-            
+
             canvas = new TCanvas(function(c) {
                 component.find("#TCanvas").replaceWith(c);
                 checkWaiting("canvas");
@@ -89,7 +82,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
 
             // Plug Runtime with Log
             TRuntime.setLog(log);
-            
+
             canvas.displayed();
             editor.displayed();
             sidebar.displayed();
@@ -108,9 +101,9 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $loading.fadeOut(1000, function() {
                 $(this).remove();
             });
-            window.platform.initWithTask(window.task);            
+            window.platform.initWithTask(window.task);
         };
-        
+
         this.lowerSeparator = function(value) {
             if (initialized) {
                 var totalHeight = $frame.height();
@@ -126,12 +119,12 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
         this.raiseSeparator = function(value) {
             this.lowerSeparator(-value);
         };
-        
+
         this.disableSeparator = function() {
             separatorEnabled = false;
             $separator.addClass("disabled");
         };
-        
+
         this.enableSeparator = function() {
             separatorEnabled = true;
             $separator.removeClass("disabled");

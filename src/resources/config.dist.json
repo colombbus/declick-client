@@ -8,6 +8,5 @@
     "log": false,
     "error": true,
     "cache-version": 0,
-    "no-cache-browser": false,
     "optimized":false
 }
