@@ -726,8 +726,10 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         if (node.callback) {
             node.callback.apply(this);
         }
+	if (state.value !== this.UNDEFINED) {
+	    this.stateStack[0].value = state.value;
+	}
     };
-
 
     return TInterpreter;
 });
