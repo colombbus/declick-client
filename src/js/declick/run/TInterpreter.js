@@ -584,7 +584,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         var n =0;
         if (state.parameters) {
             args = state.parameters;
-            n = arguments.length;
+            n = args.length;
         }
         this.stateStack.unshift({node: {type:"CallExpression", arguments:args}, arguments:args, n_:n, doneCallee_: true, func_: state.node.func_, funcThis_: this.stateStack[this.stateStack.length - 1].thisExpression});
     };
