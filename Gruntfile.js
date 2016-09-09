@@ -39,7 +39,7 @@ module.exports = function (grunt) {
         },
         front_end_modules: {
             jquery: {
-                src: ['dist/jquery.min.js'],
+                src: ['dist/jquery.min.js', 'dist/jquery.min.map'],
                 dest: 'src/js/libs/jquery'
             },
             babylonjs: {
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
                 dest: 'src/js/libs/introjs'
             },
             'ace-builds': {
-                src: ['src-min/ace.js', 'src-min/ext-language_tools.js', 'src-min/mode-javascript.js', 'src-min/theme-twilight.js', 'src-min/ext-searchbox.js'],
+                src: ['src-min/ace.js', 'src-min/worker-javascript.js','src-min/ext-language_tools.js', 'src-min/mode-javascript.js', 'src-min/theme-twilight.js', 'src-min/ext-searchbox.js'],
                 dest: 'src/js/libs/ace'
             }
         },
