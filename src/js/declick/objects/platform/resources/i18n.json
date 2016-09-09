@@ -14,7 +14,7 @@
             {"name": "_initialize", "translated": "initialiser", "displayed": "initialiser()"},
             {"name": "_removeTile", "translated": "supprimerBrique", "displayed": "supprimerBrique(0, 0)"},
             {"name": "_placeTile", "translated": "placerBrique", "displayed": "placerBrique(0, 0)"},
-            {"name": "_addTiles", "translated": "ajouterBriques", "displayed": "ajouterBriques(1, 1, 1, 1, 1)"}
+            {"name": "_addTiles", "translated": "ajouterBriques", "displayed": "ajouterBriques(1, ...)"}
          ]
     }
 }
