@@ -6,23 +6,13 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
      */
     var Maze = function() {
         Platform.call(this);
-        this.addTile("brick.png", this.getResource("brick.png"));
-        this.addTile("entrance.png", this.getResource("wall.png"));
-        this.addTile("exit.png", this.getResource("entrance.png"));
-        this.addTile("wall.png", this.getResource("exit.png"));
-        this.setCollidableTile(Maze.ENTRANCE, false);
-        this.setCollidableTile(Maze.EXIT, false);
         this._build();
     };
 
     Maze.prototype = Object.create(Platform.prototype);
     Maze.prototype.constructor = Maze;
     Maze.prototype.className = "Maze";
-    Maze.GROUND = 0x01;
-    Maze.WALL = 0x02;
-    Maze.ENTRANCE = 0x03;
-    Maze.EXIT = 0x04;
-    
+
     /**
      * Change the value of the tile [x,y] in structure to the value "number".
      * Checks if there is an Entrance or an Exit.
@@ -31,13 +21,13 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
      * @param {Number} number
      */
     Maze.prototype._setTileMaze = function(x, y, number) {
-        if (number === Maze.ENTRANCE)
+        if (number === Platform.ENTRANCE)
             this.setEntranceLocation(x, y);
-        if (number === Maze.EXIT)
+        if (number === Platform.EXIT)
             this.addExitLocation(x, y);
         this._setTile(x, y, number);
     }
-    
+
     /*
      * Put a ground at given location
      * @param {Integer} x
@@ -46,12 +36,12 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     Maze.prototype._buildGround = function(x,y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this._setTileMaze(x,y,Maze.GROUND);
+        this._setTileMaze(x,y,Platform.GROUND);
     };
-    
+
 
     /*
-     * Build a entrance at current location 
+     * Build a entrance at current location
      * If no location given, use current location
      * @param {Integer} x
      * @param {Integer} y
@@ -59,11 +49,11 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     Maze.prototype._buildEntrance = function(x,y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this._setTileMaze(x,y,Maze.ENTRANCE);
+        this._setTileMaze(x,y,Platform.ENTRANCE);
     };
 
     /*
-     * Build an exit at current location 
+     * Build an exit at current location
      * If no location given, use current location
      * @param {Integer} x
      * @param {Integer} y
@@ -71,11 +61,11 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     Maze.prototype._buildExit = function(x,y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this._setTileMaze(x,y,Maze.EXIT);
+        this._setTileMaze(x,y,Platform.EXIT);
     };
-    
+
     /*
-     * Build an wall at current location 
+     * Build an wall at current location
      * If no location given, use current location
      * @param {Integer} x
      * @param {Integer} y
@@ -83,33 +73,33 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
     Maze.prototype._buildWall = function(x,y) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        this._setTileMaze(x,y,Maze.WALL);
+        this._setTileMaze(x,y,Platform.WALL);
     };
 
     Maze.prototype._setRow = function(x, y, row) {
         for (var i=0; i<row.length; i++){
-            if (row[i] === Maze.ENTRANCE) {
+            if (row[i] === Platform.ENTRANCE) {
                 this.setEntranceLocation(x+i,y);
-            } else if (row[i] === Maze.EXIT) {
+            } else if (row[i] === Platform.EXIT) {
                 this.addExitLocation(x+i,y);
             }
         }
         Platform.prototype._setRow.call(this,x,y,row);
     };
-    
+
     Maze.prototype._loadStructure = function(structure) {
         Platform.prototype._loadStructure.call(this, structure);
         for (var i=0; i<this.nbRows; i++) {
             for (var j=0; j<this.nbCols; j++) {
-                if (this.rows[i][j] === Maze.ENTRANCE) {
+                if (this.rows[i][j] === Platform.ENTRANCE) {
                     this.setEntranceLocation(j,i);
-                } else if (this.rows[i][j] === Maze.EXIT) {
+                } else if (this.rows[i][j] === Platform.EXIT) {
                     this.addExitLocation(j,i);
                 }
             }
         }
     };
-    
+
     return Maze;
 });
 

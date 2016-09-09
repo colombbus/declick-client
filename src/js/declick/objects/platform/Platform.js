@@ -13,7 +13,6 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.nbCols = 0;
         this.nbRows = 0;
         this.resources = new ResourceManager();
-        this.sheet = null;
         this.built = false;
         this.entranceLocation = false;
         this.exitLocations = false;
@@ -26,6 +25,12 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             var object = Platform.registered[i];
             object._addPlatform(this);
         }
+        this.addTile("brick.png", this.getResource("brick.png"));
+        this.addTile("entrance.png", this.getResource("wall.png"));
+        this.addTile("exit.png", this.getResource("entrance.png"));
+        this.addTile("wall.png", this.getResource("exit.png"));
+        this.setCollidableTile(Platform.ENTRANCE, false);
+        this.setCollidableTile(Platform.EXIT, false);
     };
 
     Platform.prototype = Object.create(TGraphicalObject.prototype);
@@ -33,6 +38,11 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.prototype.className = "Platform";
     Platform.instances = [];
     Platform.registered = [];
+
+    Platform.GROUND = 0x01;
+    Platform.WALL = 0x02;
+    Platform.ENTRANCE = 0x03;
+    Platform.EXIT = 0x04;
 
     var graphics = Platform.prototype.graphics;
 
@@ -51,6 +61,17 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
     };
 
+    // TODO: Correct this. It's a hack that works if there is only 1 answer
+    // callback.
+    Platform.ask = function (source, question) {
+        for (var index = 0; index < Platform.registered.length; index++) {
+            var object = Platform.registered[index];
+	    if (object.className === 'Girl') {
+		var commands = object.getGObject().askCommands;
+		commands.executeCommands({'parameters': [source, question]});
+	    }
+        }
+    };
 
     var TSpriteSheet = graphics.addClass("SpriteSheet", "TSpriteSheet", {
     	init: function(img, options) {
@@ -98,7 +119,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         init: function(props, defaultProps) {
             this._super(TUtils.extend({
                 type: TGraphicalObject.TYPE_PLATFORM,
-                frozen: false ,
+                frozen: false,
                 initialized: false,
                 reset:false,
                 drawBaseTile:false,
@@ -118,6 +139,16 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
                 graphics.objectResized(this);
             });
         },
+	empty: function ()
+	{
+	    this.sheet(new Image());
+	    this.p.tiles = [[]];
+	    this.p.collidable = [false];
+	    this.p.initialized = false;
+	    if (this.p.built) {
+		this.build();
+	    }
+	},
         setStructure: function(data) {
             this.p.tiles = data;
             if (this.p.built) {
@@ -141,7 +172,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             this.p.tileW = this.spriteSheet.tileW;
             this.p.tileH = this.spriteSheet.tileH;
             if (this.p.built) {
-                    // rebuild object
+                // rebuild object
                 this.build();
             }
             if (!this.p.initialized && this.p.tiles) {
@@ -276,12 +307,32 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.tiles.push(imageName);
         this.counters.push(0);
         this.gObject.addCollidable();
-        this.resources.add(imageName, imagePath, function() {
-            if (self.built) {
-                // build sheet only if object already built
-                self.buildSheet();
-            }
-        });
+	if (this.resources.has(imageName)) {
+	    if (this.built) {
+		this.buildSheet();
+	    }
+	} else {
+	    this.resources.add(imageName, imagePath, function() {
+		if (self.built) {
+		    // build sheet only if object already built
+		    self.buildSheet();
+		}
+	    });
+	}
+    };
+
+    Platform.prototype._initialize = function ()
+    {
+	this.baseTile="";
+        this.rows = [];
+        this.nbCols = 0;
+        this.nbRows = 0;
+        this.entranceLocation = false;
+        this.exitLocations = false;
+        this.counters = [0];
+	this.gObject.empty();
+        this.tiles = [];
+	this.built = false;
     };
 
     Platform.prototype._setCollidableTile = function(number, value) {
@@ -313,6 +364,11 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         } catch (e) {
             throw new Error(this.getMessage("file not found", imageName));
         }
+    };
+
+
+    Platform.prototype._addTiles = function(/* tile, ... */) {
+	this._addRow.apply(this, arguments);
     };
 
     /**
@@ -423,17 +479,32 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         return (this.gObject.p.tiles);
     };
 
+
+    Platform.prototype._removeTile = function(x, y) {
+        x = TUtils.getInteger(x);
+    	y = TUtils.getInteger(y);
+	this.setTile(x, y, 0);
+    };
+
     /**
      * Change the value of the tile [x,y] in structure to the value "number".
      * @param {Number} x
      * @param {Number} y
      * @param {Number} number
      */
-    Platform.prototype._setTile = function(x,y,number) {
-        var i,j;
+    Platform.prototype._setTile = function(x, y, number) {
         x = TUtils.getInteger(x);
     	y = TUtils.getInteger(y);
-    	number = TUtils.getInteger(number);
+	if (number === void 0) {
+	    number = 1;
+	} else {
+	    number = TUtils.getInteger(number);
+	}
+	this.setTile(x, y, number);
+    };
+
+    Platform.prototype.setTile = function (x, y, number) {
+        var i,j;
     	if (x<0) {
             throw new Error(this.getMessage("x value incorrect", x));
     	}
@@ -487,7 +558,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.prototype.buildSheet = function() {
         var tile;
     	if (this.tiles.length===0) {
-    		return;
+	    return;
     	}
     	var tile0 = this.resources.get(this.tiles[0]);
     	if (!tile0) {
@@ -515,7 +586,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
                 return;
             }
             ctx.drawImage(tile, tileW*(i+1), 0);
-    	}
+	}
         var newImage = new Image();
         var self = this;
         newImage.onload = function() {
