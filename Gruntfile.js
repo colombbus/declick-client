@@ -55,7 +55,7 @@ module.exports = function (grunt) {
                 dest: 'src/js/libs/introjs'
             },
             'ace-builds': {
-                src: ['src-min/ace.js', 'src-min/ext-language_tools.js', 'src-min/mode-javascript.js', 'src-min/theme-twilight.js'],
+                src: ['src-min/ace.js', 'src-min/ext-language_tools.js', 'src-min/mode-javascript.js', 'src-min/theme-twilight.js', 'src-min/ext-searchbox.js'],
                 dest: 'src/js/libs/ace'
             }
         },
@@ -64,7 +64,7 @@ module.exports = function (grunt) {
                 files:false,
                 folders:true
             },
-            src: ['dist/js/declick/objects/**/*'],
+            src: ['dist/js/declick/objects/**/*']
         }
 //        ,
 //        build: {
