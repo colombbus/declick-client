@@ -507,6 +507,12 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         return (this.gObject.p.tiles);
     };
 
+    Platform.prototype._placeTile = function(x, y, number) {
+        x = TUtils.getInteger(x);
+    	y = TUtils.getInteger(y);
+    	number = TUtils.getInteger(number);
+	this.setTile(x, y, number);
+    };
 
     Platform.prototype._removeTile = function(x, y) {
         x = TUtils.getInteger(x);
