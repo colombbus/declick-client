@@ -25,6 +25,7 @@ require.config({
         "TUtils": "utils/TUtils",
         "TResource": "data/TResource",
         "js-interpreter":"../libs/js-interpreter/interpreter",
+        "introjs": "../libs/introjs/intro.min"        
     }
 });
 
