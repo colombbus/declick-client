@@ -471,6 +471,34 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	}
     };
 
+    Platform.prototype._compareStructure = function (comparison) {
+	var a = comparison;
+	var b = this.gObject.p.tiles;
+	if (a.length !== b.length)
+	{
+	    return false;
+	}
+	for (var y = 0; y < a.length; y++)
+	{
+	    var ya = a[y];
+	    var yb = b[y];
+	    if (ya.length !== yb.length)
+	    {
+		return false;
+	    }
+	    for (var x = 0; x < ya.length; x++)
+	    {
+		xa = ya[x];
+		xb = yb[x];
+		if (xa !== xb)
+		{
+		    return false;
+		}
+	    }
+	}
+	return true;
+    };
+
     /**
      * Returns the 2D matrix.
      * @returns {Integer[][]}
