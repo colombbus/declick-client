@@ -1,0 +1,9 @@
+{
+    "images": {
+            "forward":[],
+            "backward":[],
+            "front":["face.png"]
+        },
+    "durationMove": 0.3,
+    "durationPause": 1
+}

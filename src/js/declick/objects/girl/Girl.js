@@ -1,9 +1,12 @@
 define(['objects/platform/Platform', 'objects/robot/Robot', 'CommandManager', 'TUtils'],
 function (Platform, Robot, CommandManager, TUtils)
 {
-    var Girl = function()
+    var Girl = function(model)
     {
-        Robot.call(this, 'girl');
+	if (model === void 0) {
+	    model = 'girl';
+	}
+        Robot.call(this, model);
     };
 
     Girl.prototype = Object.create(Robot.prototype);
