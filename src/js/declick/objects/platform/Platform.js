@@ -141,7 +141,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         },
 	empty: function ()
 	{
-	    this.sheet(new Image());
+	    this.sheet(new Image(), {'tileW': 40, 'tileH': 40});
 	    this.p.tiles = [[]];
 	    this.p.collidable = [false];
 	    this.p.initialized = false;
