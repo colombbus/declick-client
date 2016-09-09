@@ -6,7 +6,8 @@
             {"name":"_say","translated":"dire","displayed":"dire(\"message\")"},
             {"name":"_ifSay","translated":"siDit","displayed":"siDit(commande)"},
             {"name":"_ask","translated":"demander","displayed":"demander(\"question\")"},
-            {"name":"_ifAsk","translated":"siDemande","displayed":"siDemande(commande)"}
+            {"name":"_ifAsk","translated":"siDemande","displayed":"siDemande(commande)"},
+            {"name":"_disableCollisions","translated":"désactiverCollisions","displayed":"désactiverCollisions()"}
         ]
     }
 }

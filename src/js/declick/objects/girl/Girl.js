@@ -50,6 +50,7 @@ function (Platform, Robot, CommandManager, TUtils)
 
     Girl.prototype.gClass = Girl.prototype.graphics.addClass('TRobot', 'Girl',
     {
+	collisionsDisabled: false,
 	timeoutIdentifier: null,
 	message: null,
 	sayCommands: new CommandManager(),
@@ -95,6 +96,15 @@ function (Platform, Robot, CommandManager, TUtils)
 		window.clearTimeout(this.timeoutIdentifier);
 	    }
 	    this._super();
+	},
+	disableCollisions: function (value)
+	{
+	    this.collisionsDisabled = value;
+	},
+	checkCollisions: function () {
+	    if (!this.collisionsDisabled) {
+		this._super();
+	    }
 	}
     });
 
@@ -127,6 +137,15 @@ function (Platform, Robot, CommandManager, TUtils)
     Girl.prototype._ifAsk = function (command) {
 	command = TUtils.getCommand(command);
 	this.gObject.askCommands.addCommand(command);
+    };
+
+    Girl.prototype._disableCollisions = function (value) {
+	if (value === void 0) {
+	    value = true;
+	} else {
+	    value = TUtils.getBoolean(value);
+	}
+	this.gObject.disableCollisions(value);
     };
 
     return Girl;
