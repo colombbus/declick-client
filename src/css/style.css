@@ -169,6 +169,7 @@ body, html {
     flex-direction: column;
     z-index:1000;
     align-items:center;
+    background-color:#FFFFFF;
 }
 
 #tcanvas-popup-content {
