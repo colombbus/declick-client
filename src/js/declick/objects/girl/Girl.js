@@ -1,5 +1,5 @@
-define(['objects/robot/Robot', 'CommandManager', 'TUtils'],
-function (Robot, CommandManager, TUtils)
+define(['objects/platform/Platform', 'objects/robot/Robot', 'CommandManager', 'TUtils'],
+function (Platform, Robot, CommandManager, TUtils)
 {
     var Girl = function()
     {
@@ -50,8 +50,10 @@ function (Robot, CommandManager, TUtils)
 
     Girl.prototype.gClass = Girl.prototype.graphics.addClass('TRobot', 'Girl',
     {
+	timeoutIdentifier: null,
 	message: null,
 	sayCommands: new CommandManager(),
+	askCommands: new CommandManager(),
 	draw: function (context)
 	{
 	    if (this.message !== null)
@@ -73,12 +75,26 @@ function (Robot, CommandManager, TUtils)
 	    this.message = message;
 	    this.synchronousManager.begin();
 	    var context = this;
-	    window.setTimeout(function ()
+	    this.timeoutIdentifier = window.setTimeout(function ()
 	    {
+		context.timeoutIdentifier = null;
 		context.message = null;
 		context.sayCommands.executeCommands({'parameters': [message]});
 		context.synchronousManager.end();
 	    }, (message.length * 50) + 1500);
+	},
+	ask: function (question)
+	{
+	    this.say(question);
+	    Platform.ask(this.getTObject(), question);
+	},
+	destroy: function ()
+	{
+	    if (this.timeoutIdentifier !== null)
+	    {
+		window.clearTimeout(this.timeoutIdentifier);
+	    }
+	    this._super();
 	}
     });
 
@@ -100,6 +116,17 @@ function (Robot, CommandManager, TUtils)
     {
 	command = TUtils.getCommand(command);
 	this.gObject.sayCommands.addCommand(command);
+    };
+
+    Girl.prototype._ask = function (question)
+    {
+	question = TUtils.getString(question);
+	this.gObject.ask(question);
+    };
+
+    Girl.prototype._ifAsk = function (command) {
+	command = TUtils.getCommand(command);
+	this.gObject.askCommands.addCommand(command);
     };
 
     return Girl;
