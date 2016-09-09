@@ -53,11 +53,14 @@ function (Platform, Robot, CommandManager, TUtils)
 
     Girl.prototype.gClass = Girl.prototype.graphics.addClass('TRobot', 'Girl',
     {
-	collisionsDisabled: false,
-	timeoutIdentifier: null,
-	message: null,
-	sayCommands: new CommandManager(),
-	askCommands: new CommandManager(),
+	init: function (props, defaultProps) {
+            this._super(props, defaultProps);
+	    this.collisionsDisabled = false;
+	    this.timeoutIdentifier = null;
+	    this.message = null;
+	    this.sayCommands = new CommandManager();
+	    this.askCommands = new CommandManager();
+        },
 	draw: function (context)
 	{
 	    if (this.message !== null)
