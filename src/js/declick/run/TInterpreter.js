@@ -630,6 +630,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
 
     // add ability to handle dynamic properties
     Interpreter.prototype.getProperty = function(obj, name) {
+        if (typeof (name))
         name = name.toString();
         if (obj == this.UNDEFINED || obj == this.NULL) {
             this.throwException(this.TYPE_ERROR, "Cannot read property '" + name + "' of " + obj);
@@ -726,7 +727,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         if (node.callback) {
             node.callback.apply(this);
         }
-	if (state.value !== this.UNDEFINED) {
+	if (state.value !== this.UNDEFINED && !this.stateStack[0]) {
 	    this.stateStack[0].value = state.value;
 	}
     };
