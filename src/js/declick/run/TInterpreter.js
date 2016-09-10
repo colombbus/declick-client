@@ -727,7 +727,7 @@ define(['TError', 'TUtils', 'acorn', 'js-interpreter'], function(TError, TUtils,
         if (node.callback) {
             node.callback.apply(this);
         }
-	if (state.value !== this.UNDEFINED && !this.stateStack[0].priority && this.stateStack[0].node.type === 'CallExpression') {
+	if (typeof state.value !== 'undefined' && state.value !== this.UNDEFINED && !this.stateStack[0].priority && this.stateStack[0].node.type === 'CallExpression') {
 	    this.stateStack[0].value = state.value;
 	}
     };
