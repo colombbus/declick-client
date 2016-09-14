@@ -785,7 +785,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         for (i=0; i<row.length; i++) {
             previous = this.rows[y][x+i];
             this.counters[previous]--;
-	    this.notifyTileChanger(x + i, y, row[i]);
+	    this.notifyTileChange(x + i, y, row[i]);
             this.rows[y][x+i] = row[i];
             this.counters[row[i]]++;
         }
