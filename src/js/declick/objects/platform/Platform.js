@@ -31,6 +31,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.addTile("wall.png", this.getResource("exit.png"));
         this.setCollidableTile(Platform.ENTRANCE, false);
         this.setCollidableTile(Platform.EXIT, false);
+	this.hasDefaultSettings = true;
     };
 
     Platform.prototype = Object.create(TGraphicalObject.prototype);
@@ -327,12 +328,13 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         this.rows = [];
         this.nbCols = 0;
         this.nbRows = 0;
-        this.entranceLocation = false;
-        this.exitLocations = false;
+	this.removeEntranceLocation();
+	this.removeExitLocations();
         this.counters = [0];
 	this.gObject.empty();
         this.tiles = [];
 	this.built = false;
+	this.hasDefaultSettings = false;
     };
 
     Platform.prototype._setCollidableTile = function(number, value) {
@@ -397,6 +399,9 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
             // truncate row
             row.splice(this.nbCols, row.length);
     	}
+	for (var index = 0; index < row.length; index++) {
+	    this.notifyTileChange(index, this.rows.length, row[index]);
+	}
     	this.rows.push(row);
         // update counters
         for (var j=0;j<row.length;j++) {
@@ -419,9 +424,11 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     	}
     	for (var i = 0; i< this.nbRows; i++) {
             if (i<col.length) {
+		this.notifyTileChange(this.rows[i].length, i, col[i]);
                 this.rows[i].push(col[i]);
                 this.counters[col[i]]++;
             } else {
+		this.notifyTileChange(this.rows[i].length, i, 0);
                 this.rows[i].push(0);
                 this.counters[0]++;
             }
@@ -452,6 +459,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
                 for (var j = 0; j<newNbCols; j++) {
                     if (j<structure[i].length) {
                         tileNumber = structure[i][j];
+			this.notifyTileChange(j, i, tileNumber);
                         newRows[i][j] = tileNumber;
                         this.counters[tileNumber]++;
                     } else {
@@ -461,6 +469,8 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
                     }
                 }
             }
+	    this.removeEntranceLocation();
+	    this.removeExitLocations();
             this.rows = newRows;
             this.nbRows = structure.length;
             this.nbCols = newNbCols;
@@ -572,6 +582,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
         // update counter of preceding tile
         this.counters[this.rows[y][x]]--;
+	this.notifyTileChange(x, y, number);
         this.rows[y][x] = number;
         this.counters[number]++;
         this.buildStructure();
@@ -656,22 +667,72 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         }
     };
 
+    Platform.prototype.notifyTileChange = function (x, y, identifier) {
+	if (this.entranceLocation !== false && this.entranceLocation[0] === x && this.entranceLocation[1] === y) {
+	    this.removeEntranceLocation();
+	} else if (this.exitLocations !== false) {
+	    this.removeExitLocation(x, y);
+	}
+	if (this.hasDefaultSettings) {
+	    if (identifier === Platform.ENTRANCE) {
+		this.setEntranceLocation(x, y);
+	    } else if (identifier === Platform.EXIT) {
+		this.addExitLocation(x, y);
+	    }
+	}
+    };
+
     Platform.prototype.getEntranceLocation = function() {
         return this.entranceLocation;
     };
 
+    Platform.prototype.removeEntranceLocation = function () {
+	if (this.entranceLocation === false) {
+	    return;
+	}
+	var x = this.entranceLocation[0];
+	var y = this.entranceLocation[1];
+	for (var i=0;i<Platform.registered.length;i++) {
+            var object = Platform.registered[i];
+	    object.removeEntranceLocation();
+        }
+	this.entranceLocation = false;
+    };
 
     Platform.prototype.setEntranceLocation = function(x,y) {
         this.entranceLocation = [x,y];
         // warn every robots registered that entrance has been added
         for (var i=0;i<Platform.registered.length;i++) {
             var object = Platform.registered[i];
-            object.setEntranceLocation(x,y);
+	    object.setEntranceLocation(x,y);
         }
     };
 
     Platform.prototype.getExitLocations = function() {
         return this.exitLocations;
+    };
+
+    Platform.prototype.removeExitLocations = function () {
+	var exitLocations = this.exitLocations.slice();
+	for (var index = 0; index < exitLocations.length; index++) {
+	    var location = exitLocations[index];
+	    this.removeExitLocation(location[0], location[1]);
+	}
+	this.exitLocations = false;
+    };
+
+    Platform.prototype.removeExitLocation = function (x, y) {
+	for (var index = this.exitLocations.length - 1; index >= 0; index--) {
+	    var exitLocation = this.exitLocations[index];
+	    if (exitLocation[0] === x && exitLocation[1] === y) {
+		this.exitLocations.splice(index, 1);
+		break;
+	    }
+	}
+	for (var i=0;i<Platform.registered.length;i++) {
+            var object = Platform.registered[i];
+	    object.removeExitLocation(x,y);
+        }
     };
 
     Platform.prototype.addExitLocation = function(x,y) {
@@ -724,6 +785,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
         for (i=0; i<row.length; i++) {
             previous = this.rows[y][x+i];
             this.counters[previous]--;
+	    this.notifyTileChanger(x + i, y, row[i]);
             this.rows[y][x+i] = row[i];
             this.counters[row[i]]++;
         }

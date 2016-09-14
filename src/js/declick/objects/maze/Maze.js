@@ -21,12 +21,8 @@ define(['objects/platform/Platform', 'TUtils'], function( Platform, TUtils) {
      * @param {Number} number
      */
     Maze.prototype._setTileMaze = function(x, y, number) {
-        if (number === Platform.ENTRANCE)
-            this.setEntranceLocation(x, y);
-        if (number === Platform.EXIT)
-            this.addExitLocation(x, y);
         this._setTile(x, y, number);
-    }
+    };
 
     /*
      * Put a ground at given location

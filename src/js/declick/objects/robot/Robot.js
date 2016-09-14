@@ -132,7 +132,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         },
         bumpTop: function (collision) {
             // check if collided is a ground
-            if (typeof collision.tile !== 'undefined' && collision.tile === Maze.GROUND) {
+            if (typeof collision.tile !== 'undefined' && collision.tile === Platform.GROUND) {
                 this.p.skipCollide = true;
             }
             this.p.blocked[0] = true;
@@ -539,8 +539,22 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         }
     };
 
+    Robot.prototype.removeEntranceLocation = function () {
+	this.gObject.setStartLocation(0, 0);
+    };
+
     Robot.prototype.setEntranceLocation = function (x, y) {
         this.gObject.setStartLocation(x, y);
+    };
+
+    Robot.prototype.removeExitLocation = function (x, y) {
+	for (var index = 0; index < this.exitLocations.length; index++) {
+	    var location = this.exitLocations[index];
+	    if (location[0] === x && location[1] === y) {
+		this.exitLocations.splice(index, 1);
+		break;
+	    }
+	}
     };
 
     Robot.prototype.addExitLocation = function (x, y) {
