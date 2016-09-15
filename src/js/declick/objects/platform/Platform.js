@@ -713,6 +713,9 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     };
 
     Platform.prototype.removeExitLocations = function () {
+	if (this.exitLocations === false) {
+	    return;
+	}
 	var exitLocations = this.exitLocations.slice();
 	for (var index = 0; index < exitLocations.length; index++) {
 	    var location = exitLocations[index];
