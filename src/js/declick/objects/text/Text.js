@@ -27,6 +27,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
                 h: 0,
                 label: "",
                 textSize: 12,
+                textFont: 'Verdana',
                 type: TGraphicalObject.TYPE_INACTIVE
             }, props), defaultProps);
         },
@@ -35,7 +36,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
             var oldW = this.p.w;
             var context = graphics.getContext();
             try {
-                context.font = "normal " + this.p.textSize + "px Verdana,Sans-serif";
+                context.font = "normal " + this.p.textSize + "px " + this.p.textFont;
                 this.p.h = this.p.textSize;
                 this.p.w = context.measureText(this.p.label).width;
                 this.p.x += this.p.w / 2 - oldW / 2;
@@ -53,7 +54,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         draw: function(context) {
             context.fillStyle = this.p.textColor;
             context.textBaseline = "middle";
-            context.font = "normal " + this.p.textSize + "px Verdana,Sans-serif";
+            context.font = "normal " + this.p.textSize + "px " + this.p.textFont;
             context.fillText(this.p.label, -this.p.w / 2, 0);
         }
     });
@@ -90,6 +91,10 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'TGraphicalObject'
         var color = TUtils.getColor(red, green, blue);
         var gObject = this.gObject;
         gObject.p.textColor = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+    };
+
+    Text.prototype._setFont = function (font) {
+        this.gObject.p.textFont = TUtils.getString(font);
     };
 
     return Text;

@@ -3,7 +3,8 @@
         "methods": [
             {"name": "_setText", "translated": "d\u00e9finirTexte", "displayed": "d\u00e9finirTexte(\"texte\")"},
             {"name": "_setTextSize", "translated": "d\u00e9finirTaille", "displayed": "d\u00e9finirTaille(12)"},
-            {"name": "_setColor", "translated": "d\u00e9finirCouleur", "displayed": "d\u00e9finirCouleur(125,125,125)"}
+            {"name": "_setColor", "translated": "d\u00e9finirCouleur", "displayed": "d\u00e9finirCouleur(125,125,125)"},
+            {"name": "_setFont", "translated": "d\u00e9finirPolice", "displayed": "d\u00e9finirPolice(\"Verdana\")"}
         ]
     }
 }
