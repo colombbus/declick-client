@@ -6,7 +6,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     var Shape = function() {
         Sprite.call(this);
     };
-    
+
     Shape.prototype = Object.create(Sprite.prototype);
     Shape.prototype.constructor = Shape;
     Shape.prototype.className = "Shape";
@@ -21,8 +21,9 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 fill: false,
                 fillColor: "#800000",
                 type: TGraphicalObject.TYPE_SHAPE,
-                initialized: true
+                initialized: false
             }, props), defaultProps);
+            this.initialized();
         },
         color: function(red, green, blue) {
            this.p.color = TUtils.rgbToHex(TUtils.getColor(red, green, blue));
@@ -37,7 +38,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
            this.p.fillColor = TUtils.rgbToHex(TUtils.getColor(red, green, blue));
         }
     });
-    
+
     /**
      * Change the color of the shape.</br>
      * Default value : red | [255, 0, 0]
@@ -48,7 +49,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     Shape.prototype._color = function(red, green, blue) {
         this.gObject.color(red, green, blue);
     };
-    
+
     /**
      * Set the width of the stroke.
      * Default value : 1.
@@ -60,10 +61,10 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.gObject.width(value);
         }
     };
-        
+
     /**
      * Enable or disable the fill of the shape.
-     * Default value : False. 
+     * Default value : False.
      * @param {Boolean} value
      */
     Shape.prototype._fill = function(value) {
@@ -71,7 +72,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.gObject.fill(value);
         }
     };
-    
+
     /**
      * Change the color of the shape's fill.
      * Default value : marron | [128, 0, 0]
@@ -82,6 +83,6 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
     Shape.prototype._fillColor = function(red, green, blue) {
         this.gObject.fillColor(red, green, blue);
     };
-    
+
     return Shape;
 });
