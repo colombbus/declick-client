@@ -101,18 +101,22 @@ define(['jquery', 'TEnvironment', 'ui/TComponent'], function($, TEnvironment, TC
                 var domElement = document.createElement("div");
                 domElement.id = elementId;
                 domElement.className = "tdesign-log-row";
-                var domName = document.createElement("div");
+                var domName = document.createElement("span");
                 domName.className = "tdesign-log-name";
                 domName.innerHTML = nameText;
-                var domLocation = document.createElement("div");
+                var domLocation = document.createElement("span");
                 domLocation.className = "tdesign-log-location";
                 domLocation.innerHTML = locationText;
                 domElement.appendChild(domName);
                 domElement.appendChild(domLocation);
                 $designLog.append(domElement);
+                // Drag disabled because it's making copy paste harder and the interface prevents
+                // the user from dragging instructions into his code anyway.
+                /*
                 domElement.setAttribute("draggable", "true");
                 domElement.ondragstart = dragHandler;
                 $(domElement).click(clickHandler);
+                */
                 $designLog.scrollTop($designLog.prop("scrollHeight"));
                 //$designLog.selectable();
             }
