@@ -77,22 +77,27 @@ function (Platform, Robot, CommandManager, TUtils)
 	    }
 	    this._super(context);
 	},
-	say: function (message)
+	say: function (message, triggerEvent)
 	{
+        if (typeof triggerEvent === 'undefined') {
+            triggerEvent = true;
+        }
 	    this.message = message;
 	    this.synchronousManager.begin();
 	    var context = this;
 	    this.timeoutIdentifier = window.setTimeout(function ()
 	    {
-		context.timeoutIdentifier = null;
-		context.message = null;
-		context.sayCommands.executeCommands({'parameters': [message]}, true);
-		context.synchronousManager.end();
+            context.timeoutIdentifier = null;
+            context.message = null;
+            if (triggerEvent) {
+                context.sayCommands.executeCommands({'parameters': [message]}, true);
+            }
+            context.synchronousManager.end();
 	    }, (message.length * 50) + 1500);
 	},
 	ask: function (question)
 	{
-	    this.say(question);
+	    this.say(question, false);
 	    Platform.ask(this.getTObject(), question);
 	},
 	destroy: function ()
