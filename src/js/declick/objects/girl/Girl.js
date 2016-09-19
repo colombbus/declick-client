@@ -86,7 +86,7 @@ function (Platform, Robot, CommandManager, TUtils)
 	    {
 		context.timeoutIdentifier = null;
 		context.message = null;
-		context.sayCommands.executeCommands({'parameters': [message]});
+		context.sayCommands.executeCommands({'parameters': [message]}, true);
 		context.synchronousManager.end();
 	    }, (message.length * 50) + 1500);
 	},

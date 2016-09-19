@@ -67,7 +67,10 @@ define(['TRuntime', 'TUtils', 'TParser', 'TLink', 'TEnvironment'], function(TRun
      * Execute commands, depending of parameters.
      * @param {String[]} parameters
      */
-    CommandManager.prototype.executeCommands = function(parameters) {
+    CommandManager.prototype.executeCommands = function(parameters, allowSimultaneousExecutions) {
+        if (typeof allowSimultaneousExecutions === 'undefined') {
+            allowSimultaneousExecutions = false;
+        }
         // TODO: handle parameters
         var i, cmdParameters, field;
         var self = this;
@@ -80,17 +83,23 @@ define(['TRuntime', 'TUtils', 'TParser', 'TLink', 'TEnvironment'], function(TRun
             }
         }
         if (typeof field === 'undefined' ) {
-            if (this.enabled._default) {
+            if (allowSimultaneousExecutions) {
+                TRuntime.executeNow(this.commands, cmdParameters, this.logging);
+            } else if (this.enabled._default) {
                 this.enabled._default = false;
                 TRuntime.executeNow(this.commands, cmdParameters, this.logging, function() {
                     self.enabled._default = true;
                 });
             }
-        } else if (typeof this.commands[field] !== 'undefined' && this.enabled[field]) {
-            this.enabled[field] = false;
-            TRuntime.executeNow(this.commands[field], cmdParameters, this.logging, function() {
-                self.enabled[field] = true;
-            });
+        } else if (typeof this.commands[field] !== 'undefined') {
+            if (allowSimultaneousExecutions) {
+                TRuntime.executeNow(this.commands[field], cmdParameters, this.logging);
+            } else if (this.enabled[field]) {
+                this.enabled[field] = false;
+                TRuntime.executeNow(this.commands[field], cmdParameters, this.logging, function() {
+                    self.enabled[field] = true;
+                });
+            }
         }
     };
 

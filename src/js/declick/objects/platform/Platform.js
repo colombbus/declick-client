@@ -67,10 +67,10 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.ask = function (source, question) {
         for (var index = 0; index < Platform.registered.length; index++) {
             var object = Platform.registered[index];
-	    if (object.className === 'Girl') {
-		var commands = object.getGObject().askCommands;
-		commands.executeCommands({'parameters': [source, question]});
-	    }
+            if (object.className === 'Girl') {
+                var commands = object.getGObject().askCommands;
+                commands.executeCommands({'parameters': [source, question]}, true);
+            }
         }
     };
 
