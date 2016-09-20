@@ -44,89 +44,90 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 y: 0,
                 blocked: [false, false, false, false]
             }, props), defaultProps);
-			this.previous = {X: this.p.x, Y: this.p.y};
-			this.move = null;
-			this.falling = false;
-			this.jumping = false;
-			this.previousGridX = 0;
-			this.previousGridY = 0;
+            this.previous = {X: this.p.x, Y: this.p.y};
+            this.move = null;
+            this.falling = false;
+            this.jumping = false;
+            this.previousGridX = 0;
+            this.previousGridY = 0;
             this.on("bump.top", "bumpTop");
             this.on("bump.bottom", "bumpBottom");
             this.on("bump.left", "bumpLeft");
             this.on("bump.right", "bumpRight");
         },
         step: function (dt) {
-			var p = this.p;
-			var previous = this.previous;
+            var p = this.p;
+            var previous = this.previous;
 
-			var completed = p.x === p.destinationX && p.y === p.destinationY;
-			var moved = p.x !== previous.X || p.y !== previous.Y;
-			var landed = this.falling && completed && !moved;
+            var completed = p.x === p.destinationX && p.y === p.destinationY;
+            var moved = p.x !== previous.X || p.y !== previous.Y;
+            var landed = this.falling && completed && !moved;
 
-			if (this.jumping && this.p.vy >= 0)
-			{
-				this.jumping = false;
-				this.falling = true;
-				// this.endMove();
-			}
-			else if (this.move === null && landed)
-			{
-				// Falling while move is empty means gravity activation.
-				// End the current command when the robot stops falling.
-				this.endMove();
-			}
+            if (this.jumping && this.p.vy >= 0)
+            {
+                this.jumping = false;
+                this.falling = true;
+                // this.endMove();
+            }
+            else if (this.move === null && landed)
+            {
+                // Falling while move is empty means gravity activation.
+                // End the current command when the robot stops falling.
+                this.updateGridLocation();
+                this.endMove();
+            }
 
-			else if (this.move !== null)
-			{
-				// The robot has a move to complete.
-				if (completed)
-				{
-					// The robot has ended a submove.
-					this.updateGridLocation();
-					if (this.falling)
-					{
-						// Stop fall if the robot landed. Else, wait.
-						if (!moved)
-						{
-							this.falling = false;
-							this.consumeMove();
-						}
-					}
-					else if (p.gridX !== this.previousGridX
-					      || p.gridY !== this.previousGridY)
-					{
-						// The robot is not falling, so check if it finished a
-						// cell move.
-						this.previousGridX = p.gridX;
-						this.previousGridY = p.gridY;
-						if (p.mayFall)
-						{
-							// If the gravity is enabled, let it try to fall.
-							this.fall();
-						}
-						else
-						{
-							// Else directly load next cell move.
-							this.consumeMove();
-						}
-					}
-					else
-					{
-						// The robot has ended a submove but is not falling
-						// nor changing cell, it must be blocked. End move.
-						this.endMove();
-					}
-				}
-			}
+            else if (this.move !== null)
+            {
+                // The robot has a move to complete.
+                if (completed)
+                {
+                    // The robot has ended a submove.
+                    this.updateGridLocation();
+                    if (this.falling)
+                    {
+                        // Stop fall if the robot landed. Else, wait.
+                        if (!moved)
+                        {
+                            this.falling = false;
+                            this.consumeMove();
+                        }
+                    }
+                    else if (p.gridX !== this.previousGridX
+                          || p.gridY !== this.previousGridY)
+                    {
+                        // The robot is not falling, so check if it finished a
+                        // cell move.
+                        this.previousGridX = p.gridX;
+                        this.previousGridY = p.gridY;
+                        if (p.mayFall)
+                        {
+                            // If the gravity is enabled, let it try to fall.
+                            this.fall();
+                        }
+                        else
+                        {
+                            // Else directly load next cell move.
+                            this.consumeMove();
+                        }
+                    }
+                    else
+                    {
+                        // The robot has ended a submove but is not falling
+                        // nor changing cell, it must be blocked. End move.
+                        this.endMove();
+                    }
+                }
+            }
 
-			this.previous = {X: p.x, Y: p.y};
+            this.previous = {X: p.x, Y: p.y};
 
             this._super(dt);
             if (!p.dragging && !p.frozen)
-			{
+            {
                 if (moved)
-				{
-					this.updateItemsPosition();
+                {
+                    this.updateItemsPosition();
                 }
             }
         },
@@ -161,96 +162,96 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
         wasBlockedRight: function () {
             return (this.p.blocked[3]);
         },
-		fall: function ()
-		{
-			this.p.vx = 0;
-			this.falling = true;
-		},
+        fall: function ()
+        {
+            this.p.vx = 0;
+            this.falling = true;
+        },
         jump: function () {
             if (this.p.mayFall)
-			{
+            {
                 this.synchronousManager.begin();
                 this.perform(function ()
-				{
-	                if (this.p.jumpAvailable > 1)
-					{
-	                    this.p.vy = this.p.jumpSpeed;
-	                    this.jumping = true;
-	                }
-					else
-					{
-						this.synchronousManager.end();
-					}
-            	});
+                {
+                    if (this.p.jumpAvailable > 1)
+                    {
+                        this.p.vy = this.p.jumpSpeed;
+                        this.jumping = true;
+                    }
+                    else
+                    {
+                        this.synchronousManager.end();
+                    }
+                });
             }
         },
-		endMove: function ()
-		{
-			this.move = null;
-			this.falling = false;
-			this.jumping = false;
-			this.p.destinationX = this.p.x;
-			this.p.destinationY = this.p.y;
-			this.synchronousManager.end();
-		},
-		consumeMove: function ()
-		{
-			var direction = this.move[0], intensity = this.move[1];
-			if (intensity === 0)
-			{
-				this.endMove();
-				return;
-			}
-			var XMultiplier = 0, YMultiplier = 0;
-			switch (direction)
-			{
-				case Sprite.DIRECTION_UP:    YMultiplier = -1; break;
-				case Sprite.DIRECTION_DOWN:  YMultiplier =  1; break;
-				case Sprite.DIRECTION_LEFT:  XMultiplier = -1; break;
-				case Sprite.DIRECTION_RIGHT: XMultiplier =  1; break;
-			}
-			this.p.destinationX = this.p.x + (XMultiplier * this.p.length);
-			this.p.destinationY = this.p.y + (YMultiplier * this.p.length);
-			this.p.vx = XMultiplier * this.p.speed;
-			this.p.vy = YMultiplier * this.p.speed;
-			this.move[1] = intensity - 1;
-		},
-		initializeMove: function (direction, intensity)
-		{
-			this.synchronousManager.begin();
-			this.perform(function ()
-			{
-				this.move = [direction, intensity];
-				this.consumeMove();
-			}, []);
-		},
-		moveUpward: function (intensity)
-		{
-			this.initializeMove(Sprite.DIRECTION_UP, intensity);
-		},
-		moveDownward: function (intensity)
-		{
-			this.initializeMove(Sprite.DIRECTION_DOWN, intensity);
-		},
-		moveBackward: function (intensity)
-		{
-			this.initializeMove(Sprite.DIRECTION_LEFT, intensity);
-		},
-		moveForward: function (intensity)
-		{
-			this.initializeMove(Sprite.DIRECTION_RIGHT, intensity);
-		},
-		updateItemsPosition: function ()
-		{
-			var p = this.p;
-			var x = p.x - p.w / 2;
-			var y = p.y - p.h / 2;
-			for (var i = 0; i < p.carriedItems.length; i++)
-			{
-				var item = p.carriedItems[i];
-				item.setLocation(x, y - 4 * i);
-			}
-		},
+        endMove: function ()
+        {
+            this.move = null;
+            this.falling = false;
+            this.jumping = false;
+            this.p.destinationX = this.p.x;
+            this.p.destinationY = this.p.y;
+            this.synchronousManager.end();
+        },
+        consumeMove: function ()
+        {
+            var direction = this.move[0], intensity = this.move[1];
+            if (intensity === 0)
+            {
+                this.endMove();
+                return;
+            }
+            var XMultiplier = 0, YMultiplier = 0;
+            switch (direction)
+            {
+                case Sprite.DIRECTION_UP:    YMultiplier = -1; break;
+                case Sprite.DIRECTION_DOWN:  YMultiplier =  1; break;
+                case Sprite.DIRECTION_LEFT:  XMultiplier = -1; break;
+                case Sprite.DIRECTION_RIGHT: XMultiplier =  1; break;
+            }
+            this.p.destinationX = this.p.x + (XMultiplier * this.p.length);
+            this.p.destinationY = this.p.y + (YMultiplier * this.p.length);
+            this.p.vx = XMultiplier * this.p.speed;
+            this.p.vy = YMultiplier * this.p.speed;
+            this.move[1] = intensity - 1;
+        },
+        initializeMove: function (direction, intensity)
+        {
+            this.synchronousManager.begin();
+            this.perform(function ()
+            {
+                this.move = [direction, intensity];
+                this.consumeMove();
+            }, []);
+        },
+        moveUpward: function (intensity)
+        {
+            this.initializeMove(Sprite.DIRECTION_UP, intensity);
+        },
+        moveDownward: function (intensity)
+        {
+            this.initializeMove(Sprite.DIRECTION_DOWN, intensity);
+        },
+        moveBackward: function (intensity)
+        {
+            this.initializeMove(Sprite.DIRECTION_LEFT, intensity);
+        },
+        moveForward: function (intensity)
+        {
+            this.initializeMove(Sprite.DIRECTION_RIGHT, intensity);
+        },
+        updateItemsPosition: function ()
+        {
+            var p = this.p;
+            var x = p.x - p.w / 2;
+            var y = p.y - p.h / 2;
+            for (var i = 0; i < p.carriedItems.length; i++)
+            {
+                var item = p.carriedItems[i];
+                item.setLocation(x, y - 4 * i);
+            }
+        },
         countItems: function () {
             var skip = 0;
             var collided = this.stage.TsearchSkip(this, TGraphicalObject.TYPE_ITEM, skip);
@@ -305,8 +306,8 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.setLocation(x * this.p.length, y * this.p.length);
         },
         updateGridLocation: function () {
-            this.p.gridX = Math.floor(this.p.x / this.p.length);
-            this.p.gridY = Math.floor(this.p.y / this.p.length);
+            this.p.gridX = Math.round(this.getX() / this.p.length);
+            this.p.gridY = Math.round(this.getY() / this.p.length);
         },
         setStartLocation: function (x, y) {
             this.setGridLocation(x, y);
@@ -338,7 +339,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             this.perform(function () {
                 this.p.mayFall = value;
                 if (startFalling) {
-					this.falling = true;
+                    this.falling = true;
                     this.p.inMovement = true;
                 }
             });
@@ -540,7 +541,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
 
     Robot.prototype.removeEntranceLocation = function () {
-	this.gObject.setStartLocation(0, 0);
+        this.gObject.setStartLocation(0, 0);
     };
 
     Robot.prototype.setEntranceLocation = function (x, y) {
@@ -548,13 +549,13 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
     };
 
     Robot.prototype.removeExitLocation = function (x, y) {
-	for (var index = 0; index < this.exitLocations.length; index++) {
-	    var location = this.exitLocations[index];
-	    if (location[0] === x && location[1] === y) {
-		this.exitLocations.splice(index, 1);
-		break;
-	    }
-	}
+        for (var index = 0; index < this.exitLocations.length; index++) {
+            var location = this.exitLocations[index];
+            if (location[0] === x && location[1] === y) {
+            this.exitLocations.splice(index, 1);
+            break;
+            }
+        }
     };
 
     Robot.prototype.addExitLocation = function (x, y) {
@@ -591,8 +592,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
             if (name === current) {
                 return true;
             }
-        } catch (e) {
-        }
+        } catch (e) {}
         return false;
     };
 
@@ -602,8 +602,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'SynchronousManage
                 return this._isOver(name);
             this.gObject.getItemName();
             return true;
-        } catch (e) {
-        }
+        } catch (e) {}
         return false;
     };
 
