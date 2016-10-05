@@ -1,4 +1,5 @@
-define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink','SynchronousManager', 'TError'], function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TLink, SynchronousManager, TError) {
+define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink','SynchronousManager', 'TError', 'CommandManager'],
+    function($, TUI, TEnvironment, TRuntime, TUtils, TObject, TLink, SynchronousManager, TError, CommandManager) {
     /**
      * Defines Declick, inherited from TObject.
      * Declick is an object created automatically with the launch of Declick.
@@ -9,6 +10,7 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     {
         this.synchronousManager = new SynchronousManager();
         TRuntime.addInstance(this);
+        this._interruptions = [];
     };
 
     Declick.prototype = Object.create(TObject.prototype);
@@ -17,20 +19,46 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
 
     Declick.prototype.clear = function ()
     {
-	this._maskGrid();
+        this._maskGrid();
     };
 
     Declick.prototype._displayGrid = function ()
     {
-	TRuntime.getGraphics().displayGrid();
+        TRuntime.getGraphics().displayGrid();
     };
 
     Declick.prototype._maskGrid = function ()
     {
-	TRuntime.getGraphics().maskGrid();
+        TRuntime.getGraphics().maskGrid();
     };
 
+    Declick.prototype.delay = function (callback, arguments_, duration) {
+        if (typeof duration === 'undefined') {
+            duration = arguments_;
+        }
+        var context = this;
+        var identifier = window.setTimeout(function () {
+            var index = context._interruptions.indexOf(identifier);
+            context._interruptions.splice(index, 1);
+            callback();
+        }, duration);
+        this._interruptions.push(identifier);
+    };
 
+        Declick.prototype.loop = function (callback) {
+        var loop = new CommandManager();
+        loop.addCommand(callback);
+        var previousTime = Date.now(), currentTime;
+        var context = this;
+        var repeater = function () {
+            currentTime = Date.now();
+            var delay = currentTime - previousTime;
+            loop.executeCommands({parameters: [delay]});
+            previousTime = currentTime;
+            context.delay(repeater, 0);
+        };
+        repeater();
+    };
 
     /**
      * Write "value" in logs.
@@ -95,6 +123,11 @@ define(['jquery', 'TUI', 'TEnvironment', 'TRuntime', 'TUtils', 'TObject', 'TLink
     Declick.prototype._init = function() {
         TRuntime.clearGraphics();
         TRuntime.clearObjects();
+        for (var index = 0; index < this._interruptions.length; index++) {
+            var interruption = this._interruptions[index];
+            window.clearTimeout(interruption);
+        }
+        this._interruptions = [];
     };
 
     /**
