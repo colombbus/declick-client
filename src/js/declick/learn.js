@@ -32,7 +32,6 @@ require.config({
         "platform-pr": "../libs/pem-task/platform-pr",
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
-        "SimpleTask": "env/SimpleTask",
         "Grader": "env/Grader",
         "TExerciseProject": "data/TExerciseProject",
         "TResource": "data/TResource",

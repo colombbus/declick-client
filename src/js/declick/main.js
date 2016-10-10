@@ -42,7 +42,6 @@ require.config({
         "jschannel": "../libs/jschannel/jschannel",
         "json": "../libs/pem-task/json2.min",
         "Task": "env/Task",
-        "SimpleTask": "env/SimpleTask",
         "Grader": "env/Grader",
         "TExerciseProject": "data/TExerciseProject",
         "js-interpreter": "../libs/js-interpreter/interpreter",
@@ -96,7 +95,7 @@ require.config({
 //baseUrl: 'js/declick',
 // Start the main app logic.
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject', 'SimpleTask'], function ($, TEnvironment, TRuntime, TFrame, TProject, SimpleTask) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject'], function ($, TEnvironment, TRuntime, TFrame, TProject) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
@@ -113,7 +112,6 @@ function load() {
                     TEnvironment.log("*******************");
                     TEnvironment.log("* Initiating link *");
                     TEnvironment.log("*******************");
-                    window.task = new SimpleTask();
                     var currentProject = new TProject();
                     currentProject.init(function () {
                         TEnvironment.setProject(currentProject);
@@ -123,7 +121,6 @@ function load() {
                             if (typeof window.parent !== 'undefined') {
                                 window.parent.postMessage('init', '*');
                             }
-                            platform.initWithTask(task);
                         });
                     });
                 });
