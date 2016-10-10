@@ -38,7 +38,7 @@ define(['jquery','platform-pr', 'json'], function($) {
 
 
         this.getHeight = function (callback) {
-            callback(800);
+            callback($("html").outerHeight(true));
         };
 
         this.getState = function (callback) {
