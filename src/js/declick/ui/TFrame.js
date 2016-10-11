@@ -101,7 +101,6 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $loading.fadeOut(1000, function() {
                 $(this).remove();
             });
-            window.platform.initWithTask(window.task);
         };
 
         this.lowerSeparator = function(value) {
