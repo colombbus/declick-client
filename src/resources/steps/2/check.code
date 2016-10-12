@@ -1,7 +1,0 @@
-teacher.wait(1000);
-if (teacher.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'avancer'}}}}) || 
-    teacher.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'reculer'}}}}) ||
-    teacher.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'monter'}}}}) ||
-    teacher.hasStatement({expression:{ callee:{object: {name: 'bob'}, property:{name: 'descendre'}}}})) {
-    teacher.validateStep();
-}
