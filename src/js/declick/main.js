@@ -95,7 +95,7 @@ require.config({
 //baseUrl: 'js/declick',
 // Start the main app logic.
 function load() {
-    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject', 'Task', 'Grader'], function ($, TEnvironment, TRuntime, TFrame, TProject) {
+    require(['jquery', 'TEnvironment', 'TRuntime', 'ui/TFrame', 'TProject'], function ($, TEnvironment, TRuntime, TFrame, TProject) {
         window.console.log("*******************");
         window.console.log("* Loading Environment *");
         window.console.log("*******************");
