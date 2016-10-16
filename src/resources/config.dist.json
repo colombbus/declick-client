@@ -8,5 +8,6 @@
     "log": false,
     "error": true,
     "cache-version": 0,
-    "optimized":false
+    "optimized":false,
+    "analytics":false
 }

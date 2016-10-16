@@ -66,6 +66,18 @@ module.exports = function (grunt) {
                 folders:true
             },
             src: ['dist/js/declick/objects/**/*']
+        },
+        htmlbuild: {
+            dist: {
+                src:'dist/*.html',
+                options: {
+                    replace:true,
+                    beautify:true,
+                    keepTags:false,
+                    scripts: {
+                    }
+                }
+            }
         }
 //        ,
 //        build: {
@@ -78,6 +90,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-front-end-modules');
     grunt.loadNpmTasks('grunt-cleanempty');
+    grunt.loadNpmTasks('grunt-html-build');    
     //grunt.loadNpmTasks('grunt-contrib-uglify');
     //grunt.loadNpmTasks('grunt-jsdoc');
 
@@ -86,6 +99,9 @@ module.exports = function (grunt) {
         var declickConfig = grunt.file.readJSON("dist/resources/config.json");
         declickConfig.optimized = true;
         declickConfig["cache-version"] = grunt.config("cacheVersion");
+        if (declickConfig["analytics"] !== 'false') {
+            grunt.config("htmlbuild.dist.options.scripts.analytics", declickConfig["analytics"]);
+        }
         grunt.file.write("dist/resources/config.json",JSON.stringify(declickConfig));
     });
 
@@ -134,7 +150,7 @@ module.exports = function (grunt) {
     grunt.registerTask('install_declick', ['front_end_modules']);
 
     // Build task
-    grunt.registerTask('build_declick', ['get_objects_list', 'set_cache_version', 'requirejs', 'set_dist_config']);
+    grunt.registerTask('build_declick', ['get_objects_list', 'set_cache_version', 'requirejs', 'set_dist_config', 'htmlbuild']);
     //TODO: see if we merge i18n and message files for objects
     //grunt.registerTask('build_declick', ['get_objects_list', 'requirejs', 'merge_files', 'set_optimized', 'cleanempty']);
     grunt.registerTask('default', ['build_declick']);
