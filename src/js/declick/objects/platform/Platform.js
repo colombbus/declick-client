@@ -516,7 +516,11 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
     Platform.prototype._placeTile = function(x, y, number) {
         x = TUtils.getInteger(x);
         y = TUtils.getInteger(y);
-        number = TUtils.getInteger(number);
+        if (typeof number !== 'undefined') {
+            number = TUtils.getInteger(number);
+        } else {
+            number = 1;
+        }
         this.setTile(x, y, number);
     };
 
@@ -533,14 +537,7 @@ define(['jquery', 'TGraphicalObject', 'TUtils', 'ResourceManager', 'TEnvironment
      * @param {Number} number
      */
     Platform.prototype._setTile = function(x, y, number) {
-        x = TUtils.getInteger(x);
-        y = TUtils.getInteger(y);
-        if (number === void 0) {
-            number = 1;
-        } else {
-            number = TUtils.getInteger(number);
-        }
-        this.setTile(x, y, number);
+        this._placeTile(x, y, number);
     };
 
     Platform.prototype.setTile = function (x, y, number) {
