@@ -1,9 +1,9 @@
 define(['TRuntime', 'SynchronousManager', 'TObject'], function(TRuntime, SynchronousManager, TObject) {
     /**
-     * Defines Teacher, inherited from TObject.
-     * Teacher is an object used to validate routes.
+     * Defines Exercise, inherited from TObject.
+     * Exercise is an object used to validate routes.
      * It compares values with statements, and can (un)validate steps.
-     * @exports Teacher
+     * @exports Exercise
      */
     var Exercise = function() {
         // Do not call parent constructor, as we don't want this object to be erased when clearing the

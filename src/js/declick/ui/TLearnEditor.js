@@ -23,10 +23,6 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
         var popupTriggered = false;
         var popupTimeout;
         var triggerPopup = false;
-        var Teacher;
-        require(['objects/teacher/Teacher'], function(TeacherObj) {
-            Teacher = TeacherObj;
-        });
 
         /**
          * Initialize LearnEditor.
@@ -66,7 +62,7 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
                 }
             });
 
-            aceEditor.completers = [consoleCompleter];
+            // aceEditor.completers = [consoleCompleter];
             aceEditor.setBehavioursEnabled(false);
 
             this.enableMethodHelper();
@@ -170,6 +166,7 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
             aceEditor.resize();
         };
 
+        /*
         var consoleCompleter = {
             getCompletions: function(editor, session, pos, prefix, callback) {
                 pos.column--;
@@ -251,6 +248,7 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
                 callback(null, completions);
             }
         };
+        */
 
         var dotCommand = {
             name: "methodHelper",

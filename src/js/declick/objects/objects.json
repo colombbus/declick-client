@@ -323,16 +323,6 @@
         },
         "parents": true
     },
-    "Teacher": {
-        "path": "teacher",
-        "translations": {
-            "fr": "teacher",
-            "es": "teacher",
-            "en": "teacher"
-        },
-        "parents": false,
-        "instance": true
-    },
     "Platform": {
     	"path": "platform",
     	"translations": {

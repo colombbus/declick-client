@@ -19,10 +19,6 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
         //TODO: generate this name dynamically and find a way to protect it
         var name = "exercise_123456";
         var frame = false;
-        var Teacher;
-        require(['objects/teacher/Teacher'], function(TeacherObj) {
-            Teacher = TeacherObj;
-        });
 
         /**
         * Set Project's ID.
@@ -168,66 +164,10 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
         * Execute check statements if any.
         */
         this.check = function(statements, callback) {
-            if (exercise !== false) {
-                exercise.setStatements(statements);
-            } else {
-                Teacher.setStatements(statements);
-            }
+            exercise.setStatements(statements);
             if (checkStatements !== false) {
                 TRuntime.evaluate(checkStatements, callback);
             }
-        };
-
-        /**
-        * Loads init statements.
-        * @param {Function} callback
-        */
-        var loadInit = function(callback) {
-            project.getProgramStatements("init", function(result) {
-                if (!(result instanceof TError)) {
-                    initStatements = result;
-                }
-                callback.call(this);
-            });
-        };
-
-        /**
-        * Loads start statements.
-        * @param {Function} callback
-        */
-        var loadStart = function(callback) {
-            project.getProgramStatements("start", function(result) {
-                if (!(result instanceof TError)) {
-                    startStatements = result;
-                }
-                callback.call(this);
-            });
-        };
-
-        /**
-        * Loads end statements.
-        * @param {Function} callback
-        */
-        var loadEnd = function(callback) {
-            project.getProgramStatements("end", function(result) {
-                if (!(result instanceof TError)) {
-                    endStatements = result;
-                }
-                callback.call(this);
-            });
-        };
-
-        /**
-        * Loads check statements.
-        * @param {Function} callback
-        */
-        var loadCheck = function(callback) {
-            project.getProgramStatements("check", function(result) {
-                if (!(result instanceof TError)) {
-                    checkStatements = result;
-                }
-                callback.call(this);
-            });
         };
 
         /**
@@ -280,10 +220,6 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
             project.init(function() {
                 // 1st check existing programs
                 var programs = project.getProgramsNames();
-                var initPresent = false;
-                var startPresent = false;
-                var endPresent = false;
-                var checkPresent = false;
                 var solutionPresent = false;
                 var exercisePresent = false;
                 var toLoad = 0;
@@ -296,25 +232,6 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
                 if (programs.indexOf("exercise") > -1) {
                     toLoad++;
                     exercisePresent = true;
-                } else {
-                    if (programs.indexOf("start") > -1) {
-                        toLoad++;
-                        startPresent = true;
-                    }
-
-                    if (programs.indexOf("end") > -1) {
-                        toLoad++;
-                        endPresent = true;
-                    }
-
-                    if (programs.indexOf("check") > -1) {
-                        toLoad++;
-                        checkPresent = true;
-                    }
-                    if (programs.indexOf("init") > -1) {
-                        toLoad++;
-                        initPresent = true;
-                    }
                 }
 
                 // 2nd check existing resources
@@ -334,18 +251,6 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
                         callback.call(this);
                     }
                 };
-                if (initPresent) {
-                    loadInit(checkLoad);
-                }
-                if (startPresent) {
-                    loadStart(checkLoad);
-                }
-                if (endPresent) {
-                    loadEnd(checkLoad);
-                }
-                if (checkPresent) {
-                    loadCheck(checkLoad);
-                }
                 if (solutionPresent) {
                     loadSolution(checkLoad);
                 }
@@ -358,7 +263,9 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
 
         this.setFrame = function(aFrame) {
             frame = aFrame;
-            Teacher.setFrame(aFrame);
+            if (exercise) {
+                exercise.setFrame(aFrame);
+            }
         };
     }
 
