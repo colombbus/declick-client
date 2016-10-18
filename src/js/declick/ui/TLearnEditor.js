@@ -63,6 +63,7 @@ define(['ui/TComponent', 'TParser', 'ui/TLog', 'TEnvironment', 'TUtils', 'TRunti
             });
 
             // aceEditor.completers = [consoleCompleter];
+            aceEditor.completers = [];
             aceEditor.setBehavioursEnabled(false);
 
             this.enableMethodHelper();
