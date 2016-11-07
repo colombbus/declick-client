@@ -97,10 +97,24 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $('.split-pane').splitPane();
             initialized = true;
             // init separator position so that toolbar is visible
-            TUI.enableEditor(false);
+            /*TUI.enableEditor(false);
             $loading.fadeOut(1000, function() {
                 $(this).remove();
-            });
+            });*/
+            // Tweak required by France IOI platform which displays 
+            // the frame with a null height at first
+            var initEditor = function() {
+                $(window).off("resize", initEditor);
+                if ($frame.height()>0) {
+                    TUI.enableEditor(false);
+                    $loading.fadeOut(1000, function() {
+                        $(this).remove();
+                    });				
+                } else {
+                    $(window).resize(initEditor);
+                }
+            };
+            initEditor();
         };
 
         this.lowerSeparator = function(value) {
