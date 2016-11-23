@@ -6,6 +6,8 @@
             {"name":"_moveUpward","translated":"monter","displayed":"monter(50)"},
             {"name":"_moveDownward","translated":"descendre","displayed":"descendre(50)"},
             {"name":"_stop","translated":"arr\u00eater","displayed":"arr\u00eater()"},
+            {"name":"_stopVertically","translated":"arr\u00eaterVerticallement","displayed":"arr\u00eaterVerticallement()"},
+            {"name":"_stopHorizontally","translated":"arr\u00eaterHorizontallement","displayed":"arr\u00eaterHorizontallement()"},
             {"name":"_setVelocity","translated":"d\u00e9finirVitesse","displayed":"d\u00e9finirVitesse(100)"},
             {"name":"_addImage","translated":"ajouterImage","displayed":"ajouterImage(\"image\")"},
             {"name":"_setImage","translated":"d\u00e9finirImage","displayed":"d\u00e9finirImage(\"image\")"},

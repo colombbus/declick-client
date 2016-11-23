@@ -102,7 +102,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 var collided = this.stage.TsearchSkip(this, this.p.collisionMask, skip, true);
                 // detect up to 3 objects
                 var nbCollisions = 3;
-                
+
                 while (collided && nbCollisions>0) {
                     object = collided.obj;
                     if (typeof object.getId !== 'undefined') {
@@ -268,7 +268,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         alwaysMoveUpward: function() {
             this.perform(function() {
                 this.p.direction = Sprite.DIRECTION_UP;
-                this.p.vy = -this.p.speed;                                
+                this.p.vy = -this.p.speed;
             }, {});
         },
         moveDownward: function(value) {
@@ -298,7 +298,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 } else {
                     this.p.vy = -this.p.speed;
                 }
-                this.p.direction = Sprite.DIRECTION_NONE; 
+                this.p.direction = Sprite.DIRECTION_NONE;
             }, [x, y]);
         },
         centerGoTo: function(x, y) {
@@ -315,7 +315,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 } else {
                     this.p.vy = -this.p.speed;
                 }
-                this.p.direction = Sprite.DIRECTION_NONE;               
+                this.p.direction = Sprite.DIRECTION_NONE;
             }, [x, y]);
         },
         stop: function() {
@@ -326,6 +326,22 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
                 // TODO: find a more elegant way
                 /*this.p.vx = 0;
                 this.p.vy = 0;*/
+                this.p.direction = Sprite.DIRECTION_NONE;
+            }, {});
+        },
+        stopVertically: function() {
+            this.perform(function() {
+                this.p.destinationY = this.p.y;
+                if (this.p.direction === Sprite.DIRECTION_UP
+                    || this.p.direction === Sprite.DIRECTION_DOWN)
+                this.p.direction = Sprite.DIRECTION_NONE;
+            }, {});
+        },
+        stopHorizontally: function() {
+            this.perform(function() {
+                this.p.destinationX = this.p.x;
+                if (this.p.direction === Sprite.DIRECTION_LEFT
+                    || this.p.direction === Sprite.DIRECTION_RIGHT)
                 this.p.direction = Sprite.DIRECTION_NONE;
             }, {});
         },
@@ -431,7 +447,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
     Sprite.prototype._alwaysMoveBackward = function() {
         this.gObject.alwaysMoveBackward();
     };
-    
+
     /**
      * Move Sprite of "value" pixels upward.
      * if "value" is undefined, always move upward.
@@ -445,14 +461,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             this.gObject.moveUpward(value);
         }
     };
-    
+
     /**
      * Move Sprite upward while nothing stops it.
      */
     Sprite.prototype._alwaysMoveUpward = function() {
         this.gObject.alwaysMoveUpward();
     };
-    
+
     /**
      * Move Sprite of "value" pixels downward.
      * if "value" is undefined, always move downward.
@@ -472,6 +488,14 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
      */
     Sprite.prototype._alwaysMoveDownward = function() {
         this.gObject.alwaysMoveDownward();
+    };
+
+    Sprite.prototype._stopVertically = function() {
+        this.gObject.stopVertically();
+    };
+
+    Sprite.prototype._stopHorizontally = function() {
+        this.gObject.stopHorizontally();
     };
 
     /*
@@ -810,7 +834,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
             }
         });
     };
-    
+
     /**
      * Move Sprite's top-left pixel to coordinates {x,y}.
      * @param {Number} x
@@ -821,7 +845,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         y = TUtils.getInteger(y);
         this.gObject.goTo(x, y);
     };
-    
+
     /**
      * Move Sprite's center pixel to coordinates {x,y}.
      * @param {Number} x
