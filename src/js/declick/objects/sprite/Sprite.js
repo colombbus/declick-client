@@ -332,6 +332,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         stopVertically: function() {
             this.perform(function() {
                 this.p.destinationY = this.p.y;
+                this.p.vy = 0;
                 if (this.p.direction === Sprite.DIRECTION_UP
                     || this.p.direction === Sprite.DIRECTION_DOWN)
                 this.p.direction = Sprite.DIRECTION_NONE;
@@ -340,6 +341,7 @@ define(['jquery', 'TEnvironment', 'TUtils', 'CommandManager', 'ResourceManager',
         stopHorizontally: function() {
             this.perform(function() {
                 this.p.destinationX = this.p.x;
+                this.p.vx = 0;
                 if (this.p.direction === Sprite.DIRECTION_LEFT
                     || this.p.direction === Sprite.DIRECTION_RIGHT)
                 this.p.direction = Sprite.DIRECTION_NONE;
