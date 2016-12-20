@@ -1,4 +1,5 @@
-define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTextEditor', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'], function(TComponent, TUI, TEnvironment, TError, TViewer, TTextEditor, $) {
+define(['TLink', 'ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTextEditor', 'jquery', 'jquery-ui/widget', 'iframe-transport', 'fileupload'],
+function(TLink, TComponent, TUI, TEnvironment, TError, TViewer, TTextEditor, $) {
 
     function TSidebarResources(callback) {
 
@@ -18,7 +19,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
             $uploadButton.click(function(e) {
                 $("#tsidebar-upload-input").click();
             });
-            
+
             var $buttonNewResource = component.find("#tsidebar-new-resource");
             $buttonNewResource.attr("title", TEnvironment.getMessage('option-new-resource'));
             $buttonNewResource.click(function(e) {
@@ -32,7 +33,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
                     TUI.delete();
                 }
             });
-            
+
             var emptyMediaP = component.find("#tsidebar-resources-empty p");
             emptyMediaP.append(TEnvironment.getMessage("empty-media-library"));
 
@@ -54,7 +55,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
             });
 
             var self = this;
-            
+
             viewer = new TViewer(function(c) {
                 textEditor = new TTextEditor(function(d) {
                     if (typeof callback !== 'undefined') {
@@ -91,13 +92,15 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
                 var name = prevImage.find('.tsidebar-file-name').text();
                 return name;
             });
-            
+
             // Set up blueimp fileupload plugin
             // TODO: make use of acceptFileTypes and maxFileSize
             $upload.fileupload({
                 dataType: 'json',
-                url: TEnvironment.getBackendUrl('addresource'),
-                paramName: 'resources[]',
+                type: 'POST',
+                url: null,
+                singleFileUploads: true,
+                paramName: 'data',
                 dropZone: $resources,
                 add: function(e, data) {
                     var newDivs = [];
@@ -131,7 +134,13 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
                             empty = false;
                         }
                         $resources.stop().animate({scrollTop: $resources.scrollTop() + $(div).position().top}, 1000);
-                        data.submit();
+
+                        var file = files[0]
+                        TLink.createResource(file.name, function () {
+                            data.url = TLink.getResourceLocation(file.name)
+                            data.name = file.name
+                            data.submit()
+                        })
                     } catch (error) {
                         // error
                         // 1st remove loading resources
@@ -153,7 +162,31 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
                         TUI.addLogError(error);
                     }
                 },
+                beforeSend: function(xhr, data) {
+                    xhr.setRequestHeader(
+                        'Authorization',
+                        'Token ' + TLink.getAuthorizationToken()
+                    )
+                },
                 done: function(e, data) {
+                    var project = TEnvironment.getProject();
+                    TLink.getResource(data.name, function (resource) {
+                        var name = data.name
+                        var $div = uploadingDivs[name];
+                        if (typeof $div !== 'undefined') {
+                            $div.find(".progress-bar-wrapper").fadeOut(2000, function() {
+                                $(this).remove();
+                            });
+                        }
+                        $div.removeClass('tsidebar-type-uploading');
+                        var type = '';
+                        if (typeof resource.type !== 'undefined') {
+                            $div.addClass('tsidebar-type-' + resource.type);
+                        }
+                        delete uploadingDivs[name];
+                        project.resourceUploaded(name, resource);
+                    })
+                    /*
                     var result = data.result;
                     if (typeof result !== 'undefined') {
                         if (typeof result.error !== 'undefined') {
@@ -179,7 +212,6 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
                         } else if (typeof result.created !== 'undefined') {
                             // files were created
                             var project = TEnvironment.getProject();
-
                             for (var i = 0; i < result.created.length; i++) {
                                 var name = result.created[i].name;
                                 var data = result.created[i].data;
@@ -199,6 +231,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
                             }
                         }
                     }
+                    */
                 },
                 progress: function(e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -342,7 +375,7 @@ define(['ui/TComponent', 'TUI', 'TEnvironment', 'TError', 'ui/TViewer', 'ui/TTex
         this.show = function() {
             $resources.show();
         };
-        
+
         this.hide = function() {
             $resources.hide();
         };

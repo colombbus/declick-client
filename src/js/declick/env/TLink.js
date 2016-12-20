@@ -1,536 +1,464 @@
-define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'], function($, TUtils, TEnvironment, TError, TParser) {
-    /**
-     * TLink is the bridge between client and server.
-     * It loads projects.
-     * @exports TLink
-     */
-    var TLink = function() {
-        var projectId = false;
+define(['jquery', 'TUtils', 'TEnvironment', 'TError', 'TParser'],
+function($, TUtils, TEnvironment, TError, TParser) {
+  /**
+   * TLink is the bridge between client and server.
+   * It loads projects.
+   * @exports TLink
+   */
 
-        /**
-         * Set the ID project to value.
-         * @param {Number} value
-         */
-        this.setProjectId = function(value) {
-            projectId = value;
-        };
+    var TLink = function () {
 
-        /**
-         * Get the list of programs.
-         * @param {Function} callback
-         */
-        this.getProgramList = function(callback) {
-            if (TEnvironment.debug)
-                callback.call(this, ["bob.tgr", "pomme.tgr", "cubeQuest.tgr"]);
-            else {
-                var url = TEnvironment.getBackendUrl('getprograms');
-                var input = {};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    data: input,
-                    type: "POST",
-                    global: false,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this, data['programs'], data['id']);
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
+    /*
+    var token = false;
+    var userId = false;
+    var projectId = false;
+    var defaultprojectId = false;
 
-        /**
-         * Get the code of the current program.
-         * @param {String} name
-         * @param {Function} callback
-         */
-        this.getProgramCode = function(name, callback, async) {
-            var url;
-            if (typeof async === 'undefined') {
-                async = true;
-            }
-            name = TUtils.getString(name);
-            if (TEnvironment.debug) {
-                url = TEnvironment.getProjectResource(name);
-                $.ajax({
-                    dataType: "text",
-                    url: url,
-                    global: false,
-                    async:async,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this, data);
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            } else {
-                url = TEnvironment.getBackendUrl('getcode');
-                var input = {'name': name};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    async:async,                    
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this, data['code']);
-                        }
-                        code = data['code'];
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
+    var resources = false;
+    */
 
-        /**
-         * Get statements of the current program.
-         * @param {String} name
-         * @param {Function} callback
-         */
-        this.getProgramStatements = function(name, callback, async) {
-            try {
-                this.getProgramCode(name, function(code) {
-                    if (code instanceof TError) {
-                        callback.call(this, code);
-                    } else {
-                        var statements = TParser.parse(code, name);
-                        callback.call(this, statements);
-                    }
-                }, async);
-            }
-            catch (e) {
-                var error = new TError(e);
-                error.setProgramName(name);
-                error.setCode(code);
-                callback.call(this, error);
-            }
-        };
+    this.setProjectId = function (value) {
+      projectId = value
+    }
 
-        /**
-         * Save the current program. Does not save the whole project.
-         * @param {String} name
-         * @param {String} code
-         * @param {String[]} statements
-         * @param {Function} callback
-         */
-        this.saveProgram = function(name, code, callback) {
-            if (!TEnvironment.debug) {
-                var url = TEnvironment.getBackendUrl('setprogramcontent');
-                var input = {'name': name, 'code': code};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this);
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
+    var self = this
 
-        /**
-         * Create a new program.
-         * @param {String} name Program's name
-         * @param {Function} callback
-         */
-        this.createProgram = function(name, callback) {
-            if (!TEnvironment.debug) {
-                var url = TEnvironment.getBackendUrl('createprogram');
-                var input = {'name': name};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this);
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
+    var api = {
 
-        /**
-         * Rename the current program.
-         * @param {String} name Actual name
-         * @param {type} newName    New name
-         * @param {type} callback
-         */
-        this.renameProgram = function(name, newName, callback) {
-            if (!TEnvironment.debug) {
-                var url = TEnvironment.getBackendUrl('renameprogram');
-                var input = {'name': name, 'new': newName};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this);
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
+      authorizationToken: null,
 
-        /**
-         * Get resources of the project.
-         * @param {Function} Callback
-         */
-        this.getResources = function(callback) {
-            if (TEnvironment.debug) {
-                callback.call(this, {"arbre.gif": {"type": "image"}, "arrivee.png": {"type": "image"}, "bat1.png": {"type": "image"}, "bat2.png": {"type": "image"}, "bob.png": {"type": "image"}, "bob_droite_1.png": {"type": "image"}, "bob_droite_2.png": {"type": "image"}, "bob_droite_3.png": {"type": "image"}, "bob_droite_4.png": {"type": "image"}, "bob_droite_5.png": {"type": "image"}, "bob_droite_6.png": {"type": "image"}, "bob_face.png": {"type": "image"}, "bob_gauche_1.png": {"type": "image"}, "bob_gauche_2.png": {"type": "image"}, "bob_gauche_3.png": {"type": "image"}, "bob_gauche_4.png": {"type": "image"}, "bob_gauche_5.png": {"type": "image"}, "bob_gauche_6.png": {"type": "image"}, "boum.png": {"type": "image"}, "cle.png": {"type": "image"}, "ennemi.png": {"type": "image"}, "ennemi2.png": {"type": "image"}, "ennemi3.png": {"type": "image"}, "fini.png": {"type": "image"}, "fond.png": {"type": "image"}, "game over.png": {"type": "image"}, "gameover.png": {"type": "image"}, "maison.gif": {"type": "image"}, "mechant1.png": {"type": "image"}, "mechant2.png": {"type": "image"}, "menujeu.png": {"type": "image"}, "niveau1.png": {"type": "image"}, "niveau2.png": {"type": "image"}, "niveau3.png": {"type": "image"}, "niveau4.png": {"type": "image"}, "niveau5.png": {"type": "image"}, "niveau6.png": {"type": "image"}, "niveau7.png": {"type": "image"}, "niveau8.png": {"type": "image"}, "nok1.png": {"type": "image"}, "nok2.png": {"type": "image"}, "nok3.png": {"type": "image"}, "ok.png": {"type": "image"}, "perso.png": {"type": "image"}, "pomme.gif": {"type": "image"}, "porte.png": {"type": "image"}, "porte_ouverte.png": {"type": "image"}, "sol.gif": {"type": "image"}});
-            } else {
-                var url = TEnvironment.getBackendUrl('getresources');
-                var input = {};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    data: input,
-                    type: "POST",
-                    global: false,
-                    success: function(data) {
-                        if (typeof callback !== 'undefined') {
-                            var e = checkError(data);
-                            if (e!==false) {
-                                callback.call(this, e);
-                            } else {
-                                callback.call(this, data['resources'], data['id']);
-                            }
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
+      makeRequest: function (parameters, successCallback, errorCallback) {
+        var defaultParameters = {
+          global: false,
+          beforeSend: function (request) {
+            if (api.authorizationToken) {
+              request.setRequestHeader(
+                'Authorization',
+                'Token ' + api.authorizationToken
+              )
             }
-        };
-
-        /**
-         * Get Resource's URL.
-         * @param {type} name
-         * @param {type} version
-         * @returns {String}
-         */
-        this.getResourceLocation = function(name, version) {
-            if (TEnvironment.debug) {
-                return TEnvironment.getBaseUrl() + "/tests/" + name;
-            } else {
-                if (projectId) {
-                    return TEnvironment.getBackendUrl('getresource') + "/" + projectId + "/" + version + "/" + encodeURIComponent(name);
-                } else {
-                    return TEnvironment.getBackendUrl('getresource') + "/" + version + "/" + encodeURIComponent(name);
-                }
-            }
-        };
-
-        /**
-         * Rename a resource.
-         * @param {String} name Actual name
-         * @param {type} newName    New name
-         * @param {type} callback
-         */
-        this.renameResource = function(name, newBaseName, callback) {
-            if (!TEnvironment.debug) {
-                var url = TEnvironment.getBackendUrl('renameresource');
-                var input = {'name': name, 'new': newBaseName};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this, data['updated']);
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
-
-        /**
-         * Delete the current program.
-         * @param {String}  name
-         * @param {Function}    callback
-         */
-        this.deleteProgram = function(name, callback) {
-            if (!TEnvironment.debug) {
-                var url = TEnvironment.getBackendUrl('removeprogram');
-                var input = {'name': name};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this);
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
-
-        /**
-         * Delete the current resource.
-         * @param {String}  name
-         * @param {Function}    callback
-         */
-        this.deleteResource = function(name, callback) {
-            if (!TEnvironment.debug) {
-                var url = TEnvironment.getBackendUrl('removeresource');
-                var input = {'name': name};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                         } else {
-                            callback.call(this);
-                         }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
-
-        /**
-         * Set a content for the resource "name".
-         * @param {String} name
-         * @param {String} data
-         * @param {Function} callback
-         */
-        this.setResourceContent = function(name, data, callback) {
-            if (!TEnvironment.debug) {
-                var url = TEnvironment.getBackendUrl('setresource');
-                var input = {'name': name, 'data': data};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this, {'name': data.updated, 'data': data.data});
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
-
-        /**
-         * Get content of resource "name".
-         * @param {String} name
-         * @param {Function} callback
-         */
-        this.getResourceContent = function(name, version, callback) {
-            var url = this.getResourceLocation(name, version);
-            $.get(url, null, function(data) {
-                callback.call(this, data);
-            }, "text");
-        };
-
-        /**
-         * Duplicate resource "name".
-         * @param {String} name
-         * @param {Function} callback
-         */
-        this.duplicateResource = function(name, callback) {
-            if (!TEnvironment.debug) {
-                var url = TEnvironment.getBackendUrl('duplicateresource');
-                var input = {'name': name};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this, {'name': data.created, 'data': data.data});
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
-
-        /**
-         * Create a new resource.
-         * @param {String} name
-         * @param {String} data
-         * @param {Function} callback
-         */
-        this.createResource = function(name, data, callback) {
-            if (!TEnvironment.debug) {
-                var url = TEnvironment.getBackendUrl('createresource');
-                var input = {'name': name, 'data': data};
-                if (projectId) {
-                    input['project_id'] = projectId;
-                }
-                $.ajax({
-                    dataType: "json",
-                    url: url,
-                    type: "POST",
-                    global: false,
-                    data: input,
-                    success: function(data) {
-                        var e = checkError(data);
-                        if (e !== false) {
-                            callback.call(this, e);
-                        } else {
-                            callback.call(this, {'name': data.created, 'data': data.data});
-                        }
-                    },
-                    error: function(data, status, error) {
-                        var e = new TError(error);
-                        callback.call(this, e);
-                    }
-                });
-            }
-        };
-
-        /**
-         * Checks if there is an error in data.
-         * @param {type} data
-         * @returns {TError|Boolean}    Returns error if existing, else false.
-         */
-        function checkError(data) {
-            if (typeof data !== 'undefined' && typeof data['error'] !== 'undefined') {
-                var e = new TError(TEnvironment.getMessage("backend-error-" + data['error']));
-                return e;
-            } else {
-                return false;
-            }
+          },
+          success: function (data) {
+            successCallback.call(this, data)
+          },
+          error: function (data, status, error) {
+            errorCallback.call(this, new TError(error))
+          }
         }
+        $.ajax($.extend(defaultParameters, parameters))
+      },
 
-    };
+      createResource: function (target, data, successCallback, errorCallback) {
+        this.makeRequest({
+          type: 'POST',
+          url: TEnvironment.getBackendUrl(target),
+          contentType: 'application/json',
+          data: JSON.stringify(data)
+        }, successCallback, errorCallback)
+      },
 
-    var linkInstance = new TLink();
+      modifyResource: function (target, modifications, successCallback,
+        errorCallback
+      ) {
+        this.makeRequest({
+          type: 'PATCH',
+          url: TEnvironment.getBackendUrl(target),
+          contentType: 'application/json',
+          data: JSON.stringify(modifications)
+        }, successCallback, errorCallback)
+      },
 
-    return linkInstance;
+      getResource: function (target, successCallback, errorCallback) {
+        this.makeRequest({
+          type: 'GET',
+          url: TEnvironment.getBackendUrl(target),
+          dataType: 'json'
+        }, successCallback, errorCallback)
+      },
+
+      deleteResource: function (target, successCallback, errorCallback) {
+        this.makeRequest({
+          type: 'DELETE',
+          url: TEnvironment.getBackendUrl(target)
+        }, successCallback, errorCallback)
+      },
+
+      getTextFile: function (target, successCallback, errorCallback) {
+        this.makeRequest({
+          type: 'GET',
+          url: TEnvironment.getBackendUrl(target),
+          dataType: 'text'
+        }, successCallback, errorCallback)
+      },
+
+      setTextFile: function (target, code, successCallback, errorCallback) {
+        this.makeRequest({
+          type: 'POST',
+          url: TEnvironment.getBackendUrl(target),
+          contentType: 'text/plain',
+          data: code
+        }, successCallback, errorCallback)
+      },
+
+      getBinaryFile: function (target, successCallback, errorCallback) {
+        this.makeRequest({
+          type: 'GET',
+          url: TEnvironment.getBackendUrl(target),
+          dataType: 'blob'
+        }, successCallback, errorCallback)
+      },
+
+      setBinaryFile: function (target, data, successCallback, errorCallback) {
+        this.makeRequest({
+          type: 'POST',
+          url: TEnvironment.getBackendUrl(target),
+          contentType: 'application/octet-stream',
+          data: data
+        }, successCallback, errorCallback)
+      }
+    }
+
+    var store = {
+
+      userId: null,
+      defaultProjectId: null,
+      projectId: null,
+      projectResources: null,
+
+      getUserId: function (successCallback, errorCallback) {
+        if (this.userId) {
+          return successCallback.call(self, this.userId)
+        }
+        api.getResource('authorizations', function (authorizations) {
+          if (authorizations.length >= 1) {
+            store.userId = authorizations[0].owner_id
+            successCallback.call(self, store.userId)
+          } else {
+            errorCallback.call(new TError('user not connected'))
+          }
+        }, errorCallback)
+      },
+
+      getDefaultProjectId: function (successCallback, errorCallback) {
+        if (this.defaultProjectId) {
+          return successCallback.call(self, this.defaultProjectId)
+        }
+        this.getUserId(function (userId) {
+          api.getResource(
+            'users/' + userId + '/projects/default',
+            function (project) {
+              store.defaultProjectId = project.id
+              successCallback.call(self, store.defaultProjectId)
+            },
+            errorCallback
+          )
+        }, errorCallback)
+      },
+
+      getProjectId: function (successCallback, errorCallback) {
+        if (projectId) {
+          successCallback.call(self, projectId)
+        } else {
+          this.getDefaultProjectId(successCallback, errorCallback)
+        }
+      },
+
+      getProjectResources: function (successCallback, errorCallback) {
+        if ((projectId || this.defaultProjectId) && this.projectResources) {
+          return successCallback.call(self, this.projectResources,
+            (projectId || this.defaultProjectId))
+        }
+        this.getProjectId(function (projectId) {
+          api.getResource(
+            'projects/' + projectId + '/resources',
+            function (resources) {
+              store.projectResources = resources
+              successCallback.call(self, store.projectResources, projectId)
+            },
+            errorCallback
+          )
+        }, errorCallback)
+      },
+
+      getProjectResource: function (name, successCallback, errorCallback) {
+        this.getProjectResources(function (resources, projectId) {
+          var match = resources.filter(function (resource) {
+            return resource.file_name === name
+          })[0]
+          if (match) {
+            successCallback.call(self, match, projectId)
+          } else {
+            errorCallback.call(self, new TError('resource not found'))
+          }
+        }, errorCallback)
+      },
+
+      deleteProjectResource: function (name, successCallback, errorCallback) {
+        this.getProjectResource(name, function (resource, projectId) {
+          api.deleteResource(
+            'projects/' + projectId + '/resources/' + resource.id,
+            function () {
+              successCallback.call(self, resource, projectId)
+            },
+            errorCallback
+          )
+        }, errorCallback)
+      },
+
+      createProjectScript: function (name, successCallback, errorCallback) {
+        this.getProjectResources(function (resources, projectId) {
+          var script = {
+              file_name: name,
+              media_type: SCRIPT_MEDIA_TYPE
+          }
+          api.createResource(
+            'projects/' + projectId + '/resources',
+            script,
+            function (resource) {
+              resources.push(resource)
+              successCallback.call(self, resources, projectId)
+            },
+            errorCallback
+          )
+        }, errorCallback)
+      },
+
+      renameProjectScript: function (name, newName, successCallback,
+        errorCallback
+      ) {
+        this.getProjectResource(name, function (resource, projectId) {
+          api.modifyResource(
+            'projects/' + projectId + '/resources/' + resource.id,
+            modifications = {
+              file_name: newName
+            },
+            function (resources) {
+              resource.file_name = newName
+              successCallback.call(self, resources, projectId)
+            },
+            errorCallback
+          )
+        })
+      },
+
+      getProjectScriptContent: function (name, successCallback,
+        errorCallback
+      ) {
+        this.getProjectResource(name, function (resource, projectId) {
+          api.getTextFile(
+            'projects/' + projectId + '/resources/' + resource.id + '/content',
+            successCallback,
+            errorCallback
+          )
+        }, errorCallback)
+      },
+
+      setProjectScriptContent: function (name, code, successCallback,
+        errorCallback
+      ) {
+        this.getProjectResource(name, function (resource, projectId) {
+          api.setTextFile(
+            'projects/' + projectId + '/resources/' + resource.id + '/content',
+            code,
+            successCallback,
+            errorCallback
+          )
+        }, errorCallback)
+      },
+
+      createProjectAsset: function (name, successCallback, errorCallback) {
+        this.getProjectResources(function (resources, projectId) {
+          var extension = ''
+          if (name.indexOf('.') !== -1) {
+            extension = name.split('.').pop()
+          }
+          var media_type = IMAGE_MEDIA_TYPES[extension]
+          if (!media_type) {
+            media_type = 'application/octet-stream'
+          }
+          var asset = {
+              file_name: name,
+              media_type: media_type
+          }
+          api.createResource(
+            'projects/' + projectId + '/resources',
+            asset,
+            function (resource) {
+              resources.push(resource)
+              successCallback.call(self, resources, projectId)
+            },
+            errorCallback
+          )
+        }, errorCallback)
+      },
+
+      renameProjectAsset: function (name, newBaseName, successCallback,
+        errorCallback
+      ) {
+        this.getProjectResource(name, function (resource, projectId) {
+          var newName = newBaseName
+          var extension = name.split('.').pop()
+          if (extension) {
+            newName += '.' + extension
+          }
+          api.modifyResource(
+            'projects/' + projectId + '/resources/' + resource.id,
+            modifications = {
+              file_name: newName
+            },
+            function (resources) {
+              resource.file_name = newName
+              successCallback.call(self, newName)
+            },
+            errorCallback
+          )
+        }, errorCallback)
+      },
+
+      getProjectAssetContentLocation: function (name) {
+        // optimistic
+        var resource = this.projectResources.filter(function (resource) {
+          return resource.file_name === name
+        })[0]
+        var target =
+          'projects/' + (projectId || this.defaultProjectId) +
+          '/resources/' + resource.id +
+          '/content'
+        return TEnvironment.getBackendUrl(target)
+      },
+
+      getProjectAssetContent: function (name, successCallback, errorCallback) {
+        this.getProjectResource(name, function (resource, projectId) {
+          api.getBinaryFile(
+            'projects/' + projectId + '/resources/' + resource.id + '/content',
+            successCallback,
+            errorCallback
+          )
+        }, errorCallback)
+      }
+    }
+
+    TEnvironment.registerParameterHandler(function (name, value) {
+      switch (name) {
+        case 'token':
+          api.authorizationToken = value
+          break
+      }
+    })
+
+    this.getAuthorizationToken = function () {
+      return api.authorizationToken
+    }
+
+    var SCRIPT_MEDIA_TYPE = 'text/vnd.colombbus.declick.script'
+
+    this.getProgramList = function (callback) {
+      store.getProjectResources(function (resources, projectId) {
+        var scriptNames = []
+        resources.forEach(function (resource) {
+          if (resource.media_type === SCRIPT_MEDIA_TYPE) {
+            scriptNames.push(resource.file_name)
+          }
+        })
+        callback.call(self, scriptNames, projectId)
+      }, callback)
+    }
+
+    var IMAGE_MEDIA_TYPES = {
+      'gif': 'image/gif',
+      'jpeg': 'image/jpeg',
+      'jpg': 'image/jpeg',
+      'png': 'image/png'
+    }
+
+    this.getResources = function (callback) {
+      store.getProjectResources(function (resources, projectId) {
+        var formattedResources = {}
+        resources.forEach(function (resource) {
+          var isImage = false
+          for (var extension in IMAGE_MEDIA_TYPES) {
+            if (resource.media_type === IMAGE_MEDIA_TYPES[extension]) {
+              isImage = true
+              break
+            }
+          }
+          if (isImage) {
+            var parts = resource.file_name.split('.')
+            var extension = (parts.length >= 2) ? parts.pop() : ''
+            var baseName = parts.join('.')
+            formattedResources[resource.file_name] = {
+              type: 'image',
+              version: 1,
+              extension: extension,
+              'base-name': baseName
+            }
+          }
+        })
+        callback.call(self, formattedResources, projectId)
+      }, callback)
+    }
+
+    this.getResource = function (name, callback) {
+      this.getResources(function (resources) {
+        callback.call(self, resources[name])
+      }, callback)
+    }
+
+    this.getProgramCode = function (name, callback) {
+      store.getProjectScriptContent(name, callback, callback)
+    }
+
+    this.getProgramStatements = function (name, callback) {
+      store.getProjectScriptContent(name, function (content) {
+        var statements = TParser.parse(code, name)
+        callback.call(self, statements)
+      }, callback)
+    }
+
+    this.saveProgram = function (name, code, callback) {
+      store.getProjectResource(name, function (resource) {
+        store.setProjectScriptContent(name, code, function () {
+          callback.call(self)
+        }, callback)
+      }, callback)
+    }
+
+    this.createProgram = function (name, callback) {
+      store.createProjectScript(name, function () {
+        callback.call(self)
+      }, callback)
+    }
+
+    this.renameProgram = function (name, newName, callback) {
+      store.renameProjectScript(name, newName, function () {
+        callback.call(self)
+      }, callback)
+    }
+
+    this.deleteProgram = function (name, callback) {
+      store.deleteProjectResource(name, function () {
+        callback.call(self)
+      }, callback)
+    }
+
+    this.createResource = function (name, callback) {
+      store.createProjectAsset(name, function () {
+        callback.call(self, name)
+      }, callback)
+    }
+
+    this.getResourceLocation = function (name) {
+      return store.getProjectAssetContentLocation(name)
+    }
+
+    this.renameResource = function (name, newBaseName, callback) {
+      store.renameProjectAsset(name, newBaseName, callback, callback)
+    }
+
+    this.deleteResource = this.deleteProgram
+  };
+
+  var linkInstance = new TLink();
+
+  return linkInstance;
 });

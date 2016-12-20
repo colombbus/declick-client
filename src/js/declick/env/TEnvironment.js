@@ -16,8 +16,47 @@ define(['jquery', 'TResource'], function ($, TResource) {
         this.language = "fr";
 
         // Config parameters: default values
-        this.config = {"debug": false, "backend-path": "/declick-server/web/app.php/", "cache": true, "log": false, "error": true, "cache-version": 0, "optimized":false};
+        this.config = {
+            "debug": false,
+            "backend-path": "/declick-server/web/app.php/",
+            "cache": true,
+            "log": false,
+            "error": true,
+            "cache-version": 0,
+            "optimized":false
+        };
         this.debug = false;
+
+        var parameters = {};
+        var parameterHandlers = [];
+
+        this.registerParameterHandler = function (handler) {
+            parameterHandlers.push(handler);
+            propagateParameters(handler);
+        };
+
+        function propagateParameters(handler) {
+            for (var key in parameters) {
+                handler(key, parameters[key]);
+            }
+        }
+
+        function reloadParameters() {
+            parameters = {};
+            var parts = window.location.hash.substring(1).split('&')
+            for (var index = 0; index < parts.length; index++) {
+                var subParts = parts[index].split('=');
+                var key = subParts[0];
+                var value = subParts[1];
+                parameters[key] = value;
+            }
+            for (index = 0; index < parameterHandlers.length; index++) {
+                propagateParameters(parameterHandlers[index]);
+            }
+        }
+
+        $(window).on('hashchange', reloadParameters);
+        reloadParameters();
 
         /**
          * Loads environment (config, messages), and calls callback if existing
@@ -83,18 +122,8 @@ define(['jquery', 'TResource'], function ($, TResource) {
             return this.getObjectsUrl() + "/objects.json";
         };
 
-        /**
-         * Get the URL of the module entered in parameter.
-         * @param {String} module
-         * @returns {String} Returns the URL of module.
-         */
-        this.getBackendUrl = function (module) {
-            var url = window.location.protocol + "//" + window.location.host;
-            url += this.config['backend-path'] + "assets/";
-            if (typeof module !== "undefined") {
-                url = url + module;
-            }
-            return url;
+        this.getBackendUrl = function (target) {
+            return this.config['backend-path'] + target;
         };
 
         /**
