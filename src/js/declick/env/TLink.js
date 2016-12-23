@@ -361,7 +361,10 @@ function($, TUtils, TEnvironment, TError, TParser) {
           }
         })
         callback.call(self, scriptNames, projectId)
-      }, callback)
+      }, function() {
+        callback.call(self, new TError('not connected'));
+      }
+      )
     }
 
     var IMAGE_MEDIA_TYPES = {
