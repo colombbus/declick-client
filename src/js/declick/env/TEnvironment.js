@@ -28,17 +28,15 @@ define(['jquery', 'TResource'], function ($, TResource) {
         this.debug = false;
 
         var parameters = {};
-        var parameterHandlers = [];
+        var parametersHandlers = [];
 
-        this.registerParameterHandler = function (handler) {
-            parameterHandlers.push(handler);
-            propagateParameters(handler);
+        this.registerParametersHandler = function (handler, callback) {
+            parametersHandlers.push(handler);
+            propagateParameters(handler, callback);
         };
 
-        function propagateParameters(handler) {
-            for (var key in parameters) {
-                handler(key, parameters[key]);
-            }
+        function propagateParameters(handler, callback) {
+            handler(parameters, callback);
         }
 
         function reloadParameters() {
@@ -50,13 +48,17 @@ define(['jquery', 'TResource'], function ($, TResource) {
                 var value = subParts[1];
                 parameters[key] = value;
             }
-            for (index = 0; index < parameterHandlers.length; index++) {
-                propagateParameters(parameterHandlers[index]);
+            for (index = 0; index < parametersHandlers.length; index++) {
+                propagateParameters(parametersHandlers[index]);
             }
         }
 
-        $(window).on('hashchange', reloadParameters);
-        reloadParameters();
+        $(document).ready(function() {
+            reloadParameters();
+            window.addEventListener("hashchange", function() {
+                reloadParameters();
+            }, false);
+        });
 
         /**
          * Loads environment (config, messages), and calls callback if existing
