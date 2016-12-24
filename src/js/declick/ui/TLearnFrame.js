@@ -109,11 +109,6 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             initSplitPane();
             // declare itself as log
             TRuntime.setLog(this);
-
-            var self = this;
-            window.addEventListener("hashchange", function() {
-                self.load();
-            }, false);
         };
 
         this.init = function() {
@@ -129,17 +124,15 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             initialized = true;
         };
 
-        this.load = function(callback) {
-            hideSuccess();
-            var hash = document.location.hash;
-            var part = hash.substring(1);
-            if (part.substring(0,1) === "s") {
+        this.update = function(id, callback) {
+            hideSuccess(); 
+            if (id.substring(0,1) === "s") {
                 // slide
                 if (!initialized) {
                     this.init();
                 }
                 this.loading();
-                var slideId = part.substring(1);
+                var slideId = id.substring(1);
                 var self = this;
                 this.displaySlide(slideId, function() {
                     self.loaded();
@@ -148,7 +141,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     }
                 });
             } else {
-                var exerciseId = parseInt(hash.substring(1));
+                var exerciseId = parseInt(id);
                 if (isNaN(exerciseId)) {
                     TEnvironment.error("Could not parse exercise id");
                     if (!initialized) {
@@ -157,25 +150,45 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     if (typeof callback !== 'undefined') {
                         callback.call(this);
                     }
-                } else if (exerciseId !== exercise.getId() || slideDisplayed) {
-                    this.loading();
-                    var self = this;
-                    this.loadExercise(exerciseId, function() {
-                        if (!initialized) {
-                            self.init();
-                        }
-                        self.loaded();
-                        if (typeof callback !== 'undefined') {
-                            callback.call(this);
-                        }
-                    });
-                } else {
+                } else /*if (exerciseId !== exercise.getId() || slideDisplayed)*/ {
+                        this.loading();
+                        var self = this;
+                        this.loadExercise(exerciseId, function() {
+                            if (!initialized) {
+                                self.init();
+                            }
+                            self.loaded();
+                            if (typeof callback !== 'undefined') {
+                                callback.call(this);
+                            }
+                        });
+                } /*else {
                     if (typeof callback !== 'undefined') {
                         callback.call(this);
                     }
-                }
+                }*/
             }
-        };
+        }
+
+        this.load = function(callback) {
+            var self = this;
+            TEnvironment.registerParametersHandler(function (parameters, callback) {
+                var id = false;
+                for (var name in parameters) {
+                    window.console.log("name : "+name);
+                    var value = parameters[name];
+                    if (name === 'id') {
+                        id = value;
+                    }
+                }
+                if (id) {
+                    window.console.log("update avec id : "+id);
+                    self.update(id, callback);
+                } else if (callback) {
+                    callback.call(self);
+                }
+            }, callback);
+       };
 
         this.loading = function() {
             $slideFrame.hide();
