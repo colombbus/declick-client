@@ -245,6 +245,10 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
                 }
 
                 // 3rd load statements
+                if (toLoad===0) {
+                    // In case there is nothing to load: call callback now
+                    callback.call(this);
+                }
                 var checkLoad = function() {
                     toLoad--;
                     if (toLoad===0) {
