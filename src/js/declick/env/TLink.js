@@ -18,7 +18,7 @@ function($, TUtils, TEnvironment, TError, TParser) {
     */
 
     this.setProjectId = function (value) {
-      projectId = value
+      store.setProjectId(value);
     }
 
     var self = this
@@ -121,13 +121,23 @@ function($, TUtils, TEnvironment, TError, TParser) {
     var store = {
 
       userId: null,
-      defaultProjectId: null,
       projectId: null,
       projectResources: null,
 
+      resetUser: function() {
+        store.userId = null;
+        store.projectId = null;
+        store.projectResources = null;
+      },
+
+      setProjectId: function(value) {
+        store.projectId = value;
+        store.projectResources = null;
+      },
+
       getUserId: function (successCallback, errorCallback) {
-        if (this.userId) {
-          return successCallback.call(self, this.userId)
+        if (store.userId) {
+          return successCallback.call(self, store.userId)
         }
         api.getResource('authorizations', function (authorizations) {
           if (authorizations.length >= 1) {
@@ -140,15 +150,11 @@ function($, TUtils, TEnvironment, TError, TParser) {
       },
 
       getDefaultProjectId: function (successCallback, errorCallback) {
-        if (this.defaultProjectId) {
-          return successCallback.call(self, this.defaultProjectId)
-        }
         this.getUserId(function (userId) {
           api.getResource(
             'users/' + userId + '/projects/default',
             function (project) {
-              store.defaultProjectId = project.id
-              successCallback.call(self, store.defaultProjectId)
+              successCallback.call(self, project.id);
             },
             errorCallback
           )
@@ -156,24 +162,28 @@ function($, TUtils, TEnvironment, TError, TParser) {
       },
 
       getProjectId: function (successCallback, errorCallback) {
-        if (projectId) {
-          successCallback.call(self, projectId)
+        if (store.projectId) {
+          successCallback.call(self, store.projectId);
         } else {
-          this.getDefaultProjectId(successCallback, errorCallback)
+          this.getDefaultProjectId(function(projectId) {
+            store.projectId = projectId;
+            successCallback.call(self, projectId);
+            }
+            , errorCallback);
         }
       },
 
       getProjectResources: function (successCallback, errorCallback) {
-        if ((projectId || this.defaultProjectId) && this.projectResources) {
-          return successCallback.call(self, this.projectResources,
-            (projectId || this.defaultProjectId))
+        if (store.projectId && store.projectResources) {
+          return successCallback.call(self, store.projectResources,
+            store.projectId);
         }
         this.getProjectId(function (projectId) {
           api.getResource(
             'projects/' + projectId + '/resources',
             function (resources) {
-              store.projectResources = resources
-              successCallback.call(self, store.projectResources, projectId)
+              store.projectResources = resources;
+              successCallback.call(self, store.projectResources, projectId);
             },
             errorCallback
           )
@@ -183,14 +193,14 @@ function($, TUtils, TEnvironment, TError, TParser) {
       getProjectResource: function (name, successCallback, errorCallback) {
         this.getProjectResources(function (resources, projectId) {
           var match = resources.filter(function (resource) {
-            return resource.file_name === name
+            return resource.file_name === name;
           })[0]
           if (match) {
-            successCallback.call(self, match, projectId)
+            successCallback.call(self, match, projectId);
           } else {
-            errorCallback.call(self, new TError('resource not found'))
+            errorCallback.call(self, new TError('resource not found'));
           }
-        }, errorCallback)
+        }, errorCallback);
       },
 
       deleteProjectResource: function (name, successCallback, errorCallback) {
@@ -198,11 +208,11 @@ function($, TUtils, TEnvironment, TError, TParser) {
           api.deleteResource(
             'projects/' + projectId + '/resources/' + resource.id,
             function () {
-              successCallback.call(self, resource, projectId)
+              successCallback.call(self, resource, projectId);
             },
             errorCallback
           )
-        }, errorCallback)
+        }, errorCallback);
       },
 
       createProjectScript: function (name, successCallback, errorCallback) {
@@ -215,8 +225,8 @@ function($, TUtils, TEnvironment, TError, TParser) {
             'projects/' + projectId + '/resources',
             script,
             function (resource) {
-              resources.push(resource)
-              successCallback.call(self, resources, projectId)
+              resources.push(resource);
+              successCallback.call(self, resources, projectId);
             },
             errorCallback
           )
@@ -233,8 +243,8 @@ function($, TUtils, TEnvironment, TError, TParser) {
               file_name: newName
             },
             function (resources) {
-              resource.file_name = newName
-              successCallback.call(self, resources, projectId)
+              resource.file_name = newName;
+              successCallback.call(self, resources, projectId);
             },
             errorCallback
           )
@@ -250,7 +260,7 @@ function($, TUtils, TEnvironment, TError, TParser) {
             successCallback,
             errorCallback
           )
-        }, errorCallback)
+        }, errorCallback);
       },
 
       setProjectScriptContent: function (name, code, successCallback,
@@ -263,18 +273,18 @@ function($, TUtils, TEnvironment, TError, TParser) {
             successCallback,
             errorCallback
           )
-        }, errorCallback)
+        }, errorCallback);
       },
 
       createProjectAsset: function (name, successCallback, errorCallback) {
         this.getProjectResources(function (resources, projectId) {
           var extension = ''
           if (name.indexOf('.') !== -1) {
-            extension = name.split('.').pop()
+            extension = name.split('.').pop();
           }
-          var media_type = IMAGE_MEDIA_TYPES[extension]
+          var media_type = IMAGE_MEDIA_TYPES[extension];
           if (!media_type) {
-            media_type = 'application/octet-stream'
+            media_type = 'application/octet-stream';
           }
           var asset = {
               file_name: name,
@@ -284,22 +294,22 @@ function($, TUtils, TEnvironment, TError, TParser) {
             'projects/' + projectId + '/resources',
             asset,
             function (resource) {
-              resources.push(resource)
-              successCallback.call(self, resources, projectId)
+              resources.push(resource);
+              successCallback.call(self, resources, projectId);
             },
             errorCallback
           )
-        }, errorCallback)
+        }, errorCallback);
       },
 
       renameProjectAsset: function (name, newBaseName, successCallback,
         errorCallback
       ) {
         this.getProjectResource(name, function (resource, projectId) {
-          var newName = newBaseName
-          var extension = name.split('.').pop()
+          var newName = newBaseName;
+          var extension = name.split('.').pop();
           if (extension) {
-            newName += '.' + extension
+            newName += '.' + extension;
           }
           api.modifyResource(
             'projects/' + projectId + '/resources/' + resource.id,
@@ -307,24 +317,24 @@ function($, TUtils, TEnvironment, TError, TParser) {
               file_name: newName
             },
             function (resources) {
-              resource.file_name = newName
-              successCallback.call(self, newName)
+              resource.file_name = newName;
+              successCallback.call(self, newName);
             },
             errorCallback
           )
-        }, errorCallback)
+        }, errorCallback);
       },
 
       getProjectAssetContentLocation: function (name) {
         // optimistic
         var resource = this.projectResources.filter(function (resource) {
-          return resource.file_name === name
-        })[0]
+          return resource.file_name === name;
+        })[0];
         var target =
           'projects/' + (projectId || this.defaultProjectId) +
           '/resources/' + resource.id +
-          '/content'
-        return TEnvironment.getBackendUrl(target)
+          '/content';
+        return TEnvironment.getBackendUrl(target);
       },
 
       getProjectAssetContent: function (name, successCallback, errorCallback) {
@@ -333,17 +343,24 @@ function($, TUtils, TEnvironment, TError, TParser) {
             'projects/' + projectId + '/resources/' + resource.id + '/content',
             successCallback,
             errorCallback
-          )
+          );
         }, errorCallback)
       }
     }
 
-    TEnvironment.registerParameterHandler(function (name, value) {
-      switch (name) {
-        case 'token':
-          api.authorizationToken = value
-          break
-      }
+    TEnvironment.registerParametersHandler(function (parameters) {
+        for (var name in parameters) {
+            var value = parameters[name];
+            switch (name) {
+              case 'token':
+                api.authorizationToken = value;
+                store.resetUser();
+                break
+              case 'projectId':
+                store.setProjectId(value);
+                break
+            }
+        }
     })
 
     this.getAuthorizationToken = function () {
@@ -398,7 +415,9 @@ function($, TUtils, TEnvironment, TError, TParser) {
           }
         })
         callback.call(self, formattedResources, projectId)
-      }, callback)
+      }, function() {
+        callback.call(self, new TError('cannot retrieve resources'));
+      })
     }
 
     this.getResource = function (name, callback) {
