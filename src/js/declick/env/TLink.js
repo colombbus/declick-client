@@ -304,6 +304,24 @@ function($, TUtils, TEnvironment, TError, TParser) {
         }, errorCallback);
       },
 
+      setProjectAssetContent: function (
+        name,
+        content,
+        successCallback,
+        errorCallback
+      ) {
+        this.getProjectResource(name, function (resource, projectId) {
+          api.setBinaryFile(
+            'projects/' + projectId + '/resources/' + resource.id + '/content',
+            content,
+            function () {
+              successCallback.call(this, resource);
+            },
+            errorCallback
+          )
+        }, errorCallback);
+      },
+
       renameProjectAsset: function (name, newBaseName, successCallback,
         errorCallback
       ) {
@@ -468,6 +486,14 @@ function($, TUtils, TEnvironment, TError, TParser) {
     this.createResource = function (name, callback) {
       store.createProjectAsset(name, function () {
         callback.call(self, name)
+      }, callback)
+    }
+
+    this.saveResource = function (name, data, callback) {
+      store.getProjectResource(name, function (resource) {
+        store.setProjectAssetContent(name, data, function () {
+          self.getResource(name, callback);
+        }, callback)
       }, callback)
     }
 

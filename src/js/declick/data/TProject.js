@@ -704,19 +704,29 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
             canvas.height = height;
             var imageData = canvas.toDataURL();
             var self = this;
-            TLink.createResource(name, imageData, function(newData) {
-                if (newData instanceof TError) {
-                    // error: just forward it
-                    callback.call(this, newData);
-                } else {
-                    var newName = newData['name'];
+
+            if (name.indexOf('.png') === -1) {
+              name += '.png'
+            }
+
+            TLink.createResource(name, function (error) {
+              if (error && error instanceof TError) {
+                callback.call(this, error);
+              } else {
+                TLink.saveResource(name, imageData, function (resource) {
+                  if (resource && resource instanceof TError) {
+                    callback.call(this, resource);
+                  } else {
+                    var newName = name;
                     resourcesNames.push(newName);
                     resourcesNames = TUtils.sortArray(resourcesNames);
-                    resources[newName] = newData['data'];
+                    resources[newName] = resource;
                     // preload image
                     self.preloadImage(newName);
                     callback.call(this, newName);
-                }
+                  }
+                })
+              }
             });
         };
 
