@@ -208,6 +208,8 @@ function($, TUtils, TEnvironment, TError, TParser) {
           api.deleteResource(
             'projects/' + projectId + '/resources/' + resource.id,
             function () {
+              var index = store.projectResources.indexOf(resource);
+              store.projectResources.splice(index, 1);
               successCallback.call(self, resource, projectId);
             },
             errorCallback
