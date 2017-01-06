@@ -534,7 +534,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                     // error: just forward it
                     callback.call(this, newData);
                 } else {
-                    var newName = newData['name'];
+                    var newName = name;
                     if (newName !== name) {
                         // name has changed
                         // remove old name
@@ -547,7 +547,7 @@ define(['TLink', 'TProgram', 'TEnvironment', 'TUtils', 'TError', 'TRuntime'], fu
                         resourcesNames = TUtils.sortArray(resourcesNames);
                         name = newName;
                     }
-                    resources[name] = newData['data'];
+                    resources[name] = newData
                     // preload image
                     self.preloadImage(name);
                     callback.call(this, name);

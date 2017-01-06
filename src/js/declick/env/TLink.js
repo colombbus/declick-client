@@ -104,7 +104,7 @@ function($, TUtils, TEnvironment, TError, TParser) {
         this.makeRequest({
           type: 'GET',
           url: TEnvironment.getBackendUrl(target),
-          dataType: 'blob'
+          dataType: 'text'
         }, successCallback, errorCallback)
       },
 
@@ -112,7 +112,7 @@ function($, TUtils, TEnvironment, TError, TParser) {
         this.makeRequest({
           type: 'POST',
           url: TEnvironment.getBackendUrl(target),
-          contentType: 'application/octet-stream',
+          contentType: 'text/plain',
           data: data
         }, successCallback, errorCallback)
       }
@@ -286,7 +286,11 @@ function($, TUtils, TEnvironment, TError, TParser) {
           }
           var media_type = IMAGE_MEDIA_TYPES[extension];
           if (!media_type) {
-            media_type = 'application/octet-stream';
+            if (extension === 'html' || extension === 'htm') {
+              media_type = HTML_MEDIA_TYPE;
+            } else {
+              media_type = 'application/octet-stream';
+            }
           }
           var asset = {
               file_name: name,
@@ -400,8 +404,7 @@ function($, TUtils, TEnvironment, TError, TParser) {
         callback.call(self, scriptNames, projectId)
       }, function() {
         callback.call(self, new TError('not connected'));
-      }
-      )
+      })
     }
 
     var IMAGE_MEDIA_TYPES = {
@@ -411,24 +414,30 @@ function($, TUtils, TEnvironment, TError, TParser) {
       'png': 'image/png'
     }
 
+    var HTML_MEDIA_TYPE = 'text/html'
+
     this.getResources = function (callback) {
       store.getProjectResources(function (resources, projectId) {
         var formattedResources = {}
         resources.forEach(function (resource) {
           var isImage = false
+          var isHtml = false
           for (var extension in IMAGE_MEDIA_TYPES) {
             if (resource.media_type === IMAGE_MEDIA_TYPES[extension]) {
               isImage = true
               break
             }
           }
-          if (isImage) {
+          if (resource.media_type === HTML_MEDIA_TYPE) {
+            isHtml = true
+          }
+          if (isImage || isHtml) {
             var parts = resource.file_name.split('.')
             var extension = (parts.length >= 2) ? parts.pop() : ''
             var baseName = parts.join('.')
             formattedResources[resource.file_name] = {
-              type: 'image',
-              version: 1,
+              type: (isImage && 'image') || (isHtml && 'text'),
+              version: 0,
               extension: extension,
               'base-name': baseName
             }
@@ -492,9 +501,17 @@ function($, TUtils, TEnvironment, TError, TParser) {
     this.saveResource = function (name, data, callback) {
       store.getProjectResource(name, function (resource) {
         store.setProjectAssetContent(name, data, function () {
-          self.getResource(name, callback);
+          self.getResource(name, callback)
         }, callback)
       }, callback)
+    }
+
+    this.getResourceContent = function (name, version, callback) {
+      store.getProjectAssetContent(name, callback, callback)
+    }
+
+    this.setResourceContent = function (name, data, callback) {
+      this.saveResource(name, data, callback)
     }
 
     this.getResourceLocation = function (name) {
