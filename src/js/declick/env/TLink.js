@@ -333,7 +333,7 @@ function($, TUtils, TEnvironment, TError, TParser) {
           return resource.file_name === name;
         })[0];
         var target =
-          'projects/' + (projectId || this.defaultProjectId) +
+          'projects/' + (this.projectId || this.defaultProjectId) +
           '/resources/' + resource.id +
           '/content';
         return TEnvironment.getBackendUrl(target);
