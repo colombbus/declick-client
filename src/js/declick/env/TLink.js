@@ -349,7 +349,7 @@ function($, TUtils, TEnvironment, TError, TParser) {
         }, errorCallback);
       },
 
-      getProjectAssetContentLocation: function (name) {
+      getProjectAssetContentLocation: function (name, withExtension) {
         // optimistic
         var resource = this.projectResources.filter(function (resource) {
           return resource.file_name === name;
@@ -358,6 +358,14 @@ function($, TUtils, TEnvironment, TError, TParser) {
           'projects/' + (this.projectId || this.defaultProjectId) +
           '/resources/' + resource.id +
           '/content';
+        if (withExtension) {
+          for (var extension in IMAGE_MEDIA_TYPES) {
+            if (resource.media_type === IMAGE_MEDIA_TYPES[extension]) {
+              target += '.' + extension
+              break
+            }
+          }
+        }
         return TEnvironment.getBackendUrl(target);
       },
 
@@ -515,7 +523,11 @@ function($, TUtils, TEnvironment, TError, TParser) {
     }
 
     this.getResourceLocation = function (name) {
-      return store.getProjectAssetContentLocation(name)
+      return store.getProjectAssetContentLocation(name, true)
+    }
+
+    this.getResourceUploadLocation = function (name) {
+      return store.getProjectAssetContentLocation(name, false)
     }
 
     this.renameResource = function (name, newBaseName, callback) {

@@ -137,7 +137,7 @@ function(TLink, TComponent, TUI, TEnvironment, TError, TViewer, TTextEditor, $) 
 
                         var file = files[0]
                         TLink.createResource(file.name, function () {
-                            data.url = TLink.getResourceLocation(file.name)
+                            data.url = TLink.getResourceUploadLocation(file.name)
                             data.name = file.name
                             data.submit()
                         })
