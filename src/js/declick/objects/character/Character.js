@@ -67,6 +67,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             dt += p.ellapsed;
             var deltaX = p.x - p.lastX;
             var deltaY = p.y - p.lastY;
+            var useFrontAssets = false;
             if (p.autoAsset && !p.dragging && !p.frozen) {
                 if (p.moving) {
                     // we are moving
@@ -130,6 +131,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                                 } else if (p.defaultAssetsCount > 0) {
                                     p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
                                     p.asset = this.defaultAssets[p.imgIndex];
+                                } else {
+                                    useFrontAssets = true;
                                 }
                             } else {
                                 if (p.upwardAssetsCount > 0) {
@@ -144,32 +147,37 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                                 } else if (p.defaultAssetsCount > 0) {
                                     p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
                                     p.asset = this.defaultAssets[p.imgIndex];
+                                } else {
+                                    useFrontAssets = true;
                                 }
                             }
                         } else {
                             p.ellapsed = dt;
                         }
                     }
-                } else if (p.initialized) {
-                    // not moving forward nor backward
-                    if (dt > p.dtPause) {
-                        step = Math.floor(dt / p.dtPause);
-                        p.ellapsed = dt - step * p.dtPause;
-                        if (p.frontAssetsCount > 0) {
-                            if (p.lastMove === Sprite.DIRECTION_NONE) {
-                                p.imgIndex = (p.imgIndex + step) % p.frontAssetsCount;
-                            } else {
-                                // direction changed
-                                p.imgIndex = 0;
+                }
+                if (!p.moving || (p.moving && useFrontAssets)) {
+                    if (p.initialized) {
+                        // not moving forward nor backward
+                        if (dt > p.dtPause) {
+                            step = Math.floor(dt / p.dtPause);
+                            p.ellapsed = dt - step * p.dtPause;
+                            if (p.frontAssetsCount > 0) {
+                                if (p.lastMove === Sprite.DIRECTION_NONE) {
+                                    p.imgIndex = (p.imgIndex + step) % p.frontAssetsCount;
+                                } else {
+                                    // direction changed
+                                    p.imgIndex = 0;
+                                }
+                                p.asset = this.frontAssets[p.imgIndex];
+                                p.lastMove = Sprite.DIRECTION_NONE;
+                            } else if (p.defaultAssetsCount > 0) {
+                                p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
+                                p.asset = this.defaultAssets[p.imgIndex];
                             }
-                            p.asset = this.frontAssets[p.imgIndex];
-                            p.lastMove = Sprite.DIRECTION_NONE;
-                        } else if (p.defaultAssetsCount > 0) {
-                            p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
-                            p.asset = this.defaultAssets[p.imgIndex];
+                        } else {
+                            p.ellapsed = dt;
                         }
-                    } else {
-                        p.ellapsed = dt;
                     }
                 }
                 p.lastX = p.x;
