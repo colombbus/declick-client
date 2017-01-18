@@ -82,7 +82,9 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                     // we are moving
                     if(axisRatio > 1) {
                         // X movement is dominant over Y movement
+                        /*
                         if (dt > p.dtMovement) {
+                        */
                             step = Math.floor(dt / p.dtMovement);
                             p.ellapsed = dt - step * p.dtMovement;
                             // display next image
@@ -117,12 +119,16 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                                     p.asset = this.defaultAssets[p.imgIndex];
                                 }
                             }
+                        /*
                         } else {
                             p.ellapsed = dt;
                         }
+                        */
                     } else {
                         // Y movement is dominant over X movement
+                        /*
                         if (dt > p.dtMovement) {
+                        */
                             step = Math.floor(dt / p.dtMovement);
                             p.ellapsed = dt - step * p.dtMovement;
                             // display next image
@@ -160,15 +166,19 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                                     useFrontAssets = true;
                                 }
                             }
+                        /*
                         } else {
                             p.ellapsed = dt;
                         }
+                        */
                     }
                 }
                 if (!p.moving || (p.moving && useFrontAssets)) {
                     if (p.initialized) {
                         // not moving forward nor backward
+                        /*
                         if (dt > p.dtPause) {
+                        */
                             step = Math.floor(dt / p.dtPause);
                             p.ellapsed = dt - step * p.dtPause;
                             if (p.frontAssetsCount > 0) {
@@ -184,9 +194,11 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                                 p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
                                 p.asset = this.defaultAssets[p.imgIndex];
                             }
+                        /*
                         } else {
                             p.ellapsed = dt;
                         }
+                        */
                     }
                 }
                 p.lastX = p.x;
