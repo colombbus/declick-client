@@ -61,6 +61,15 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
                 component.find("#TMessage").replaceWith(c);
                 checkWaiting("message");
             });
+
+            // set init function to be launched whenever frame parameters (ie access token) change
+            TEnvironment.registerParametersHandler(function (parameters, callback) {
+                TUI.init();
+                if (typeof showEditor !== 'undefined' && showEditor) {
+                    TUI.enableEditor();
+                }
+            });
+
         });
 
         var checkSeparatorEnabled = function(event) {
@@ -144,15 +153,6 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
         };
 
         // Declare global functions
-
-        if (typeof window.updateEnvironment === 'undefined') {
-            window.updateEnvironment = function(showEditor) {
-                TUI.init();
-                if (typeof showEditor !== 'undefined' && showEditor) {
-                    TUI.enableEditor();
-                }
-            };
-        }
 
         if (typeof window.isUnsaved === 'undefined') {
             window.isUnsaved = function() {
