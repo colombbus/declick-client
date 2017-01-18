@@ -67,11 +67,20 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             dt += p.ellapsed;
             var deltaX = p.x - p.lastX;
             var deltaY = p.y - p.lastY;
+            var axisRatio;
+            if (deltaY !== 0) {
+                axisRatio = Math.abs(deltaX) / Math.abs(deltaY);
+            } else {
+                axisRatio = 1 / (Math.abs(deltaY) / Math.abs(deltaX));
+            }
+            if ((axisRatio > 0.99) && (axisRatio < 1.01)) {
+                axisRatio = 1.01;
+            }
             var useFrontAssets = false;
             if (p.autoAsset && !p.dragging && !p.frozen) {
                 if (p.moving) {
                     // we are moving
-                    if(Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if(axisRatio > 1) {
                         // X movement is dominant over Y movement
                         if (dt > p.dtMovement) {
                             step = Math.floor(dt / p.dtMovement);
