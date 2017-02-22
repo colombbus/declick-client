@@ -64,7 +64,9 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
 
             // set init function to be launched whenever frame parameters (ie access token) change
             TEnvironment.registerParametersHandler(function (parameters, callback) {
-                TUI.init();
+                if (initialized) {
+                    TUI.init();
+                }
                 if (typeof showEditor !== 'undefined' && showEditor) {
                     TUI.enableEditor();
                 }
