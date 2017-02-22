@@ -158,9 +158,15 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                                 self.init();
                             }
                             self.loaded();
-                            if (typeof callback !== 'undefined') {
-                                callback.call(this);
-                            }
+                            window.console.log("sending show view");
+                            window.platform.showView({task:{}}, function() {
+                                window.console.log("show view sent");
+                                if (typeof callback !== 'undefined') {
+                                    callback.call(self);
+                                }
+                            }, function() {
+                                window.console.error("error while sending show View to platform");
+                            });
                         });
                 } /*else {
                     if (typeof callback !== 'undefined') {
