@@ -109,6 +109,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             initSplitPane();
             // declare itself as log
             TRuntime.setLog(this);
+            window.platform.initWithTask(window.task);
         };
 
         this.init = function() {
@@ -120,7 +121,6 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             $slideFrame.hide();
 
             canvas.removeLoading();
-            window.platform.initWithTask(window.task);
             initialized = true;
         };
 
