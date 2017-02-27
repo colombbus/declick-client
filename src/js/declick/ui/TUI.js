@@ -633,13 +633,13 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'ui/THints', 'TError'], function($
             });
         };
 
-        this.init = function() {
+        this.init = function(id) {
             this.clear();
             editor.disable();
             sidebar.load();
             TEnvironment.getProject().init(function() {
                 sidebar.update();
-            });
+            }, id);
         };
 
         this.hideHints = function() {
