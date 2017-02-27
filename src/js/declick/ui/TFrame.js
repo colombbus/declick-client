@@ -114,7 +114,7 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
                         }
                     }
                     if (name === 'id') {
-
+                        TUI.init(id);
                     }
                 }
             });
