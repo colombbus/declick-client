@@ -181,14 +181,12 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             TEnvironment.registerParametersHandler(function (parameters, callback) {
                 var id = false;
                 for (var name in parameters) {
-                    window.console.log("name : "+name);
                     var value = parameters[name];
                     if (name === 'id') {
                         id = value;
                     }
                 }
                 if (id) {
-                    window.console.log("update avec id : "+id);
                     self.update(id, callback);
                 } else if (callback) {
                     callback.call(self);
