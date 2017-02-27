@@ -62,16 +62,6 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
                 checkWaiting("message");
             });
 
-            // set init function to be launched whenever frame parameters (ie access token) change
-            TEnvironment.registerParametersHandler(function (parameters, callback) {
-                if (initialized) {
-                    TUI.init();
-                }
-                if (typeof showEditor !== 'undefined' && showEditor) {
-                    TUI.enableEditor();
-                }
-            });
-
         });
 
         var checkSeparatorEnabled = function(event) {
@@ -108,24 +98,26 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
             $('.split-pane').splitPane();
             initialized = true;
             // init separator position so that toolbar is visible
-            /*TUI.enableEditor(false);
+            TUI.enableEditor(false);
             $loading.fadeOut(1000, function() {
                 $(this).remove();
-            });*/
-            // Tweak required by France IOI platform which displays 
-            // the frame with a null height at first
-            var initEditor = function() {
-                $(window).off("resize", initEditor);
-                if ($frame.height()>0) {
-                    TUI.enableEditor(false);
-                    $loading.fadeOut(1000, function() {
-                        $(this).remove();
-                    });				
-                } else {
-                    $(window).resize(initEditor);
+            });
+            // set init function to be launched whenever frame parameters (ie access token) change
+            TEnvironment.registerParametersHandler(function (parameters, callback) {
+                for (var name in parameters) {
+                    if (name === 'editor') {
+                        var editor = (parameters['editor']=='true');
+                        if (editor) {
+                            TUI.enableEditor(false);
+                        } else {
+                            TUI.disableEditor(false);
+                        }
+                    }
+                    if (name === 'id') {
+
+                    }
                 }
-            };
-            initEditor();
+            });
         };
 
         this.lowerSeparator = function(value) {
@@ -156,24 +148,11 @@ define(['ui/TComponent', 'jquery', 'split-pane', 'ui/TCanvas', 'ui/TEditor', 'ui
 
         // Declare global functions
 
-        if (typeof window.isUnsaved === 'undefined') {
+        /*if (typeof window.isUnsaved === 'undefined') {
             window.isUnsaved = function() {
                 return TEnvironment.getProject().isUnsaved();
             };
-        }
-
-        if (typeof window.displayEditor === 'undefined') {
-            window.displayEditor = function() {
-                TUI.enableEditor(false);
-            };
-        }
-
-        if (typeof window.displayView === 'undefined') {
-            window.displayView = function() {
-                TUI.disableEditor(false);
-            };
-        }
-
+        }*/
 
     }
 
