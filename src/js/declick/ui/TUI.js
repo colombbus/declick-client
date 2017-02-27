@@ -193,9 +193,7 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'ui/THints', 'TError'], function($
                 editorEnabled = true;
                 if (typeof updateServer === 'undefined' || updateServer) {
                     if (typeof window.parent !== 'undefined') {
-                        if (typeof window.parent.switchEditor === 'function') {
-                            window.parent.switchEditor();
-                        }
+                        window.parent.postMessage("switchEditor", "*");
                     }
                 }
             }
@@ -212,8 +210,8 @@ define(['jquery', 'TRuntime', 'TEnvironment', 'ui/THints', 'TError'], function($
                 THints.setPage("preview");
                 editorEnabled = false;
                 if (typeof updateServer === 'undefined' || updateServer) {
-                    if (typeof window.parent !== 'undefined' && typeof window.parent.switchView !== 'undefined') {
-                        window.parent.switchView();
+                    if (typeof window.parent !== 'undefined') {
+                        window.parent.postMessage("switchView", "*");
                     }
                 }
                 TRuntime.start();
