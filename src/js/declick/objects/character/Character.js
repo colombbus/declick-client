@@ -454,7 +454,7 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.p.autoAsset = true;
         },
         mayCatch: function (object) {
-            var id = object.getgObject().getId();
+            var id = object.getGObject().getId();
             if (typeof (this.catchableObjects[id]) === 'undefined') {
                 this.catchableObjects[id] = object;
             }
