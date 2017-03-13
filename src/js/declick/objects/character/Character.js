@@ -11,6 +11,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
         if (typeof (name) === 'undefined') {
             name = "tangy";
         }
+        this.translatedDownward = this.getMessage("downward");
+        this.translatedUpward = this.getMessage("upward");
         this.translatedForward = this.getMessage("forward");
         this.translatedBackward = this.getMessage("backward");
         this.translatedFront = this.getMessage("front");
@@ -35,6 +37,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 lastX: 0,
                 lastMove: Character.DIRECTION_NONE,
                 frontAssetsCount: 0,
+                downwardAssetsCount: 0,
+                upwardAssetsCount: 0,
                 forwardAssetsCount: 0,
                 backwardAssetsCount: 0,
                 defaultAssetsCount: 0,
@@ -45,6 +49,8 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 sizeSet: false
             }, props), defaultProps);
             this.frontAssets = [];
+            this.downwardAssets = [];
+            this.upwardAssets = [];
             this.forwardAssets = [];
             this.backwardAssets = [];
             this.defaultAssets = [];
@@ -59,72 +65,199 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             this.performAssetOperations();
             var step = 0;
             dt += p.ellapsed;
-            var deltaX = Math.round(p.x - p.lastX);
+            var deltaX = p.x - p.lastX;
+            var deltaY = p.y - p.lastY;
+            var axisRatio;
+            if (deltaY !== 0) {
+                axisRatio = Math.abs(deltaX) / Math.abs(deltaY);
+            } else {
+                axisRatio = 1 / (Math.abs(deltaY) / Math.abs(deltaX));
+            }
+            if ((axisRatio > 0.99) && (axisRatio < 1.01)) {
+                axisRatio = 1.01;
+            }
+            var useFrontAssets = false;
             if (p.autoAsset && !p.dragging && !p.frozen) {
-                if (p.moving && deltaX !== 0) {
+                if (p.moving) {
                     // we are moving
-                    if (dt > p.dtMovement) {
-                        step = Math.floor(dt / p.dtMovement);
-                        p.ellapsed = dt - step * p.dtMovement;
-                        // display next image
-                        if (deltaX > 0) {
-                            // moving right
-                            if (p.forwardAssetsCount > 0) {
-                                if (p.lastMove === Sprite.DIRECTION_RIGHT) {
-                                    p.imgIndex = (p.imgIndex + step) % p.forwardAssetsCount;
-                                } else {
-                                    // direction changed
-                                    p.imgIndex = 0;
+                    if(axisRatio > 1) {
+                        // X movement is dominant over Y movement
+                        /*
+                        if (dt > p.dtMovement) {
+                        */
+                            step = Math.floor(dt / p.dtMovement);
+                            p.ellapsed = dt - step * p.dtMovement;
+                            // display next image
+                            if (deltaX > 0) {
+                                // moving right
+                                if (p.forwardAssetsCount > 0) {
+                                    if (p.lastMove === Sprite.DIRECTION_RIGHT) {
+                                        p.imgIndex = (p.imgIndex + step) % p.forwardAssetsCount;
+                                    } else {
+                                        // direction changed
+                                        p.imgIndex = 0;
+                                    }
+                                    p.asset = this.forwardAssets[p.imgIndex];
+                                    p.lastMove = Sprite.DIRECTION_RIGHT;
+                                } else if (p.defaultAssetsCount > 0) {
+                                    p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
+                                    p.asset = this.defaultAssets[p.imgIndex];
                                 }
-                                p.asset = this.forwardAssets[p.imgIndex];
-                                p.lastMove = Sprite.DIRECTION_RIGHT;
-                            } else if (p.defaultAssetsCount > 0) {
-                                p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
-                                p.asset = this.defaultAssets[p.imgIndex];
-                            }
-                        } else {
-                            // moving left
-                            if (p.backwardAssetsCount > 0) {
-                                if (p.lastMove === Sprite.DIRECTION_LEFT) {
-                                    p.imgIndex = (p.imgIndex + step) % p.backwardAssetsCount;
-                                } else {
-                                    // direction changed
-                                    p.imgIndex = 0;
-                                }
-                                p.asset = this.backwardAssets[p.imgIndex];
-                                p.lastMove = Sprite.DIRECTION_LEFT;
-                            } else if (p.defaultAssetsCount > 0) {
-                                p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
-                                p.asset = this.defaultAssets[p.imgIndex];
-                            }
-                        }
-                    } else {
-                        p.ellapsed = dt;
-                    }
-                } else if (p.initialized) {
-                    // not moving forward nor backward
-                    if (dt > p.dtPause) {
-                        step = Math.floor(dt / p.dtPause);
-                        p.ellapsed = dt - step * p.dtPause;
-                        if (p.frontAssetsCount > 0) {
-                            if (p.lastMove === Sprite.DIRECTION_NONE) {
-                                p.imgIndex = (p.imgIndex + step) % p.frontAssetsCount;
                             } else {
-                                // direction changed
-                                p.imgIndex = 0;
+                                // moving left
+                                if (p.backwardAssetsCount > 0) {
+                                    if (p.lastMove === Sprite.DIRECTION_LEFT) {
+                                        p.imgIndex = (p.imgIndex + step) % p.backwardAssetsCount;
+                                    } else {
+                                        // direction changed
+                                        p.imgIndex = 0;
+                                    }
+                                    p.asset = this.backwardAssets[p.imgIndex];
+                                    p.lastMove = Sprite.DIRECTION_LEFT;
+                                } else if (p.defaultAssetsCount > 0) {
+                                    p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
+                                    p.asset = this.defaultAssets[p.imgIndex];
+                                }
                             }
-                            p.asset = this.frontAssets[p.imgIndex];
-                            p.lastMove = Sprite.DIRECTION_NONE;
-                        } else if (p.defaultAssetsCount > 0) {
-                            p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
-                            p.asset = this.defaultAssets[p.imgIndex];
+                        /*
+                        } else {
+                            p.ellapsed = dt;
                         }
+                        */
                     } else {
-                        p.ellapsed = dt;
+                        // Y movement is dominant over X movement
+                        /*
+                        if (dt > p.dtMovement) {
+                        */
+                            step = Math.floor(dt / p.dtMovement);
+                            p.ellapsed = dt - step * p.dtMovement;
+                            // display next image
+                            if (deltaY > 0) {
+                                // moving down
+                                if (p.downwardAssetsCount > 0) {
+                                    if (p.lastMove === Sprite.DIRECTION_DOWN) {
+                                        p.imgIndex = (p.imgIndex + step) % p.downwardAssetsCount;
+                                    } else {
+                                        // direction changed
+                                        p.imgIndex = 0;
+                                    }
+                                    p.asset = this.downwardAssets[p.imgIndex];
+                                    p.lastMove = Sprite.DIRECTION_DOWN;
+                                } else if (p.defaultAssetsCount > 0) {
+                                    p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
+                                    p.asset = this.defaultAssets[p.imgIndex];
+                                } else {
+                                    useFrontAssets = true;
+                                }
+                            } else {
+                                if (p.upwardAssetsCount > 0) {
+                                    if (p.lastMove === Sprite.DIRECTION_UP) {
+                                        p.imgIndex = (p.imgIndex + step) % p.upwardAssetsCount;
+                                    } else {
+                                        // direction changed
+                                        p.imgIndex = 0;
+                                    }
+                                    p.asset = this.upwardAssets[p.imgIndex];
+                                    p.lastMove = Sprite.DIRECTION_UP;
+                                } else if (p.defaultAssetsCount > 0) {
+                                    p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
+                                    p.asset = this.defaultAssets[p.imgIndex];
+                                } else {
+                                    useFrontAssets = true;
+                                }
+                            }
+                        /*
+                        } else {
+                            p.ellapsed = dt;
+                        }
+                        */
+                    }
+                }
+                if (!p.moving || (p.moving && useFrontAssets)) {
+                    if (p.initialized) {
+                        // not moving forward nor backward
+                        /*
+                        if (dt > p.dtPause) {
+                        */
+                            step = Math.floor(dt / p.dtPause);
+                            p.ellapsed = dt - step * p.dtPause;
+                            if (p.frontAssetsCount > 0) {
+                                if (p.lastMove === Sprite.DIRECTION_NONE) {
+                                    p.imgIndex = (p.imgIndex + step) % p.frontAssetsCount;
+                                } else {
+                                    // direction changed
+                                    p.imgIndex = 0;
+                                }
+                                p.asset = this.frontAssets[p.imgIndex];
+                                p.lastMove = Sprite.DIRECTION_NONE;
+                            } else if (p.defaultAssetsCount > 0) {
+                                p.imgIndex = (p.imgIndex + step) % p.defaultAssetsCount;
+                                p.asset = this.defaultAssets[p.imgIndex];
+                            }
+                        /*
+                        } else {
+                            p.ellapsed = dt;
+                        }
+                        */
                     }
                 }
                 p.lastX = p.x;
+                p.lastY = p.y;
             }
+        },
+        setDownwardAssets: function (assets) {
+            this.addAssetOperation(function (assets) {
+                this.downwardAssets = assets;
+                this.p.downwardAssetsCount = assets.length;
+            }, [assets], assets);
+        },
+        addDownwardAsset: function (asset) {
+            this.addAssetOperation(function (asset) {
+                this.downwardAssets.push(asset);
+                this.p.downwardAssetsCount++;
+            }, [asset], asset);
+        },
+        removeDownwardAsset: function (asset) {
+            this.addAssetOperation(function (asset) {
+                var index = this.downwardAssets.indexOf(asset);
+                if (index > -1) {
+                    this.downwardAssets.splice(index, 1);
+                    this.p.downwardAssetsCount--;
+                }
+            }, [asset]);
+        },
+        removeDownwardAssets: function () {
+            this.addAssetOperation(function () {
+                this.downwardAssets = [];
+                this.p.downwardAssetsCount = 0;
+            }, []);
+        },
+        setUpwardAssets: function (assets) {
+            this.addAssetOperation(function (assets) {
+                this.upwardAssets = assets;
+                this.p.upwardAssetsCount = assets.length;
+            }, [assets], assets);
+        },
+        addUpwardAsset: function (asset) {
+            this.addAssetOperation(function (asset) {
+                this.upwardAssets.push(asset);
+                this.p.upwardAssetsCount++;
+            }, [asset], asset);
+        },
+        removeUpwardAsset: function (asset) {
+            this.addAssetOperation(function (asset) {
+                var index = this.upwardAssets.indexOf(asset);
+                if (index > -1) {
+                    this.upwardAssets.splice(index, 1);
+                    this.p.upwardAssetsCount--;
+                }
+            }, [asset]);
+        },
+        removeUpwardAssets: function () {
+            this.addAssetOperation(function () {
+                this.upwardAssets = [];
+                this.p.upwardAssetsCount = 0;
+            }, []);
         },
         setForwardAssets: function (assets) {
             this.addAssetOperation(function (assets) {
@@ -453,6 +586,34 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                     parent.addImage(imageName, parent.translatedFront, false);
                 }
                 //parent.gObject.setFrontAssets(frontAssets);
+                var downwardImages = data['images']['downward'];
+                if (downwardImages) {
+                    var downwardAssets = [];
+                    try {
+                        parent._removeImageSet(parent.translatedDownward);
+                    } catch (e) {
+                    }
+                    for (var i = 0; i < downwardImages.length; i++) {
+                        var imageName = name + "/" + downwardImages[i];
+                        downwardAssets.push(imageName);
+                        parent.addImage(imageName, parent.translatedDownward, false);
+                    }
+                    parent.gObject.setDownwardAssets(downwardAssets);
+                }
+                var upwardImages = data['images']['upward'];
+                if (upwardImages) {
+                    var upwardAssets = [];
+                    try {
+                        parent._removeImageSet(parent.translatedUpward);
+                    } catch (e) {
+                    }
+                    for (var i = 0; i < upwardImages.length; i++) {
+                        var imageName = name + "/" + upwardImages[i];
+                        upwardAssets.push(imageName);
+                        parent.addImage(imageName, parent.translatedUpward, false);
+                    }
+                    parent.gObject.setUpwardAssets(upwardAssets);
+                }
                 var forwardImages = data['images']['forward'];
                 var forwardAssets = [];
                 try {
@@ -507,6 +668,10 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             set = TUtils.getString(set);
             if (set === this.translatedFront) {
                 specialSet = "front";
+            } else if (set === this.translatedDownward) {
+                specialSet = "downward";
+            } else if (set === this.translatedUpward) {
+                specialSet = "upward";
             } else if (set === this.translatedBackward) {
                 specialSet = "backward";
             } else if (set === this.translatedForward) {
@@ -535,6 +700,14 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             } catch (e) {
             }
             try {
+                this._removeImageSet(this.translatedDownward);
+            } catch (e) {
+            }
+            try {
+                this._removeImageSet(this.translatedUpward);
+            } catch (e) {
+            }
+            try {
                 this._removeImageSet(this.translatedForward);
             } catch (e) {
             }
@@ -553,6 +726,12 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             switch (specialSet) {
                 case "front":
                     this.gObject.addFrontAsset(name);
+                    break;
+                case "downward":
+                    this.gObject.addDownwardAsset(name);
+                    break;
+                case "upward":
+                    this.gObject.addUpwardAsset(name);
                     break;
                 case "backward":
                     this.gObject.addBackwardAsset(name);
@@ -603,6 +782,12 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
                 case "front":
                     this.gObject.removeFrontAsset(name);
                     break;
+                case "downward":
+                    this.gObject.removeDownwardAsset(name);
+                    break;
+                case "upward":
+                    this.gObject.removeUpwardAsset(name);
+                    break;
                 case "backward":
                     this.gObject.removeBackwardAsset(name);
                     break;
@@ -628,6 +813,12 @@ define(['jquery', 'TEnvironment', 'TGraphicalObject', 'objects/sprite/Sprite', '
             switch (specialSet) {
                 case "front":
                     this.gObject.removeFrontAssets();
+                    break;
+                case "downward":
+                    this.gObject.removeDownwardAssets();
+                    break;
+                case "upward":
+                    this.gObject.removeUpwardAssets();
                     break;
                 case "backward":
                     this.gObject.removeBackwardAssets();
