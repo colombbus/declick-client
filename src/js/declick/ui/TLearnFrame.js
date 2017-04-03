@@ -1,6 +1,6 @@
 define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRuntime', 'TEnvironment', 'TExerciseProject', 'TError', 'prism', 'platform-pr', 'split-pane'], function(TComponent, $, TLearnCanvas, TLearnEditor, TRuntime, TEnvironment, TExerciseProject, TError, Prism) {
     function TLearnFrame(callback) {
-        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right, $success, $successText, $slideFrame;
+        var $text, $message, $textMessage, $textMessageContent, $messageContent, $instruction, $instructions, $solution, $solutionContent, $input, $loading, $right, $success, $successText, $slideFrame, $buttonNext;
         var canvas, editor;
 
         var exercise = new TExerciseProject();
@@ -49,7 +49,7 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                 execute();
             });
 
-            var $buttonNext = component.find(".ttoolbar-button-next");
+            $buttonNext = component.find(".ttoolbar-button-next");
             $buttonNext.prepend(TEnvironment.getMessage('button-next-step'));
             $buttonNext.click(function(e) {
                 platform.validate("nextImmediate");
@@ -227,11 +227,15 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                     var message;
                     if (output.result === 'success')
                     {
-                        if (output.score < 100)
+                       if (output.score < 100)
                         {
                             message = output.message;
                         }
-                        context.validateExercise(message);
+                        var next = true;
+                        if (typeof output.next !== 'undefined') {
+                            next = output.next;
+                        }
+                        context.validateExercise(message, next);
                     }
                     else if (output.result === 'faillure')
                     {
@@ -258,12 +262,15 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
         var execute = function() {
             hideMessage();
             if (!textMode) {
-                clear();
+                clear(false);
             }
             step();
         };
 
-        var clear = function() {
+        var clear = function(resetCode) {
+            if (typeof resetCode === 'undefined') {
+                resetCode = true;
+            }
             hideMessage();
             if (textMode) {
                 // clear editor value
@@ -273,11 +280,14 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             } else {
                 // clear runtime
                 TRuntime.clear();
+                if (resetCode && exercise.hasUserCode()) {
+                    editor.setValue(exercise.getUserCode());
+                }
             }
             exercise.init();
         };
 
-        this.validateExercise = function(message) {
+        this.validateExercise = function(message, next) {
             try {
                 platform.validate("stay");
             } catch (e) {
@@ -286,8 +296,11 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             if(typeof message === "undefined" || message === "") {
                 message = TEnvironment.getMessage("success-message");
             }
+            if(typeof next === "undefined") {
+                next = true;
+            }
             window.setTimeout(function() {
-                showSuccess(message);
+                showSuccess(message, next);
             }, 1000);
         };
 
@@ -321,8 +334,13 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
             messageDisplayed = true;
         };
 
-        var showSuccess = function(message) {
+        var showSuccess = function(message, next) {
             $successText.text(message);
+            if (next) {
+                $buttonNext.show();
+            } else {
+                $buttonNext.hide();
+            }
             $success.show();
         };
 
@@ -368,6 +386,9 @@ define(['ui/TComponent', 'jquery', 'ui/TLearnCanvas', 'ui/TLearnEditor', 'TRunti
                         $instructions.html(data);
                         Prism.highlightAll(false);
                         exercise.init();
+                        if (exercise.hasUserCode()) {
+                            editor.setValue(exercise.getUserCode());
+                        }
                         // TODO: send callback to exercise.init() when interpreter supports callbacks
                         if (typeof callback !== 'undefined') {
                             callback.call(this);

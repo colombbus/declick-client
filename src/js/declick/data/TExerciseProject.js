@@ -13,6 +13,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
         var endStatements = false;
         var exerciseStatements = false;
         var exercise = false;
+        var userCode = false;
         var solutionCode = false;
         var instructions = false;
         var hints = false;
@@ -94,6 +95,14 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
         };
 
         /**
+        * Checks if Exercise has user code.
+        * @returns {Boolean}
+        */
+        this.hasUserCode = function() {
+            return (userCode !== false);
+        };
+
+        /**
         * Get Project's instructions if defined.
         * @param {Function} callback
         */
@@ -120,6 +129,16 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
         this.getHints = function(callback) {
             if (hints !== false) {
                 project.getResourceContent("hints.html", callback);
+            }
+        };
+
+        /**
+        * Get User code.
+        * @param {function} callback
+        */
+        this.getUserCode = function(callback) {
+            if (userCode !== false) {
+                return userCode;
             }
         };
 
@@ -183,6 +202,19 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
             });
         };
 
+        /**
+        * Loads user code.
+        * @param {Function} callback
+        */
+        var loadUserCode = function(callback) {
+            project.getProgramCode("user", function(result) {
+                if (!(result instanceof TError)) {
+                    userCode = result;
+                }
+                callback.call(this);
+            });
+        };        
+
         /** Loads exercise
         * @param {Function} callback
         */
@@ -222,6 +254,7 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
                 var programs = project.getProgramsNames();
                 var solutionPresent = false;
                 var exercisePresent = false;
+                var userCodePresent = false;
                 var toLoad = 0;
 
                 if (programs.indexOf("solution") > -1) {
@@ -232,6 +265,11 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
                 if (programs.indexOf("exercise") > -1) {
                     toLoad++;
                     exercisePresent = true;
+                }
+
+                if (programs.indexOf("user") > -1) {
+                    toLoad++;
+                    userCodePresent = true;
                 }
 
                 // 2nd check existing resources
@@ -260,6 +298,9 @@ define(['TEnvironment', 'TRuntime', 'TProject', 'TError', 'TParser', 'objects'],
                 }
                 if (exercisePresent) {
                     loadExercise(checkLoad);
+                }
+                if (userCodePresent) {
+                    loadUserCode(checkLoad);
                 }
             }, id);
 
